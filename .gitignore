@@ -26,3 +26,7 @@ platformio.ini
 ## This map file is created if you include the line build_flags = -Wl,-Map,output.map 
 ## in the environment section of your platformio.ini file.
 *output.map
+
+## lock files from LibreOffice
+.~lock*
+
