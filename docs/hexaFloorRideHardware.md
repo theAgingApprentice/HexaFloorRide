@@ -1,16 +1,16 @@
-# Hexbot Hardware
+# HexaFloorRide Hardware
 
-This page lists all the parts that you need in order to build your own Hexbot. 
+This page lists all the parts that you need in order to build your own HexaFloorRide. 
 
 ## Chassis
 
-Hexbot's chassis is comprised of a lower main body section with six protruding legs and a PCB mounted on top. The body and legs are milled out of 6061 extruded aluminium. When pully assembed Hexbot's physical dimensions are roughly:
+HexaFloorRide's chassis is comprised of a lower main body section with six protruding legs and a PCB mounted on top. The body and legs are milled out of 6061 extruded aluminium. When pully assembed HexaFloorRide's physical dimensions are roughly:
 
 * Height = ~ 5 inches when in neutral standing position.
 * Length = ~ 14 inches when in neutral standing position.
 * Weight = ~ 3 lbs 7.5 Oz without battery or PCB.
 
-Hexbot's chassis is comprised of:
+HexaFloorRide's chassis is comprised of:
 * 1 lower body panel
 * 1 mounting post
 * 2 mounting brackets
@@ -204,7 +204,7 @@ In addition to the parts above you will also need
        </figure> 
     </td>
     <td align ="left"> 
-       Hexbot has a total of 18 leg joints. Each leg has a hip, knee and ankle joint. These joints are 
+       HexaFloorRide has a total of 18 leg joints. Each leg has a hip, knee and ankle joint. These joints are 
        <a href="https://www.robotshop.com/ca/en/combo-pack-6x-hs-485hb-free-metal-servo-horns.html">HiTec HS-485HB servo motors</a> which we purchased from the Robot Shop. The motors came in a bundle with aluminium 24T horns that fit the servo shafts. The applied voltage of this motor should be in range of 4.8 to 7.2V. The frequency of motor is 50 Hz and the PWM duty cycle is 20 milliseconds. This motor has 3 pins as follows:
       <ul>
          <li>PWM: Orange</li>
@@ -226,7 +226,7 @@ In addition to the parts above you will also need
        </figure> 
     </td>
     <td align ="left"> 
-       The Hexpod robot requires a way to connect a large number of servo motors to a microcontroller with limit IO pins. To achieve this we use a pair of Adafruit <a href="https://cdn-learn.adafruit.com/downloads/pdf/16-channel-pwm-servo-driver.pdf">PCA9685 16-channel 12-bit servo motor drivers</a>. These motor drivers have their own onboard NXP Semiconductors <a href="http://www.adafruit.com/datasheets/PCA9685.pdf">PCA9685 microcontrollers</a> that handles the details of PWM signalling to the motors so all we have to do is communicate to them via I2C which only consumes 2 IO pins. The defult I2C address for the driver is 64 (0x40). There is also an all-call address at 112 (0x70). Since hexBot has 18 motors and a single driver can only handle a maximum of 16 we need to use 2 of these drivers. Since both drivers are on the same I2C bus we need to change the I2C address of the second driver to avoid conflicts. Page 13 of the Adafruit document explains how to do this.     
+       The Hexpod robot requires a way to connect a large number of servo motors to a microcontroller with limit IO pins. To achieve this we use a pair of Adafruit <a href="https://cdn-learn.adafruit.com/downloads/pdf/16-channel-pwm-servo-driver.pdf">PCA9685 16-channel 12-bit servo motor drivers</a>. These motor drivers have their own onboard NXP Semiconductors <a href="http://www.adafruit.com/datasheets/PCA9685.pdf">PCA9685 microcontrollers</a> that handles the details of PWM signalling to the motors so all we have to do is communicate to them via I2C which only consumes 2 IO pins. The defult I2C address for the driver is 64 (0x40). There is also an all-call address at 112 (0x70). Since HexaFloorRide has 18 motors and a single driver can only handle a maximum of 16 we need to use 2 of these drivers. Since both drivers are on the same I2C bus we need to change the I2C address of the second driver to avoid conflicts. Page 13 of the Adafruit document explains how to do this.     
     </td>   
   </tr>
 </table>  
@@ -242,7 +242,7 @@ In addition to the parts above you will also need
        </figure> 
     </td>
     <td align ="left"> 
-       Since the ESP32 microprocessor used for Hexbot's brain is a 3.3VDC device and the PCA9685 microprocessor used in the motor driver board is a 5 VDC device we must use a line level converter on the I2C bus to connect between them. Hexbot uses the KeeYees <a href="https://www.amazon.ca/gp/product/B07LG646VS/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1">4 Channel I2C Logic Level Converter Bi-Directional Module</a> which appears to be a clone of the Sparkfun Bi-Directional Logic Level Converter. For wiring help check out the <a href="https://learn.sparkfun.com/tutorials/bi-directional-logic-level-converter-hookup-guide/all">wiring guide</a>. 
+       Since the ESP32 microprocessor used for HexaFloorRide's brain is a 3.3VDC device and the PCA9685 microprocessor used in the motor driver board is a 5 VDC device we must use a line level converter on the I2C bus to connect between them. HexaFloorRide uses the KeeYees <a href="https://www.amazon.ca/gp/product/B07LG646VS/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1">4 Channel I2C Logic Level Converter Bi-Directional Module</a> which appears to be a clone of the Sparkfun Bi-Directional Logic Level Converter. For wiring help check out the <a href="https://learn.sparkfun.com/tutorials/bi-directional-logic-level-converter-hookup-guide/all">wiring guide</a>. 
     </td>   
   </tr>
 </table>  
@@ -258,7 +258,7 @@ In addition to the parts above you will also need
        </figure> 
     </td>
     <td align ="left"> 
-       The brains of Hexbot come courtesy of an Espressif <a href="https://va3wam.github.io/soc/technology%20stack/architecture/SOC-Technology-Stack/">ESP32</a> Software On a Chip (SOC). We are using Zerynth's 30 pin variant of their <a href="https://testzdoc.zerynth.com/reference/boards/doit_esp32/docs/">DOIT Esp32 DevKit v1</a> development board for ESP32 integration into our circuit.  
+       The brains of HexaFloorRide come courtesy of an Espressif <a href="https://va3wam.github.io/soc/technology%20stack/architecture/SOC-Technology-Stack/">ESP32</a> Software On a Chip (SOC). We are using Zerynth's 30 pin variant of their <a href="https://testzdoc.zerynth.com/reference/boards/doit_esp32/docs/">DOIT Esp32 DevKit v1</a> development board for ESP32 integration into our circuit.  
     </td>   
   </tr>
 </table>  
@@ -284,4 +284,4 @@ The robot features a [reset and selection button](https://www.adafruit.com/produ
 ```Not sure what display we will use yet```.
 
 ## Assembly
-Full step by step instructions for Hexbot can be found [here](hexbotAssembly.md).
+Full step by step instructions for HexaFloorRide can be found [here](/docs/hexaFloorRideAssembly.md).
