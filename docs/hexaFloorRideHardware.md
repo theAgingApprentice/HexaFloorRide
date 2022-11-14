@@ -10,87 +10,207 @@ Hexbot's chassis is comprised of a lower main body section with six protruding l
 * Length = ~ 14 inches when in neutral standing position.
 * Weight = ~ 3 lbs 7.5 Oz without battery or PCB.
 
-Hexbot's chassis is comprised of 1 lower body panel, 6 hip components, 6 upper leg components and 6 lower leg components. *Note that you will need to fabricate your own upper body component used for mounting the electronics*.   
+Hexbot's chassis is comprised of:
+* 1 lower body panel
+* 1 mounting post
+* 2 mounting brackets
+* 1 battery holder
+* 1 battery
+* 18 servo motors
+* 6 thigh components
+* 6 shin components
+* 6 foot components
+* 6 shoe components
+
+*Note that you will need to fabricate your own upper body component used for mounting the electronics*.   
 
 <table>
+   <caption>HexaFloorRide Components</caption>
+   <tr>
+      <th>Qty</th>
+      <th>Name</th>
+      <th>Image</th>
+   </tr>  
+   <tr>
+      <td align ="left"> 
+         1
+      </td>
+      <td align ="left"> 
+         Lower body
+      </td>
+      <td align ="left"> 
+         <figure>
+            <img src="/physicalDesign/fusionExports/hexaFloorRideLowerBody.png" alt="Lower body" width="100" height="100">
+            <figcaption>Fig.1 - Lower body</figcaption>
+         </figure> 
+      </td>
+   </tr>
+   <tr>
+      <td align ="left"> 
+         6
+      </td>
+      <td align ="left"> 
+         Thigh
+      </td>
+      <td align ="left"> 
+         <figure>
+            <img src="/physicalDesign/fusionExports/hexaFloorRideThigh.png" alt="Hip" width="100" height="100">
+            <figcaption>Fig.2 - Hip</figcaption>
+         </figure> 
+      </td>
+   </tr>
+   <tr>
+      <td align ="left"> 
+         6
+      </td>
+      <td align ="left"> 
+         Shin
+      </td>
+      <td align ="left"> 
+         <figure>
+            <img src="/physicalDesign/fusionExports/hexaFloorRideShin.png" alt="Shin" width="100" height="100">
+            <figcaption>Fig.3 - Shin</figcaption>
+         </figure> 
+      </td>
+   </tr>
+   <tr>
+      <td align ="left"> 
+         6
+      </td>
+      <td align ="left"> 
+         Foot
+      </td>
+      <td align ="left"> 
+         <figure>
+            <img src="/physicalDesign/fusionExports/hexaFloorRideFoot.png" alt="Foot" width="100" height="100">
+            <figcaption>Fig.4 - Foot</figcaption>
+         </figure> 
+      </td>
+   </tr>
   <tr>
-    <td align ="left"> 
-       <figure>
-          <img src="/img/newLowerBody v7.png" alt="Main body" width="100" height="100">
-          <figcaption>Fig.1 - Main body</figcaption>
-       </figure> 
-    </td>
-  </tr>
-  <tr>
-    <td align ="left"> 
-       <figure>
-          <img src="/img/newHip v12.png" alt="Hip" width="100" height="100">
-          <figcaption>Fig.2 - Hip</figcaption>
-       </figure> 
-    </td>
-  </tr>
-  <tr>
-    <td align ="left"> 
-       <figure>
-          <img src="/img/upperLeg v5.png" alt="Upper leg" width="100" height="100">
-          <figcaption>Fig.3 - Upper leg</figcaption>
-       </figure> 
-    </td>
-  </tr>
-  <tr>
-    <td align ="left"> 
-       <figure>
-          <img src="/img/newLowerLeg v10.png" alt="Lower leg" width="100" height="100">
-          <figcaption>Fig.4 - Lower leg</figcaption>
-       </figure> 
-    </td>
-  </tr>
+      <td align ="left"> 
+         6
+      </td>
+      <td align ="left"> 
+         Shoe
+      </td>
+      <td align ="left"> 
+         <figure>
+            <img src="/physicalDesign/fusionExports/hexaFloorRideShoe.png" alt="Foot" width="100" height="100">
+            <figcaption>Fig.5 - Foot</figcaption>
+         </figure> 
+      </td>
+   </tr>
+   <tr>
+      <td align ="left"> 
+         1
+      </td>
+      <td align ="left"> 
+         Mounting Post
+      </td>
+      <td align ="left"> 
+         <figure>
+            <img src="/physicalDesign/fusionExports/hexaFloorRideMountingTube.png" alt="Mounting Post" width="100" height="100">
+            <figcaption>Fig.6 - Mounting Post</figcaption>
+         </figure> 
+      </td>
+   </tr>
+   <tr>
+      <td align ="left"> 
+         2
+      </td>
+      <td align ="left"> 
+         Mounting Bracket
+      </td>
+      <td align ="left"> 
+         <figure>
+            <img src="/physicalDesign/fusionExports/hexaFloorRideMountingBracket.png" alt="Mounting Bracket" width="100" height="100">
+            <figcaption>Fig.7 - Mounting Bracket</figcaption>
+         </figure> 
+      </td>
+   </tr>
+   <tr>
+      <td align ="left"> 
+         1
+      </td>
+      <td align ="left"> 
+         Battery Holder
+      </td>
+      <td align ="left"> 
+         <figure>
+            <img src="/physicalDesign/fusionExports/hexaFloorRideBatteryHolder.png" alt="Battery Holder" width="100" height="100">
+            <figcaption>Fig.8 - Battery Holder</figcaption>
+         </figure> 
+      </td>
+   </tr>
+   <tr>
+      <td align ="left"> 
+         1
+      </td>
+      <td align ="left"> 
+         Battery
+      </td>
+      <td align ="left"> 
+         <figure>
+            <img src="/physicalDesign/fusionExports/hexaFloorRideBattery.png" alt="Battery" width="100" height="100">
+            <figcaption>Fig.9 - Battery</figcaption>
+         </figure> 
+      </td>
+   </tr>
+   <tr>
+      <td align ="left"> 
+         18
+      </td>
+      <td align ="left"> 
+         Servo motor
+      </td>
+      <td align ="left"> 
+         <figure>
+            <img src="/physicalDesign/fusionExports/hexaFloorRideServoMotor.png" alt="Battery" width="100" height="100">
+            <figcaption>Fig.10 - Servo Motor</figcaption>
+         </figure> 
+      </td>
+   </tr>
+   <tr>
+      <td align ="left"> 
+         18
+      </td>
+      <td align ="left"> 
+         Servo horns
+      </td>
+      <td align ="left"> 
+         <figure>
+            <img src="/physicalDesign/fusionExports/hexaFloorRideServoHorn.png" alt="Battery" width="100" height="100">
+            <figcaption>Fig.11 - Servo Horn</figcaption>
+         </figure> 
+      </td>
+   </tr>
 </table>  
 
 ## Micellaneous Hardware
 
 In addition to the parts above you will also need 
 
-* 72 [M3 0.5 x 10 cap head screws](https://www.amazon.ca/gp/product/B07FDLN8C3/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1)
-* 64 [M3 nuts](https://www.amazon.ca/gp/product/B07FDLN8C3/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1)
-* 18 [Mallofusa 25 tooth Servo Horn](https://www.amazon.ca/Mallofusa-Servo-Aluminum-Silvery-Helicopter/dp/B00NOGMK3M). 
-* 18 M3 0.5 x6 button head screws (come with the horns). 
+* 120 [#2-56 x 3/8" cap head screws](https://www.amazon.ca/gp/product/B073W96K9C/ref=ppx_yo_dt_b_asin_title_o07_s00?ie=UTF8&psc=1)
  
-## Motors
+## Servo Motors & Horns 
 
 <table>
   <tr>
     <td align ="left"> 
        <figure>
-          <img src="/img/mg996r-towerpro-servo-motor.jpg" alt="servo motor" width="100" height="100">
+          <img src="/img/hs485hbServoMotorsAndHorns.jpg" alt="servo motor" width="100" height="100">
           <figcaption>Fig.5 - Servo motor</figcaption>
        </figure> 
     </td>
     <td align ="left"> 
-       Hexbot has a total of 18 leg joints. These leg joints are 
-       <a href="https://components101.com/motors/mg996r-servo-motor-datasheet">MG996R Servo motors</a>. The applied voltage of this motor should be in range of 4.8 to 7.2V. The frequency of motor is 50 Hz and the PWM duty cycle is 20 milliseconds. This motor has 3 pins as follows:
+       Hexbot has a total of 18 leg joints. Each leg has a hip, knee and ankle joint. These joints are 
+       <a href="https://www.robotshop.com/ca/en/combo-pack-6x-hs-485hb-free-metal-servo-horns.html">HiTec HS-485HB servo motors</a> which we purchased from the Robot Shop. The motors came in a bundle with aluminium 24T horns that fit the servo shafts. The applied voltage of this motor should be in range of 4.8 to 7.2V. The frequency of motor is 50 Hz and the PWM duty cycle is 20 milliseconds. This motor has 3 pins as follows:
       <ul>
          <li>PWM: Orange</li>
          <li>VCC: Red</li>
          <li>GND: Brown</li>
       </ul>
-    </td>   
-  </tr>
-</table>  
-
-## Servo Horns
-
-<table>
-  <tr>
-    <td align ="left"> 
-       <figure>
-          <img src="/img/servo-horn.jpg" alt="servo horn" width="100" height="100">
-          <figcaption>Fig.6 - Servo horn</figcaption>
-       </figure> 
-    </td>
-    <td align ="left"> 
-       Each servo motor requires an 
-       <a href="https://www.amazon.ca/gp/product/B00NOGMK3M/ref=ppx_yo_dt_b_asin_title_o04_s00?ie=UTF8&psc=1">aluminium round servo horn with a 25 tooth spline</a>. 
     </td>   
   </tr>
 </table>  
