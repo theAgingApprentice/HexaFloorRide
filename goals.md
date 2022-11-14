@@ -1,6 +1,6 @@
 # Project Goals
 
-This repository contains the code and documentation that supports the **Hexapod Robot** project. The goals of this project are as follows.
+This repository contains the code and documentation that supports the **HexaFloorRide Robot** project. The goals of this project are as follows.
 
 ## Functional Goals
 
@@ -12,7 +12,7 @@ This repository contains the code and documentation that supports the **Hexapod 
 ## Software Goals
 
 * Understand the Arduino inverse kinematic library - _Incomplete_
-* Develop a custom inverse kinematic algorithm - _Incomplete_
+* Develop a custom inverse kinematic algorithm - _Complete_
 * Break code into function include files - _Incomplete_
 * Settle on a new set of coding standards - _Incomplete_
 
@@ -24,4 +24,4 @@ This repository contains the code and documentation that supports the **Hexapod 
 ## Github/Dev Process Goals
 
 * Learn to use Git to recall past code commits - _Incomplete_
-* Learn to use releases in GitHub - _Incomplete_
+* Learn to use releases in GitHub - _Complete_
