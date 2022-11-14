@@ -33,7 +33,7 @@ In order to make use of the code in this repository you will require the followi
 * A HexaFloorRide robot made up of [this hardware](/docs/hexaFloorRideHardware.md).
 * The [HexaFloorRide custom PCB](/docs/hexaFloorRideCircuit.md).
 * An [MQTT broker](/docs/MQTTbroker.md) used by the robot's [MQTT web interface](/docs/hexaFloorRideWebInterface.md).  
-* A [clone](/docs/cloneRepository.md) of the HexaFloorRide gitHub repository into your own local Git repository. To learn how we set up our diredtory structcure please refer to [this document](https://va3wam.github.io/versionControl/).
+* A [clone](/docs/cloneRepository.md) of the HexaFloorRide gitHub repository into your own local Git repository. To learn how we set up our directory structure please refer to [this document](https://va3wam.github.io/versionControl/).
 
 ### Development Software Stack
 
