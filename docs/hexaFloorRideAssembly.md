@@ -45,7 +45,7 @@ Repeat the steps in this section three times in order to create the three left l
   <tr>
     <td align ="left"> 
         <figure>
-           <img src="/HexaFloorRide/physicalDesign/fusionExports/hexaFloorRideLeftLeg.png" alt="Left Leg"> </th>
+           <img src="/hexaFloorRide/physicalDesign/fusionExports/hexaFloorRideLeftLeg.png" alt="Left Leg"> </th>
            <figcaption>Fig.2 - HexaFloorRide left leg assembly</figcaption>
         </figure> 
     </td>
@@ -73,7 +73,7 @@ Repeat the steps in this section six times in order to attach all six legs to th
   <tr>
     <td align ="left"> 
        <figure>
-          <img src="/HexaFloorRide/physicalDesign/fusionExports/hexaFloorRideProfileShadedAll.png" alt="Full robot assembly" width="750" height="750"> 
+          <img src="/hexaFloorRide/physicalDesign/fusionExports/hexaFloorRideProfileShadedAll.png" alt="Full robot assembly" width="750" height="750"> 
           <figcaption>Fig.3 - Attaching legs to body</figcaption>
        </figure> 
     </td>
