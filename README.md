@@ -30,9 +30,9 @@ Here is an index of links to helpful documents found in this repository.
 
 In order to make use of the code in this repository you will require the following items.
 
-* A HexaFloorRide robot made up of [this hardware](/docs/HexaFloorRideHardware.md).
-* The [HexaFloorRide custom PCB](/docs/HexaFloorRideCircuit.md).
-* An [MQTT broker](/docs/MQTTbroker.md) used by the robot's [MQTT web interface](/docs/HexaFloorRideWebInterface.md).  
+* A HexaFloorRide robot made up of [this hardware](/docs/hexaFloorRideHardware.md).
+* The [HexaFloorRide custom PCB](/docs/hexaFloorRideCircuit.md).
+* An [MQTT broker](/docs/MQTTbroker.md) used by the robot's [MQTT web interface](/docs/hexaFloorRideWebInterface.md).  
 * A [clone](/docs/cloneRepository.md) of the HexaFloorRide gitHub repository into your own local Git repository. To learn how we set up our diredtory structcure please refer to [this document](https://va3wam.github.io/versionControl/).
 
 ### Development Software Stack
