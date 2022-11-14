@@ -52,7 +52,7 @@ HexaFloorRide's firmware is intended to run on the Espressif ESP WROOM32 "Softwa
 
 ### Installing
 
-A set of instructions on how to install the source code for theAgingApprentice projects can be found [here](https://theAgingApprentice.github.io/versionControl/).
+A set of instructions on how to install the source code for theAgingApprentice projects can be found [here](https://va3wam.github.io/versionControl/).
 
 ### Testing
 
