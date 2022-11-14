@@ -13,7 +13,7 @@ This project requires that you have a HexaFloorRide robot. The Robot is made up 
 Here is an index of links to helpful documents found in this repository.
 
 ## Constructing a HexaFloorRide Robot
-* List of [hardware components](/docs/HexaFloorRideHardware.md).
+* List of [hardware components](/docs/hexaFloorRideHardware.md).
 * HexaFloorRide [assembly instructions](/docs/HexaFloorRideAssembly.md).
 * How to [wire the motors](/docs/wireMotors.md).
 
