@@ -3,7 +3,7 @@
 This page contains information useful when servicing or operating HexaFloorRide.
 
 ## Assembly
-Full HexaFloorRide assembly instructions can be found [here](HexaFloorRideAssembly.md).
+Full HexaFloorRide assembly instructions can be found [here](hexaFloorRideAssembly.md).
 
 ## Code Updates
 
