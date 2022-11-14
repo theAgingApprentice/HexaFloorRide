@@ -17,7 +17,7 @@ If you are new to making theAgingApprentice projects and wish to emulate the loc
 # Set up PlatformIO
 
 1. In the HexaFloorRide directory create a file called platformio.ini.
-2. Copy the content of the appropriate platform template from the [aaAdmin/platformioAdmin](https://github.com/theAgingApprentice/HexaFloorRide/tree/main/aaAdmin/platformioAdmin) directory. For MAC use [*platformIO-MAC-example.txt*]([https://github.com/theAgingApprentice/HexaFloorRide/tree/main/aaAdmin/platformioAdmin/platformIO-MAC-example.txt](https://github.com/theAgingApprentice/HexaFloorRide/blob/main/aaAdmin/platformioAdmin/platformio.ini.mac).
+2. Copy the content of the appropriate platform template from the [aaAdmin/platformioAdmin](https://github.com/theAgingApprentice/HexaFloorRide/tree/main/aaAdmin/platformioAdmin) directory. For MAC use [*platformIO-MAC-example.txt*](https://github.com/theAgingApprentice/HexaFloorRide/blob/main/aaAdmin/platformioAdmin/platformio.ini.mac).
 3. Open Visual Studio Code. Make sure that there are no active projects or files open.
 4. Navigate to the PlatformIO splash screen (use the house icon in the bottom left bar). Make sure that there are no active projects or files open.
 5. Click the open project button.
