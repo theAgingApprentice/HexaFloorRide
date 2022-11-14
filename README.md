@@ -78,7 +78,7 @@ of conduct, and the process for submitting pull requests to us.
 
 ### Versioning
 
-We use [Semantic Versioning](http://semver.org/) in naming the [releases](https://github.com/theAgingApprentice/hexaBot/releases) of this code base. 
+We use [Semantic Versioning](http://semver.org/) in naming the [releases](https://github.com/theAgingApprentice/HexaFloorRide/releases) of this code base. 
 
 # Kinematic Model
 
