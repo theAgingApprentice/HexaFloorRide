@@ -20,7 +20,7 @@ Here is an index of links to helpful documents found in this repository.
 ## HexaFloorRide User Guides
 * HexaFloorRide's [Web interface](/docs/hexaFloorRideWebInterface.md).
 * How to [configure NVRAM remotely](/docs/hexaFloorRideWebInterface.md#config-updater-screen).
-* How to [perform OTA updates](/docs/hexaFloorRideWebInterface.md.md#ota-updater-screen).
+* How to [perform OTA updates](/docs/hexaFloorRideWebInterface.md#ota-updater-screen).
 * Available [MQTT commands](/docs/mqttCommands.md).
 * [HexaFloorRide Operations manual](/docs/hexaFloorRideOperationManual.md).
 
