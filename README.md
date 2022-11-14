@@ -61,7 +61,7 @@ At this time we have no tools or standards for automated testing of Arduino code
 ### Deployment
 
 Use serial over USB to load the inital code onto the embedded system. Subsequent builds can be uploaded using either serial over USB or 
-a [OTA web interface](/docs/webOTA.md) hosted by the robot which allows you to do [OTA](https://en.wikipedia.org/wiki/Over-the-air_programming) updates.
+a [OTA web interface](/docs/hexaFloorRideWebInterface.md#ota-updater-screen) hosted by the robot which allows you to do [OTA](https://en.wikipedia.org/wiki/Over-the-air_programming) updates.
 
 ### Built With
 
