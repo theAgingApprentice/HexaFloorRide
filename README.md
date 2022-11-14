@@ -38,7 +38,7 @@ In order to make use of the code in this repository you will require the followi
 ### Development Software Stack
 
 * How to [clone](/docs/cloneRepository.md) the HexaFloorRide gitHub repository.
-* Sample [platformio.ini](AA/platformIO-MAC-example.txt) template.
+* Sample [platformio.ini](https://github.com/theAgingApprentice/HexaFloorRide/tree/main/aaAdmin/platformioAdmin) template.
 * Set up [PlatformIO](https://github.com/theAgingApprentice/HexaFloorRide/blob/main/docs/cloneRepository.md#set-up-platformio).
 * Recommended Visual Studio Code [plugins](https://github.com/theAgingApprentice/HexaFloorRide/blob/main/docs/cloneRepository.md#visual-studio-code-plugins).
 
