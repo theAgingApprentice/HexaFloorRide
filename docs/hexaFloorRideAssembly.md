@@ -17,7 +17,7 @@ Repeat the steps in this section three times in order to create the three right 
   <tr>
     <td align ="left"> 
         <figure>
-           <img src="/physicalDesign/fusionExports/hexaFloorRideRightLeg.png" alt="Right Leg"> </th>
+           <img src="/physicalDesign/fusionExports/hexaFloorRideRightLeg.png" alt="Right Leg" width="100" height="100"> </th>
            <figcaption>Fig.1 - HexaFloorRide right leg assembly</figcaption>
         </figure> 
     </td>
@@ -45,7 +45,7 @@ Repeat the steps in this section three times in order to create the three left l
   <tr>
     <td align ="left"> 
         <figure>
-           <img src="/physicalDesign/fusionExports/hexaFloorRideLeftLeg.png" alt="Left Leg"> </th>
+           <img src="/physicalDesign/fusionExports/hexaFloorRideLeftLeg.png" alt="Left Leg" width="100" height="100"> </th>
            <figcaption>Fig.2 - HexaFloorRide left leg assembly</figcaption>
         </figure> 
     </td>
