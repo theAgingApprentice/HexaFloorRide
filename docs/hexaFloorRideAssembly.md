@@ -4,7 +4,7 @@ This document takes you through the steps neccessary to successfully assemble ve
 
 ## What you need
 
-Before you start make sure that you have all [the hardware that you need](/docs/HexaFloorRideHardware.md).
+Before you start make sure that you have all [the hardware that you need](/docs/hexaFloorRideHardware.md).
 
 ## Step 1 - Servo motor mounting preparations
 
