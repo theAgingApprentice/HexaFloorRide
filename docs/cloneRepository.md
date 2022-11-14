@@ -3,7 +3,7 @@
 This page walks you through how to clone the HexaFloorRide GitHub repository to your local Git repository. 
 
 If you are new to making theAgingApprentice projects and wish to emulate the local directory structure that we use then please read 
-[this](https://theAgingApprentice.github.io/versionControl/#local-directory-setup).
+[this](https://va3wam.github.io/versionControl/#local-directory-setup).
 
 ## Step by step instructions
 
@@ -17,7 +17,7 @@ If you are new to making theAgingApprentice projects and wish to emulate the loc
 # Set up PlatformIO
 
 1. In the HexaFloorRide directory create a file called platformio.ini.
-2. Copy the content of the appropriate platform template from the [aaAdmin/platformioAdmin](/platformioAdmin) directory. For MAC use [*platformIO-MAC-example.txt*](/aaAdmin/platformioAdmin/platformIO-MAC-example.txt).
+2. Copy the content of the appropriate platform template from the [./aaAdmin/platformioAdmin](/platformioAdmin) directory. For MAC use [*platformIO-MAC-example.txt*](./aaAdmin/platformioAdmin/platformIO-MAC-example.txt).
 3. Open Visual Studio Code. Make sure that there are no active projects or files open.
 4. Navigate to the PlatformIO splash screen (use the house icon in the bottom left bar). Make sure that there are no active projects or files open.
 5. Click the open project button.
