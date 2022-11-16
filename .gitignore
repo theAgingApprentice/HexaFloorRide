@@ -27,6 +27,8 @@ platformio.ini
 ## in the environment section of your platformio.ini file.
 *output.map
 
-## lock files from LibreOffice
+## Lock files from LibreOffice.
 .~lock*
 
+## Microsoft fake assembly files.  Also used in ransomware hacks.
+.fake 
