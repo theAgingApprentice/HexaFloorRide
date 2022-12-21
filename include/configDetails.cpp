@@ -20,9 +20,13 @@
  {
     String macAdd = WiFi.macAddress(); // Get MAC address as String
     sp2("<setupPerBotConfig> MAC Address: ", macAdd);  // see if we can read this variable
-    if(macAdd == "3C:61:05:4A:DD:98")  // Doug's MAC address
+
+    // handle the case where Doug's using newest ESP32 in new robot,
+    //   and the case where CPU from old robot is swapped into new robot
+    // if you're running this code, it must be a release 2 robot supporting soft servo offsets
+    if(macAdd == "3C:61:05:4A:DD:98" || macAdd == "94:B9:7E:5F:48:B8")  // Doug's 2 ESP32 MAC addresses
     {
-       sp1l("  Doing bot-specific setup for Doug's MAC address");
+       sp1l("  Doing bot-specific setup for one of Doug's MAC addresses");
        // set up the servo calibration offsets
        // PWM value used = (PWM calculated from angle) + (calibration offset for this servo) - 299
        // note that servoOffset[0] is not used
@@ -46,9 +50,13 @@
        servoOffset[18] = 299;
 
     }
-    else if(macAdd == "94:B9:7E:5F:4A:40")  // Andrew's MAC address
+    
+    // handle the case where Andrew's using newest ESP32 in new robot,
+    //   and the case where CPU from old robot is swapped into new robot
+    // if you're running this code, it must be a release 2 robot supporting soft servo offsets
+    else if(macAdd == "94:B9:7E:5F:4A:40" || macAdd == "94:B9:7E:5F:52:DC")  // Andrew's MAC addresses
     {
-       sp1l("  Doing bot-specific setup for Andrew's MAC address");
+       sp1l("  Doing bot-specific setup for one of Andrew's MAC addresses");
        // set up the servo calibration offsets
        // PWM value used = (PWM calculated from angle) + (calibration offset for this servo)
        // note that servoOffset[0] is not used

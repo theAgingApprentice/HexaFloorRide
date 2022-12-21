@@ -30,7 +30,7 @@
  * compiler errors list a function from any of the include files here. 
  *******************************************************************************/
 // Config related variables
-const char* HOST_NAME_PREFIX = "Hexbot"; // Prefix for our unique network name.
+const char* HOST_NAME_PREFIX = "HexaFloorRide"; // Prefix for our unique network name.
 aaChip appCpu; // Access information about the ESP32 application microprocessor (Core1).
 aaNetwork network(HOST_NAME_PREFIX); // WiFi session management.
 bool networkConnected = false;

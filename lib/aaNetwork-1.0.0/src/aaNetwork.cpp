@@ -157,17 +157,7 @@ void aaNetwork::cfgToConsole()
    Serial.printf("%02X",myMacByte[5]);
    Serial.println();
    Serial.print("<aaNetwork::cfgToConsole> ... Robot IP address: "); 
-   const char* myIpChar = _convert.ipToString(WiFi.localIP()).c_str(); // Pointer to char array containing MQTT broker IP address
-   const int8_t ipv4NumBytes = 4; // IPv4 has 4 byte address 
-   byte myIpByte[ipv4NumBytes]; // Byte array for IP address   
-   _convert.ipToByteArray(myIpChar, myIpByte); // Convert to byte array
-   Serial.print(myIpByte[0],DEC);
-   Serial.print(".");
-   Serial.print(myIpByte[1],DEC);
-   Serial.print(".");
-   Serial.print(myIpByte[2],DEC);
-   Serial.print(".");
-   Serial.println(myIpByte[3],DEC); 
+   Serial.println(WiFi.localIP());
    getUniqueName(_uniqueNamePtr); 
    Serial.print("<aaNetwork::cfgToConsole> ... Robot Host Name: "); Serial.println(_uniqueName);
 } // aaNetwork::cfgToConsole()
