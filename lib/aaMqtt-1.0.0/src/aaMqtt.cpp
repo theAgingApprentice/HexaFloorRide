@@ -125,8 +125,14 @@ void aaMqtt::onMqttConnect(bool sessionPresent)
    Serial.print(" at a QOS of "); Serial.print(MQTT_QOS);
    Serial.print(" with a packetId of "); Serial.println(packetIdSub);
    _mqttConnected = true; // Flag that a broker connection now exists.
-   publishMQTT(CHECKIN_MQTT_TOPIC,uniqueName); // Checkin with unique name.
-   Serial.println("<aaMqtt::onMqttConnect> Send checkin message to broker"); 
+   char checkinMsg[100];
+   strcpy(checkinMsg, uniqueName);
+   strcat(checkinMsg, " has IP of ");
+   strcat(checkinMsg, WiFi.localIP().toString().c_str());
+   Serial.print("<aaMqtt::onMqttConnect> Send the following checkin message to broker: "); 
+   Serial.println(checkinMsg);
+   //publishMQTT(CHECKIN_MQTT_TOPIC,uniqueName); // Checkin with unique name.
+   publishMQTT(CHECKIN_MQTT_TOPIC,checkinMsg); // Checkin with unique name.
 } // aaMqtt::onMqttConnect()
 
 /**
