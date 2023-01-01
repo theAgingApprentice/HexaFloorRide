@@ -113,7 +113,7 @@ void aaMqtt::onMqttConnect(bool sessionPresent)
 {
    Serial.print("<aaMqtt::onMqttConnect> Connected to MQTT. Session present = ");
    Serial.println(sessionPresent);
-   char buf[30];
+   char buf[40]; // Why not a variable? Was 30 set to 40 now. This caused new name HexaFloorRide to be 32 long and caused crash. 
    const char* topic = "/commands";
    cmdTopicMQTT = uniqueName;
    Serial.print("<aaMqtt::onMqttConnect> uniqueName = "); Serial.println(cmdTopicMQTT);
