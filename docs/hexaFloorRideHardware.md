@@ -253,12 +253,12 @@ In addition to the parts above you will also need
   <tr>
     <td align ="left"> 
        <figure>
-          <img src="/img/esp32-board-bg.jpg" alt="ESP32 dev board" width="100" height="100">
+          <img src="/img/huzzah32.jpg" alt="ESP32 dev board" width="100" height="100">
           <figcaption>Fig.9 - ESP32 Dev Board</figcaption>
        </figure> 
     </td>
     <td align ="left"> 
-       The brains of HexaFloorRide come courtesy of an Espressif <a href="https://va3wam.github.io/soc/technology%20stack/architecture/SOC-Technology-Stack/">ESP32</a> Software On a Chip (SOC). We are using Zerynth's 30 pin variant of their <a href="https://testzdoc.zerynth.com/reference/boards/doit_esp32/docs/">DOIT Esp32 DevKit v1</a> development board for ESP32 integration into our circuit.  
+       The brains of HexaFloorRide come courtesy of an Espressif <a href="https://va3wam.github.io/soc/technology%20stack/architecture/SOC-Technology-Stack/">ESP32</a> Software On a Chip (SOC). We are using Adafruit 28 pin variant of their <a href="https://www.adafruit.com/product/3619">Huzzah32 Feather</a> development board for ESP32 integration into our circuit.  
     </td>   
   </tr>
 </table>  
