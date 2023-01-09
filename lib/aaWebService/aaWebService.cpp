@@ -291,8 +291,7 @@ void aaWebService::_cfgSetMqttPageHandler()
 {
    server.on("/setMqtt", HTTP_POST, []() 
    {
-      const char* tmp = server.arg("mqttIp").c_str();
-      newMqttBrokerIp(tmp);
+      newMqttBrokerIp(server.arg("mqttIp").c_str());     //issue 71 fix here
       _defineOptionPage(titleName);
       server.sendHeader("Connection", "close");
       server.send(200, "text/html", _optionPage);
