@@ -226,7 +226,37 @@ In addition to the parts above you will also need
        </figure> 
     </td>
     <td align ="left"> 
-       The Hexpod robot requires a way to connect a large number of servo motors to a microcontroller with limit IO pins. To achieve this we use a pair of Adafruit <a href="https://cdn-learn.adafruit.com/downloads/pdf/16-channel-pwm-servo-driver.pdf">PCA9685 16-channel 12-bit servo motor drivers</a>. These motor drivers have their own onboard NXP Semiconductors <a href="http://www.adafruit.com/datasheets/PCA9685.pdf">PCA9685 microcontrollers</a> that handles the details of PWM signalling to the motors so all we have to do is communicate to them via I2C which only consumes 2 IO pins. The defult I2C address for the driver is 64 (0x40). There is also an all-call address at 112 (0x70). Since HexaFloorRide has 18 motors and a single driver can only handle a maximum of 16 we need to use 2 of these drivers. Since both drivers are on the same I2C bus we need to change the I2C address of the second driver to avoid conflicts. Page 13 of the Adafruit document explains how to do this.     
+       The Hexpod robot requires a way to connect a large number of servo motors to a microcontroller with limit IO pins. To achieve this we use a pair of Adafruit <a href="https://cdn-learn.adafruit.com/downloads/pdf/16-channel-pwm-servo-driver.pdf">PCA9685 16-channel 12-bit servo motor drivers</a>. These motor drivers have their own onboard NXP Semiconductors <a href="http://www.adafruit.com/datasheets/PCA9685.pdf">PCA9685 microcontrollers</a> that handles the details of PWM signalling to the motors so all we have to do is communicate to them via I2C which only consumes 2 IO pins. The defult I2C address for the driver is 64 (0x40). There is also an all-call address at 112 (0x70). Since HexaFloorRide has 18 motors and a single driver can only handle a maximum of 16 we need to use 2 of these drivers. Since both drivers are on the same I2C bus we need to change the I2C address of the second driver to avoid conflicts. Page 13 of the Adafruit document explains how to do this. In short, we solder A0 port on the left controller to change it's address to 0x41. 
+
+The motor controller has specific behavours. We tested these behaviours and found the following:
+       
+### Test 1: Fresh start
+      
+Steps:
+* Power up 3.3VDC
+* Power up 5.0 VDC
+* Pull USB cable off ESP32
+* No MQTT motor commands issued
+      
+This resulted in all servos being compliant with no resistance to moving them.
+
+### Test 2: From fresh start issue command to one servo
+
+Steps:
+* Issue command stp,0,0,300
+
+This resulted in the servo no longer being compliant. It now tries to hold its position
+
+### Test 3: Cut power to see if robot goes back to being compliant
+
+1. Cut 3.3VDC power. Servo becomes compliant.
+2. Add 3.3vdc power back. Servo goes back to last position and is no longer compliant.
+3. Cut 5VDC power. Servo becomes compliant.
+4. Add 5vdc power back. Servo goes back to last position and is no longer compliant.
+5. Disconnect USB cable from SOC. Servo becomes compliant.
+6. Reconnect USB cable to SOC. Requirs yu to re-establish console connectin in but does not require a reload of the software. Servo remains compliant.
+
+Based on this testing it appears that the only way to erase past motor commends is to disconnect the console cable from the SOC. Not entirely sure what this means. Is the SOC sending continual messages to the PCA9685 via the library we are using? Cannot think what other explanation there is for this behaviour. Need to break out a scope or protocol analyzer to check on this. Will be very surprised if this is the case.  
     </td>   
   </tr>
 </table>  

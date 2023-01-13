@@ -15,7 +15,7 @@ Here is an index of links to helpful documents found in this repository.
 ## Constructing a HexaFloorRide Robot
 * List of [hardware components](/docs/hexaFloorRideHardware.md).
 * HexaFloorRide [assembly instructions](/docs/hexaFloorRideAssembly.md).
-* How to [wire the motors](/docs/wireMotors.md).
+* How to [wire the motors](/physicalDesign/otherDesignInfo/legRefenceNamesAndHomePositions.pdf).
 
 ## HexaFloorRide User Guides
 * HexaFloorRide's [Web interface](/docs/hexaFloorRideWebInterface.md).
