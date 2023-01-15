@@ -62,7 +62,7 @@ void setup()
    setupPerBotConfig(); // do setup unique to each hexbot.
                         // code for above routine is in flows.cpp
    Log.traceln("<setup> Initialize servo drivers.");
-   setupMobility();
+   // setupMobility();  // not using Andrews leg movement code
    Log.verboseln("<setup> Display robot configuration in console trace.");
    showCfgDetails(); // Show all configuration details in one summary.
    Log.verboseln("<setup> Initialize flows.");
