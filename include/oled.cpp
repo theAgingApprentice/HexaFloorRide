@@ -188,7 +188,7 @@ void displayStatusScreen()
    } // else
    // Current robot goal.
    display.print("Goal: ");
-   display.println(legDirExpl[legDirIndex]);
+   //display.println(legDirExpl[legDirIndex]);
    delay(10);
    yield();      
    display.display(); // actually display all of the above   
