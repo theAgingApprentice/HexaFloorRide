@@ -74,6 +74,7 @@ If you are new to these tools then you may want to read [this](https://randomner
 
 Please read [CONTRIBUTING.md](contributing.md) for details on our code
 of conduct, and the process for submitting pull requests to us.
+If you wish to contribute, please follow our conventions for the use of header files which can be seen [here](./docs/header-files.pdf)
 
 ### Versioning
 
