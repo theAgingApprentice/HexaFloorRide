@@ -6,8 +6,6 @@
 
 #define web_cpp // Precompiler macro used for precompiler check.
 
-#include <main.h> // Header file for all libraries needed by this program.
-
 /**
  * @brief Monitor local web service to see if there are any client requests.
  * @details Call to checkForClientRequest() does two things. First, it causes the 

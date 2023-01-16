@@ -6,9 +6,6 @@
 
 #define connectToMqttBroker_h // Precompiler macro used for precompiler check.
 
-#include <main.h> // Header file for all libraries needed by this program.
-
-
 // TODO #7 : A pingable but non MQTT IP address crash loops code.
 /** 
  * @brief Establish connect to the the MQTT broker.

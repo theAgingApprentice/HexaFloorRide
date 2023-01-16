@@ -6,9 +6,6 @@
 
 #define showCfgDetails_cpp // Precompiler macro used for precompiler check.
 
-#include <main.h> // Header file for all libraries needed by this program.
-
-
 /**
  * @brief Do configuration set up that is unique to each robot, including:
  * - define servo calibration offset values

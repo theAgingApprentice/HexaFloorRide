@@ -6,8 +6,6 @@
 
 #define oled_cpp // Precompiler macro used for precompiler check.
 
-#include <main.h> // Header file for all libraries needed by this program.
-
 /**
  * @brief Hardware Interrupt Service Routine for Button A on OLED display.
  * ==========================================================================*/

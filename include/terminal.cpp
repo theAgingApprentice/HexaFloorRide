@@ -6,8 +6,6 @@
 
 #define terminal_cpp // Precompiler macro used for precompiler check.
 
-#include <main.h> // Header file for all libraries needed by this program.
-
 /**
  * @brief Initialize the serial output.
  * ==========================================================================*/

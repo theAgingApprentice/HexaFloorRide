@@ -2,8 +2,6 @@
 // and is invoked by an include statement in main.cpp
 // routines here have corresponding entries in include/flows.h
 
-
-#include <flows.h>               // including main.h
 int8_t rgbLedClr = 0; //  Track what colour to set the rgb led to next when working on a new flow row.
 void setupFlows()
 {  // initialize params for the accumulation of flow rows from MQTT FLOW commands
