@@ -6,8 +6,6 @@
 #ifndef flows_h   // precompiler check to avoid dupicating this code block.
 #define flows_h  // Precompiler macro used for precompiler check.
 
-#include <main.h>          // get all our header files
-
 // #define debug_servos       // include code to dump out servo move command info to console in mqttBroker.cpp
 
 //
@@ -219,121 +217,6 @@ void setupPerBotConfig();   // do the hardware specific setup
    float sin_m45 = -.707107;      // sin( - 45 degrees)
    float cos_p45 = +.707107;      // cos( + 45 degrees) 
    float cos_m45 = +.707107;     // cos( - 45 degrees)
-
-// quick and dirty easily typed debug commands
-#define sp1(_y) Serial.print(_y);
-//   #define sp1l(_a) Serial.println(_a);
-#define sp1l(_z) Serial.println(_z);
-#define sp1s(_b)     \
-   Serial.print(_b); \
-   Serial.print(" ");
-
-#define sp2(x, y)   \
-   Serial.print(x); \
-   Serial.print(y);
-
-#define sp2s(x, y)    \
-   Serial.print(x);   \
-   Serial.print(" "); \
-   Serial.print(y);   \
-   Serial.print(" ");
-
-#define sp2l(x, y)  \
-   Serial.print(x); \
-   Serial.println(y);
-
-#define sp2sl(x, y)   \
-   Serial.print(x);   \
-   Serial.print(" "); \
-   Serial.println(y);
-
-#define sp3s(a,b,c)   \
-   Serial.print(a);   \
-   Serial.print(" "); \
-   Serial.print(b);   \
-   Serial.print(" "); \
-   Serial.print(c);   \
-   Serial.print(" ");
-
-#define sp3sl(a,b,c)  \
-   Serial.print(a);   \
-   Serial.print(" "); \
-   Serial.print(b);   \
-   Serial.print(" "); \
-   Serial.println(c);
-
-#define sp4s(a,b,c,d)   \
-   Serial.print(a);   \
-   Serial.print(" "); \
-   Serial.print(b);   \
-   Serial.print(" "); \
-   Serial.print(c);   \
-   Serial.print(" "); \
-   Serial.print(d);   \
-   Serial.print(" ");
-
-#define sp4sl(a,b,c,d)   \
-   Serial.print(a);   \
-   Serial.print(" "); \
-   Serial.print(b);   \
-   Serial.print(" "); \
-   Serial.print(c);   \
-   Serial.print(" "); \
-   Serial.println(d);
-
-#define sp5s(a,b,c,d,e)   \
-   Serial.print(a);   \
-   Serial.print(" "); \
-   Serial.print(b);   \
-   Serial.print(" "); \
-   Serial.print(c);   \
-   Serial.print(" "); \
-   Serial.print(d);   \
-   Serial.print(" "); \
-   Serial.print(e);   \
-   Serial.print(" ");
-
-#define sp5sl(a,b,c,d,e)   \
-   Serial.print(a);   \
-   Serial.print(" "); \
-   Serial.print(b);   \
-   Serial.print(" "); \
-   Serial.print(c);   \
-   Serial.print(" "); \
-   Serial.print(d);   \
-   Serial.print(" "); \
-   Serial.println(e);
-
-#define sp6s(a,b,c,d,e,f)   \
-   Serial.print(a);   \
-   Serial.print(" "); \
-   Serial.print(b);   \
-   Serial.print(" "); \
-   Serial.print(c);   \
-   Serial.print(" "); \
-   Serial.print(d);   \
-   Serial.print(" "); \
-   Serial.print(e);   \
-   Serial.print(" "); \
-   Serial.print(f);   \
-   Serial.print(" ");
-
-#define sp6sl(a,b,c,d,e,f)   \
-   Serial.print(a);   \
-   Serial.print(" "); \
-   Serial.print(b);   \
-   Serial.print(" "); \
-   Serial.print(c);   \
-   Serial.print(" "); \
-   Serial.print(d);   \
-   Serial.print(" "); \
-   Serial.print(e);   \
-   Serial.print(" "); \
-   Serial.println(f);
-
-#define sp Serial.print(" ");
-#define nl Serial.println();
-
 
 // routine call templates
 bool prepNextLine();

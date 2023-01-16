@@ -40,8 +40,6 @@
 
 #define _HUZZAH32_GPIO_PINS_H // Preprocessor variable used by above check
 
-#include <Arduino.h> // Required for variable type declarations. Arduino Core for ESP32. Comes with Platform.io
-
 /** 
  * The Adafruit Huzzah32 dev board has 28 pins of which 21 are usable to us. 
  * In order for the numbering system used in this file to make sense orient the 

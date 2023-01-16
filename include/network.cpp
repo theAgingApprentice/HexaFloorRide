@@ -6,8 +6,6 @@
 
 #define network_h // Precompiler macro used for precompiler check.
 
-#include <main.h> // Header file for all libraries needed by this program.
-
 /**
  * @brief Initialize Wifi and MQTT.
  * ==========================================================================*/

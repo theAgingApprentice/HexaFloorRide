@@ -7,21 +7,19 @@
  *
  * This code is the firmware for the six legged robot called Hexbot. Full
  * details on how to get the circuit and chassis for this robot are found
- * [here](https://github.com/va3wam/hexBot).
+ * [here](https://github.com/theAgingApprentice/HexaFloorRide).
  *
  * @section dependencies Dependencies
  *
- * This sketch depends on the libraries located in the main.h file located in
- * the include directory of this repository.
- * // test change in main.cpp as part of branch header1
- *
+ * This sketch depends on the libraries which are #included further down in this file
+ * 
  * @section author Author(s)
  *
  * Written by Old Squire and Doug Elliott.
  *
  * @section license license
  *
- * Copyright 2021 the Aging Apprentice
+ * Copyright 2023 the Aging Apprentice
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
  * deal in the Software without restriction, including without limitation the
@@ -39,8 +37,50 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *****************************************************************************/
+
+// Arduino.h needs to precede reading .h files because they use types that it defines
+#include <Arduino.h> // Arduino Core for ESP32. Comes with PlatformIO.
+
 #include <main.h>    // Header file for all libraries needed by this program.
-unsigned long timer; // Milli count for next action.
+// main.h has includes for all other .h files. No other files should include .h files
+
+// had to move following line down to avoid compiler errors
+//  suspect there are things in global_variables that should be elsewhere
+//#include <global_variables.cpp>     // global variable declarations and global macros
+
+
+// include all libraries =======================================================================
+// libraries that we've modified
+#include <aaChip.h> // Core (CPU) details that the code running on.
+#include <aaNetwork.h> // Wifi functions. 
+#include <aaWebService.h> // Realtime web-based network config and OTA code updates.
+#include <aaFlash.h> // Use Flash memory to store values that persist past reboot.
+#include <aaMqtt.h> // Use MQTT for remote management and monitoring.
+
+// libraries used as supplied by external sources
+#include <Wire.h> // Required for I2C communication.
+#include <Adafruit_PWMServoDriver.h> // https://github.com/adafruit/Adafruit-PWM-Servo-Driver-Library.
+#include <ArduinoLog.h> // https://github.com/thijse/Arduino-Log.
+#include <Adafruit_GFX.h> // OLED graphics
+#include <Adafruit_SH110X.h> // OLED text
+
+
+#include <global_variables.cpp>  // global variable declarations and global macros ====================
+
+// our code modules and code "bags" ===================================================================
+#include <flows.cpp>          // routines relates to leg movements
+// next 2 files have to be in this order due to dependencies
+//#include <huzzah32_gpio_pins.h> // Map pins on Adafruit Huzzah32 dev board to friendly names.
+//#include <hexbot_gpio_pins.h> // Map Hexbot specific pin naming to generic development board pin names. 
+#include <terminal.cpp> // Serial port management.
+#include <configDetails.cpp> // Show the environment details of this application.
+#include <web.cpp> // Manage locally hosted web service. 
+#include <rgbLed.cpp> // Control status LEDs.
+#include <network.cpp> // Control networking activities.
+#include <mqttBroker.cpp> // Establish connect to the the MQTT broker.
+#include <i2c.cpp> // Scan I2C buses to see what devices are present.
+#include <oled.cpp> // Control OLED.
+
 
 /**
  * @brief Standard Arduino initialization routine.
@@ -60,8 +100,7 @@ void setup()
    setStdRgbColour(WHITE); // Indicates that boot up is in progress.
    Log.verboseln("<setup> Set up wifi connection.");
    setupNetwork();
-   setupPerBotConfig(); // do setup unique to each hexbot.
-                        // code for above routine is in flows.cpp
+   setupPerBotConfig(); // do setup unique to each hexbot.(configDetails.cpp)
    Log.traceln("<setup> Initialize servo drivers.");
    // setupMobility();  // not using Andrews leg movement code
    Log.verboseln("<setup> Display robot configuration in console trace.");
@@ -70,7 +109,6 @@ void setup()
    setupFlows();
    Log.verboseln("<setup> Review status flags to see how boot sequence went.");
    checkBoot();
-   timer = millis(); // Timer for motor driver signalling.
    Log.traceln("<setup> End of setup.");
 } // setup()
 

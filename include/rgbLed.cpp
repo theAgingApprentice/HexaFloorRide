@@ -6,8 +6,6 @@
 
 #define rgbLed_cpp // Precompiler macro used for precompiler check.
 
-#include <main.h> // Header file for all libraries needed by this program.
-
 /**
  * @brief Set up a structure array of pre-defined colours for RGB LED.
  * @details The rest button has an embedded RGB LED that contains three
