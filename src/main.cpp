@@ -44,12 +44,8 @@
 #include <main.h>    // Header file for all libraries needed by this program.
 // main.h has includes for all other .h files. No other files should include .h files
 
-// had to move following line down to avoid compiler errors
-//  suspect there are things in global_variables that should be elsewhere
-//#include <global_variables.cpp>     // global variable declarations and global macros
 
-
-// include all libraries =======================================================================
+// include all libraries ============================================================================
 // libraries that we've modified
 #include <aaChip.h> // Core (CPU) details that the code running on.
 #include <aaNetwork.h> // Wifi functions. 
@@ -64,14 +60,27 @@
 #include <Adafruit_GFX.h> // OLED graphics
 #include <Adafruit_SH110X.h> // OLED text
 
-
+// global variables ===================================================================================
 #include <global_variables.cpp>  // global variable declarations and global macros ====================
+
+//=====================================================================================================
+// OOB stuff that used to be in main.h
+// it's positioned here because some of it has to be compiled before code that refers to it.
+// However, it needs to follow the library inclusions above
+// (being called from setup() isn't sufficient, because compiler needs to see this early)
+
+   // these seem to be calls to OOP constructors or methods, which our new header standard excludes
+   aaChip appCpu; // Access information about the ESP32 application microprocessor (Core1).
+   aaNetwork network(HOST_NAME_PREFIX); // WiFi session management.
+   aaFlash flash; // Non-volatile memory management. 
+   aaMqtt mqtt; // Publish and subscribe to MQTT broker. 
+   Adafruit_PWMServoDriver pwmDriver[numDrivers]; // Servo driver object.
+   aaWebService localWebService(WEB_APP_TITLE); // Webserver hosted by microcontroller.
+   Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
+   IPAddress brokerIP; // IP address of the MQTT broker.
 
 // our code modules and code "bags" ===================================================================
 #include <flows.cpp>          // routines relates to leg movements
-// next 2 files have to be in this order due to dependencies
-//#include <huzzah32_gpio_pins.h> // Map pins on Adafruit Huzzah32 dev board to friendly names.
-//#include <hexbot_gpio_pins.h> // Map Hexbot specific pin naming to generic development board pin names. 
 #include <terminal.cpp> // Serial port management.
 #include <configDetails.cpp> // Show the environment details of this application.
 #include <web.cpp> // Manage locally hosted web service. 
@@ -81,6 +90,31 @@
 #include <i2c.cpp> // Scan I2C buses to see what devices are present.
 #include <oled.cpp> // Control OLED.
 
+// trace message generation function
+//   -calls to this function are done as a result of encountering the trace macro
+//   -operation of this function is controlled in real time by entries in the traceTable tTrce[maxTraceNum]
+//   -traceTable can be modified in real time by an MQTT command
+//   -documentation for tracing is in docs/trace-design.pd
+void tracer(String name, int subID, int functionID, int tType, int tLevel, String dataLabel, float var)
+{
+   // crude initial implementation unconditionaly prints a formatted message
+   String type = "?";    // translate type to letter that starts message
+   if(tType == tStatus) {type = "S";}
+   if(tType == tWarn  ) {type = "W";}
+   if(tType == tError)  {type = "E";}
+
+   // similar for trace level
+   String level = "?";
+   if(tLevel == tTop) {level = "T";}
+   if(tLevel == tMed) {level = "M";}
+   if(tLevel == tLow) {level = "L";}
+
+   // build message in a string that can go to console and/or MQTT
+   Serial.println("===== about to print trace message ====");
+   String tMsg = "~" + type + level +" "+ name +","+ subID +"("+ functionID +"):" +dataLabel +var ;   // build first part of message
+   sp1l(tMsg) ;     // print the string followed by a newline
+   return ;
+}
 
 /**
  * @brief Standard Arduino initialization routine.
@@ -88,8 +122,10 @@
 void setup()
 {
    setupSerial(); // Set serial baud rate.
+   setupTracing();      //build the table that controls trace generation before we do any
    Log.begin(LOG_LEVEL_VERBOSE, &Serial, true);
    Log.traceln("<setup> Start of setup.");
+   trace("Setup-trace-test",1,3,1,1,"test trace from setup()  ",0);
    Log.verboseln("<setup> Initialize I2C buses.");
    Wire.begin(G_I2C_BUS0_SDA, G_I2C_BUS0_SCL, I2C_BUS0_SPEED); // Init I2C bus0.
    scanBus0();                                                 // Scan bus0 and show connected devices.
@@ -102,7 +138,6 @@ void setup()
    setupNetwork();
    setupPerBotConfig(); // do setup unique to each hexbot.(configDetails.cpp)
    Log.traceln("<setup> Initialize servo drivers.");
-   // setupMobility();  // not using Andrews leg movement code
    Log.verboseln("<setup> Display robot configuration in console trace.");
    showCfgDetails(); // Show all configuration details in one summary.
    Log.verboseln("<setup> Initialize flows.");

@@ -131,13 +131,68 @@
 #define sp Serial.print(" ");
 #define nl Serial.println();
 
+// symbols to help in constructing trace messages
+// first, the message type
+const int tStatus = 1;
+const int tWarn = 2;
+const int tError = 3;
+
+//next the message level
+const int tTop = 1;
+const int tMed = 2;
+const int tLow = 3;
+
+// define the table that defines, on the fly, how individual traces are to be processed and routed
+
+// index 1 in this table is a special case, and defines the global trace enabling, using bit definitions below
+   const int t_global = 1;        // symbol for this special index
+// index 2 is a special case that defines where tracemessages are sent, using these bit definitions
+   const int t_routing = 2;       // symbol for this special index
+
+   const int tb_toConsole = 1;    // if this bit is set, trace messages will go to console = serial monitor
+   const int tb_toMQTT = 2;       // if this bit is set, trace messages will go to MQTT topic ??? TBD
+                        // it is OK to set both these bits, which will cause messages to go to both destinations
+
+// The remaining indices, starting at 3 define trace handling for a particular function.
+// The index number appears in the trace command that triggers the trace message
+// There is also a sub index, so you can have multiple traces in a function that can be differentiated
+// Used indices are documented in the comments next to the table entry initialization
+// This table initialization is done at compile time, and is the default tracing configuration
+// However, an MQTT command can be used to overwrite the numbers in the table, and to display it.
+//
+// definition of bits used to build table values for each function
+   const int tb_all =       1;    // all traces are enabled
+   const int tb_allTop =    2;    // all traces at Top level
+   const int tb_allMed =    4;    // all traces at Medium level
+   const int tb_allLow =    8;    // all traces at Low level
+   const int tb_allStatus =16;    // all traces with status info
+   const int tb_allWarn =  32;    // all traces with warning info
+   const int tb_allError = 64;    // all traces with error info
+   const int tb_allTS    =128;    // all traces with top level status info
+   const int tb_allTW    =256;    // all traces with top level warning info
+   const int tb_allTE    =512;    // all traces with top level error info
+   const int tb_allMS    =128;    // all traces with medium level status info
+   const int tb_allMW    =256;    // all traces with medium level warning info
+   const int tb_allME    =512;    // all traces with medium level error info
+   const int tb_allLS    =128;    // all traces with low level status info
+   const int tb_allLW    =256;    // all traces with low level warning info
+   const int tb_allLE    =512;    // all traces with low level error info
+
+   #define maxTraceCount 100       // support for up to 100 trace messages
+
+   //int tTable[maxTraceCount];    // reserve space for the trace control table
+   uint16_t tTable[100];
+
+   // compiler won't let me populate the table here, so I'm going to try in configDetails.cpp
+void tracer(String, int, int, int, int, String, float);
+#define trace(name,subID,functionID,tType,tLevel,labelText,var)  \
+   tracer(name, subID, functionID, tType, tLevel, labelText, var);
+
 int8_t displayPage = 1;
 
 // start of big xfer from main.h =============================
 const char* HOST_NAME_PREFIX = "HexaFloorRide"; // Prefix for our unique network name.
-//const char* HOST_NAME_PREFIX = "Hexbot"; // Prefix for our unique network name.
-aaChip appCpu; // Access information about the ESP32 application microprocessor (Core1).
-aaNetwork network(HOST_NAME_PREFIX); // WiFi session management.
+
 bool networkConnected = false;
 bool mqttBrokerConnected = false;
 bool oledConnected = false;
@@ -146,9 +201,8 @@ bool motorController2Connected = false;
 bool mobilityStatus = false;
 //int8_t displayPage = 1;
 // MQTT related variables.
-aaFlash flash; // Non-volatile memory management. 
-aaMqtt mqtt; // Publish and subscribe to MQTT broker. 
-IPAddress brokerIP; // IP address of the MQTT broker.
+
+
 char uniqueName[HOST_NAME_SIZE]; // Character array that holds unique name for Wifi network purposes. 
 char *uniqueNamePtr = &uniqueName[0]; // Pointer to first address position of unique name character array.
 char healthTopicTree[50] = ""; // Char array to hold full health topic tree name.
@@ -203,7 +257,7 @@ const float origXOffset = 2.5; // Distance the knee is offset from the origin al
 #define PCA9685ServoDriver6 0x45 // I2C address for sixth servo driver.
 #define PCA9685ServoDriver7 0x46 // I2C address for seventh servo driver.
 // Define OLED related variables.
-Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
+
 bool buttonA_flag = false; // Flag used by hardware ISR for button A.
 bool buttonB_flag = false; // Flag used by hardware ISR for button B.
 bool buttonC_flag = false; // Flag used by hardware ISR for button C.
@@ -214,7 +268,7 @@ uint8_t textBaseY = 8; // Smallest font height in pixels.
 uint8_t oledOrientation = 3; // Orientation of OLED. 
 // Define servoLegs related variables that are still used by other code
 #define numDrivers 2 // Number of servo motor drivers robot has.
-Adafruit_PWMServoDriver pwmDriver[numDrivers]; // Servo driver object.
+
 uint16_t pwmClkStart = 0; // Start value of count-up PWM high signal.
 
 // Define terminal related variables.
@@ -222,7 +276,6 @@ unsigned long serialBaudRate = 115200; // Serial terminal baud rate.
 // Define local web server related variables.
 bool isWebServer; // True is web server running.
 const char* WEB_APP_TITLE = "Hexbot"; // App name for web page titles.
-aaWebService localWebService(WEB_APP_TITLE); // Webserver hosted by microcontroller.
 
 /************************************************************************************
  * @section funcDeclare Declare functions found in the include files.
@@ -287,9 +340,4 @@ void startWebServer();
  *******************************************************************************/
 
 
-/************************************************************************************
- * @section mainDeclare Declare functions in main.cpp.
- ************************************************************************************/
-void setup(); // Arduino mandatory function #1. Runs once at boot. 
-void loop(); // Arduino mandatory function #2. Runs continually.
-//============================================================
+
