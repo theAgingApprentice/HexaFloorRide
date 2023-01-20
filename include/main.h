@@ -15,21 +15,9 @@
  * @section mainDeclare Declare functions in main.cpp.
  ************************************************************************************/
 void tracer(String name, int subID, int functionID, int tType, int tLevel, String dataLabel, float var);
-void setup(); // Arduino mandatory function #1. Runs once at boot. 
-void loop(); // Arduino mandatory function #2. Runs continually.
+// void setup(); // Arduino mandatory function #1. Runs once at boot. 
+// void loop(); // Arduino mandatory function #2. Runs continually.
 
-
-/*******************************************************************************
- * @section mainIncludes Included libraries.
- *******************************************************************************/
-
-
-/*******************************************************************************
- * @section mainVars Global variable definitions.
- * @details In order to get rid of "error: 'xxx' was not declared in this scope"
- * compiler errors list a function from any of the include files here. 
- *******************************************************************************/
-// Config related variables
 
 
 #endif // End of precompiler protected code block
