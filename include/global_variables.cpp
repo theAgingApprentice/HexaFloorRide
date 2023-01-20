@@ -234,12 +234,7 @@ typedef struct
 }struct_Colour; 
 struct_Colour statusColour[numColoursSupported]; // Array of colours.
 struct_Colour memColour; // Used to switch back RGB LED colour when it is temporarily changed.
-// DAE Inverted kinematic related variables.
-const float footLen = 11; // Distance from ankle to toe (foot) is 11cm. 
-const float shinLen = 7.5; // Distance from knee to ankle (shin) is 7.5cm.
-const float toeOffset = 17; // Angle that toe is offset from 90deg of ankle joint is 17 degrees.
-// const uint8_t origXOffset = 2.92; // Distance the knee is offset from the origin along the x axis.
-const float origXOffset = 2.5; // Distance the knee is offset from the origin along the x axis.
+
 // I2C related variables.
 #define I2C_BUS0_SPEED 400000 // Define speed of I2C bus 2. Note 400KHz is the upper speed limit for ESP32 I2C
 #define I2C_BUS1_SPEED 100000 // Define speed of I2C bus 2. Note 100KHz is the upper speed limit for ESP32 I2C
@@ -256,8 +251,8 @@ const float origXOffset = 2.5; // Distance the knee is offset from the origin al
 #define PCA9685ServoDriver5 0x44 // I2C address for fifth servo driver.
 #define PCA9685ServoDriver6 0x45 // I2C address for sixth servo driver.
 #define PCA9685ServoDriver7 0x46 // I2C address for seventh servo driver.
-// Define OLED related variables.
 
+// Define OLED related variables.
 bool buttonA_flag = false; // Flag used by hardware ISR for button A.
 bool buttonB_flag = false; // Flag used by hardware ISR for button B.
 bool buttonC_flag = false; // Flag used by hardware ISR for button C.
@@ -266,13 +261,14 @@ uint8_t oledY = 64; // Screen height in pixels.
 uint8_t textBaseX = 6; // Smallest font width in pixels.
 uint8_t textBaseY = 8; // Smallest font height in pixels.
 uint8_t oledOrientation = 3; // Orientation of OLED. 
+
 // Define servoLegs related variables that are still used by other code
 #define numDrivers 2 // Number of servo motor drivers robot has.
-
 uint16_t pwmClkStart = 0; // Start value of count-up PWM high signal.
 
 // Define terminal related variables.
 unsigned long serialBaudRate = 115200; // Serial terminal baud rate.
+
 // Define local web server related variables.
 bool isWebServer; // True is web server running.
 const char* WEB_APP_TITLE = "Hexbot"; // App name for web page titles.
