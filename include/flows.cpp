@@ -75,7 +75,7 @@ void setupFlows()
    legNum[6] = "6" ;
 
 // initialize dynamic home position in local coords for each leg
-trace(t$M,"completed flows setup",0)
+trace(t$L,"completed flows setup",0)
 
 } // void setupFlows()
 
@@ -103,6 +103,16 @@ trace(t$M,"completed flows setup",0)
  * ==========================================================================*/
 int32_t mapDegToPWM(float degrees, int servo)
 {
+   // tracing preparation for this routine
+   #define localRName "mapDegToPWM"
+   #define locanRNum 4
+   // some test traces, one for all trace types
+   trace(t$H,"sample High level info",0) ;
+   trace(t$M,"sample Medium level info",0) ;
+   trace(t$L,"sample Low level info",0) ;
+   trace(t$W,"sample Warning message",0) ;
+   trace(t$E,"sample Error message",0) ;
+
    // degrees is the desired angle, between -90 and +90 degrees
    // servo is the servo number (1 - 18) used for software position calibration table lookup
    // maxServoAngle is the max allowed deviation from center position, in degrees
