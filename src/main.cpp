@@ -90,31 +90,6 @@
 #include <i2c.cpp> // Scan I2C buses to see what devices are present.
 #include <oled.cpp> // Control OLED.
 
-// trace message generation function
-//   -calls to this function are done as a result of encountering the trace macro
-//   -operation of this function is controlled in real time by entries in the traceTable tTrce[maxTraceNum]
-//   -traceTable can be modified in real time by an MQTT command
-//   -documentation for tracing is in docs/trace-design.pd
-void tracer(String name, int subID, int functionID, int tType, int tLevel, String dataLabel, float var)
-{
-   // crude initial implementation unconditionaly prints a formatted message
-   String type = "?";    // translate type to letter that starts message
-   if(tType == tStatus) {type = "S";}
-   if(tType == tWarn  ) {type = "W";}
-   if(tType == tError)  {type = "E";}
-
-   // similar for trace level
-   String level = "?";
-   if(tLevel == tTop) {level = "T";}
-   if(tLevel == tMed) {level = "M";}
-   if(tLevel == tLow) {level = "L";}
-
-   // build message in a string that can go to console and/or MQTT
-   Serial.println("===== about to print trace message ====");
-   String tMsg = "~" + type + level +" "+ name +","+ subID +"("+ functionID +"):" +dataLabel +var ;   // build first part of message
-   sp1l(tMsg) ;     // print the string followed by a newline
-   return ;
-}
 
 /**
  * @brief Standard Arduino initialization routine.
@@ -122,10 +97,9 @@ void tracer(String name, int subID, int functionID, int tType, int tLevel, Strin
 void setup()
 {
    setupSerial(); // Set serial baud rate.
-   setupTracing();      //build the table that controls trace generation before we do any
+    setupTracing();      //build the table that controls trace generation before we do any
    Log.begin(LOG_LEVEL_VERBOSE, &Serial, true);
    Log.traceln("<setup> Start of setup.");
-   trace("Setup-trace-test",1,3,1,1,"test trace from setup()  ",0);
    Log.verboseln("<setup> Initialize I2C buses.");
    Wire.begin(G_I2C_BUS0_SDA, G_I2C_BUS0_SCL, I2C_BUS0_SPEED); // Init I2C bus0.
    scanBus0();                                                 // Scan bus0 and show connected devices.

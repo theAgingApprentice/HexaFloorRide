@@ -231,7 +231,7 @@ const int tLow = 3;
    int tTable[maxTraceCount];    // reserve space for the trace control table
   
    // compiler won't let me populate the table here, so I'm going to try in configDetails.cpp
-   */
+   
    //===========================
    // now to fill in control info in tTable[maxTraceCount], (which may be overwritten by MQTT commands)
 
@@ -244,6 +244,13 @@ const int tLow = 3;
    // controls for individual numbered traces
    tTable[3] = tb_all;           //func= mainFicticious()  all SubID's are always enabled for this function
    // additional entries here as traces are added to code
+   */
+    // first 2 table entries are special purpose ones
+  $traceTab[t$global] = t$E + t$W ;  // error and warning messages are globally enabled
+  $traceTab[t$routing] = t$SM ;     // direct traces messages to serial monitor
+
+  // following table entries specified trace enables for individua routines
+  $traceTab[3] = t$H + t$M + t$L + t$W + t$E ;  // routine 3 = setupFlows() has all traces enabled
 } // void setupTracing()
 
 #endif // End of precompiler protected code block

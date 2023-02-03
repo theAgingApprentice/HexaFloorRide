@@ -4,7 +4,15 @@
 
 int8_t rgbLedClr = 0; //  Track what colour to set the rgb led to next when working on a new flow row.
 void setupFlows()
-{  // initialize params for the accumulation of flow rows from MQTT FLOW commands
+{  
+   // test tracing function with a simple "we got here" trace
+   // following is used to save typing in trace macro calls, at the cost of compiler redefinition warnings
+   #define localRName "setupFlows"
+   // following is used to save typing in trace macro calls, at the cost of compiler redefinition warnings
+   #define localRNum 3
+   trace(t$M,"entered routine", 0)
+   
+   // initialize params for the accumulation of flow rows from MQTT FLOW commands
    f_active = 0;      // what row number we fill next, and also the count of rows seen for current flow
                               // set up leg info that's indexable by leg number from 1 to 6
 
@@ -67,6 +75,7 @@ void setupFlows()
    legNum[6] = "6" ;
 
 // initialize dynamic home position in local coords for each leg
+trace(t$M,"completed flows setup",0)
 
 } // void setupFlows()
 

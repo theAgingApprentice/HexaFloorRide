@@ -132,26 +132,24 @@
 #define nl Serial.println();
 
 // symbols to help in constructing trace messages
-// first, the message type
-const int tStatus = 1;
-const int tWarn = 2;
-const int tError = 3;
 
-//next the message level
-const int tTop = 1;
-const int tMed = 2;
-const int tLow = 3;
+// first, the message type
+const int t$H = 1;      // high level info/status
+const int t$M = 2;      // medium level info/status
+const int t$L = 4;      // low level info/status
+const int t$W = 8;      // warning
+const int t$E = 16;     // error
 
 // define the table that defines, on the fly, how individual traces are to be processed and routed
 
 // index 1 in this table is a special case, and defines the global trace enabling, using bit definitions below
-   const int t_global = 1;        // symbol for this special index
+   const int t$global = 1;        // symbol for this special index
 // index 2 is a special case that defines where tracemessages are sent, using these bit definitions
-   const int t_routing = 2;       // symbol for this special index
+   const int t$routing = 2;       // symbol for this special index
 
-   const int tb_toConsole = 1;    // if this bit is set, trace messages will go to console = serial monitor
-   const int tb_toMQTT = 2;       // if this bit is set, trace messages will go to MQTT topic ??? TBD
-                        // it is OK to set both these bits, which will cause messages to go to both destinations
+   const int t$SM = 1;    // if this bit is set, trace messages will go to console = serial monitor
+   const int t$MQ = 2;     // if this bit is set, trace messages will go to MQTT topic ??? TBD
+                          // it is OK to set both these bits, which will cause messages to go to both destinations
 
 // The remaining indices, starting at 3 define trace handling for a particular function.
 // The index number appears in the trace command that triggers the trace message
@@ -160,33 +158,23 @@ const int tLow = 3;
 // This table initialization is done at compile time, and is the default tracing configuration
 // However, an MQTT command can be used to overwrite the numbers in the table, and to display it.
 //
-// definition of bits used to build table values for each function
-   const int tb_all =       1;    // all traces are enabled
-   const int tb_allTop =    2;    // all traces at Top level
-   const int tb_allMed =    4;    // all traces at Medium level
-   const int tb_allLow =    8;    // all traces at Low level
-   const int tb_allStatus =16;    // all traces with status info
-   const int tb_allWarn =  32;    // all traces with warning info
-   const int tb_allError = 64;    // all traces with error info
-   const int tb_allTS    =128;    // all traces with top level status info
-   const int tb_allTW    =256;    // all traces with top level warning info
-   const int tb_allTE    =512;    // all traces with top level error info
-   const int tb_allMS    =128;    // all traces with medium level status info
-   const int tb_allMW    =256;    // all traces with medium level warning info
-   const int tb_allME    =512;    // all traces with medium level error info
-   const int tb_allLS    =128;    // all traces with low level status info
-   const int tb_allLW    =256;    // all traces with low level warning info
-   const int tb_allLE    =512;    // all traces with low level error info
+// The message type bits like t$H defined above are used to set global enables, and per-routine enables
+// (using simple numbers for routine IDs now, but can COBOLize that later)
 
-   #define maxTraceCount 100       // support for up to 100 trace messages
+   #define maxTraceCount 100       // support for up to 100 routines that each have multiple trace messages
 
-   //int tTable[maxTraceCount];    // reserve space for the trace control table
-   uint16_t tTable[100];
+   int $traceTab[maxTraceCount];    // reserve space for the trace control table
+  
+    // compiler won't let me populate the table here, so I'm going to try in configDetails.cpp
 
-   // compiler won't let me populate the table here, so I'm going to try in configDetails.cpp
-void tracer(String, int, int, int, int, String, float);
-#define trace(name,subID,functionID,tType,tLevel,labelText,var)  \
-   tracer(name, subID, functionID, tType, tLevel, labelText, var);
+void tracer(String, int, int, String, float);
+
+//#define trace(name,functionID,tType,labelText,var)  \
+//   tracer(localRName, localRNum, tType, labelText, var);
+
+// speedy version that doesn't require entry of name or function ID
+#define trace(tType,labelText,var)  \
+   tracer(localRName, localRNum, tType, labelText, var);
 
 int8_t displayPage = 1;
 
