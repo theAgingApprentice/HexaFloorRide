@@ -56,25 +56,25 @@
        sp1l("  Doing bot-specific setup for one of Andrew's MAC addresses");
        // set up the servo calibration offsets
        // PWM value used = (PWM calculated from angle) + (calibration offset for this servo)
-       // note that servoOffset[0] is not used
-       servoOffset[ 1] = 299;
-       servoOffset[ 2] = 299;
-       servoOffset[ 3] = 299;
-       servoOffset[ 4] = 299;
-       servoOffset[ 5] = 299;
-       servoOffset[ 6] = 299;
-       servoOffset[ 7] = 299;
-       servoOffset[ 8] = 299;
-       servoOffset[ 9] = 299;
-       servoOffset[10] = 299;
-       servoOffset[11] = 299;
-       servoOffset[12] = 299;
-       servoOffset[13] = 299;
+       // note that servoOffset[0] is not used. Updated Jan 31, 2023.
+       servoOffset[ 1] = 293;
+       servoOffset[ 2] = 283;
+       servoOffset[ 3] = 294;
+       servoOffset[ 4] = 300;
+       servoOffset[ 5] = 279;
+       servoOffset[ 6] = 275;
+       servoOffset[ 7] = 290;
+       servoOffset[ 8] = 275;
+       servoOffset[ 9] = 275;
+       servoOffset[10] = 290;
+       servoOffset[11] = 302;
+       servoOffset[12] = 306;
+       servoOffset[13] = 306;
        servoOffset[14] = 299;
-       servoOffset[15] = 299;
-       servoOffset[16] = 299;
-       servoOffset[17] = 299;
-       servoOffset[18] = 299;
+       servoOffset[15] = 295;
+       servoOffset[16] = 286;
+       servoOffset[17] = 312;
+       servoOffset[18] = 316;
     }
     else    // neither MAC address matched
     {
