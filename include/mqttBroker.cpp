@@ -143,6 +143,10 @@ bool checkNumArg(int8_t numArgumentsRequired, int argN, String *arg)
  * =================================================================================*/
 bool processCmd(String payload)
 {
+   // prepare for traces
+   #define localRName "processCmd"
+   #define localRNum 6
+
    // Serial.println("<processCmd>");
    aaFormat format;
    String ucPayload = format.stringToUpper(payload);
@@ -562,6 +566,7 @@ bool processCmd(String payload)
          }
       } // else
    }    // if cmd = "MOVE_LEG"
+   
 */
    // declare variables for upcoming servo test commands
    int sr_deg, sr_pwm, sr_srv, sr_srv2, sr_side, sr_port;
@@ -711,7 +716,47 @@ bool processCmd(String payload)
       if(sr_OK == false) { sp2sl("********* invalid SSO command: ",sr_cause);}
       return sr_OK;
    } // if(cmd == "SSO")
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   if(cmd == "TR")      // Dynamic Trace control
+   {
+      // TR,routine,bits
+      // where TR is the command, always TR or tr
+      // routine is the routine number, which is same as index in $traceTab.
+      //    example: The routine setupFlows has routine number 3, due to this line in configDetails.cpp
+      //             $traceTab[3] = t$L + t$W + t$E ;  // routine 3 = setupFlows() in flows.cpp
+      // NOTE: there are 2 special routine numbers:
+      //       routine 1, or the first offset in $traceTab, offset t$global, represents the global trace enable bits
+      //       routine 2, or the second offset is $traceTab, offset t$routing, controls if traces go to console, MQTT or both
+      // bits is the decimal value of the combination of bits to be stored into the corresponding $traceTab entry.
+      //      This is some combination of the bits representing trace types:
+      //          t$H - High level info/status
+      //          t$M - Medium level info/status
+      //          t$L - Low level info/status
+      //          t$W - Warning of an unexpected but tolerable occurrence
+      //          t$E - Error / Exception message. Something went wrong
+      //
+      // The MQTT TR command allows $traceTab entries to be overwritten at run time, changing how tracing is don
+      // If routine is zereo, the non-zero entries in $traceTab are displayed (in a series of routable trace commands?)
 
+      int rout = arg[1].toInt();    // first arg is routine #
+      int bits = arg[2].toInt();    // second argument is the bit combination to be stored
+      if ( rout == 0 )              // request to dispay the $traceTab
+      {
+         sp1l(" trace table display not implemented yet");
+         trace(t$M,"Trace Control table entries, in form: index, decimal value",0)
+         char buffer [50];
+         for(int i=1; i<=maxTraceCount; i++)    // step through the trace control table
+            {  if($traceTab[i] != 0 )           // skip over boring zero entries
+               int t = sprintf(buffer, "%3d  %3d",i,$traceTab[i]) ;
+               trace(t$M,buffer,0);
+            }
+      }
+      if ( rout>0 && rout <= maxTraceCount)  // if we have a valid index into $traceTab..
+      {  $traceTab[rout] = bits ;            // write value from TR command into the table
+      }
+
+
+   } //  if(cmd == "TR")
 // add new commands above this comment, in this form, with one tab before "if"
 //    if ( cmd == "COMMAND" || cmd == "SHORT-FORM")
 //    {
