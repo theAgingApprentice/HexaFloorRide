@@ -77,7 +77,7 @@ Repeat the steps in this section six times in order to attach all six legs to th
   <tr>
     <td align ="left"> 
        <figure>
-          <img src="/physicalDesign/fusionExports/hexaFloorRideProfileShadedAll.png" alt="Full robot assembly" width="500" height="300">
+          <img src="/physicalDesign/fusionExports/hfrFullAssembly.png" alt="Full robot assembly" width="500" height="300">
           <BR> 
           <figcaption>Fig.3 - Attaching legs to body</figcaption>
        </figure> 
