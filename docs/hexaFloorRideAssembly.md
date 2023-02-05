@@ -2,7 +2,7 @@
 
 This document takes you through the steps neccessary to successfully assemble version 3 of the HexaFloorRide robot.
 
-<figure>
+<figure style="border: 1px solid #000">
  <img src="/physicalDesign/fusionExports/hfrExplodedView.png" alt="Right Leg" width="900" height="600"></th><br>
  <figcaption>Fig.1 - HexaFloorRide exploded view</figcaption>
 </figure> 
