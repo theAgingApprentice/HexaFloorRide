@@ -17,21 +17,23 @@ Repeat the steps in this section three times in order to create the three right 
   <tr>
     <td align ="left"> 
         <figure>
-           <img src="/physicalDesign/fusionExports/hexaFloorRideRightLeg.png" alt="Right Leg" width="400" height="300"></th><br>
+           <img src="/physicalDesign/fusionExports/hfrRightLeg.png" alt="Right Leg" width="400" height="300"></th><br>
            <figcaption>Fig.1 - HexaFloorRide right leg assembly</figcaption>
         </figure> 
     </td>
     <td align ="left">
        <ol>  
-          <li>Put horn on 3 motors.</li>  
-          <li>Set the first motor to 90 degrees.</li>  
-          <li>Screw the hip onto the first motor's horn.</li>  
-          <li>Screw the second motor into the hip motor bracket.</li>  
-          <li>Set the second motor to 90 degrees.</li>  
-          <li>Screw one end of the upper leg to the horn of the second motor.</li>  
-          <li>Set the third motor to 90 degrees.</li>  
-          <li>Screw the third motor onto the other end of the upper leg.</li>  
-          <li>Screw the lower leg onto the third motor via its motor bracket.</li> 
+          <li>Put hip servos into chassis.</li>  
+          <li>Set hip motor to 300 PWM (center position).</li>  
+          <li>Assemble servo blocks</li> 
+          <li>Screw servo blocks into place over hip servos.</li>  
+          <li>Attach thigh to hip servo using M4-07 x 12mm screws.<li> 
+          <li>Screw the knee servo motor into the thigh motor bracket.</li>  
+          <li>Set the knee servo to 300 PWM (90 degrees).</li>  
+          <li>Screw one end of the shin part to the horn of the knee servo motor.</li>  
+          <li>Set the ankle servo motor to 300 PWM (90 degrees).</li>  
+          <li>Screw the ankle servo motor onto the other end of the shin.</li>  
+          <li>Screw the foot onto the ankle servo motor via its motor bracket.</li> 
        </ol>  
     </td>
   </tr>  
@@ -45,21 +47,23 @@ Repeat the steps in this section three times in order to create the three left l
   <tr>
     <td align ="left"> 
         <figure>
-           <img src="/physicalDesign/fusionExports/hexaFloorRideLeftLeg.png" alt="Left Leg" width="400" height="300"> </th><br>
+           <img src="/physicalDesign/fusionExports/hfrLeftLeg.png" alt="Left Leg" width="400" height="300"> </th><br>
            <figcaption>Fig.2 - HexaFloorRide left leg assembly</figcaption>
         </figure> 
     </td>
     <td align ="left">
        <ol>  
-          <li>Put horn on 3 motors.</li>  
-          <li>Set the first motor to 90 degrees.</li>  
-          <li>Screw the hip onto the first motor's horn.</li>  
-          <li>Screw the second motor into the hip motor bracket.</li>  
-          <li>Set the second motor to 90 degrees.</li>  
-          <li>Screw one end of the upper leg to the horn of the second motor.</li>  
-          <li>Set the third motor to 90 degrees.</li>  
-          <li>Screw the third motor onto the other end of the upper leg.</li>  
-          <li>Screw the lower leg onto the third motor via its motor bracket.</li> 
+          <li>Put hip servos into chassis.</li>  
+          <li>Set hip motor to 300 PWM (center position).</li>  
+          <li>Assemble servo blocks</li> 
+          <li>Screw servo blocks into place over hip servos.</li>  
+          <li>Attach thigh to hip servo using M4-07 x 12mm screws.<li> 
+          <li>Screw the knee servo motor into the thigh motor bracket.</li>  
+          <li>Set the knee servo to 300 PWM (90 degrees).</li>  
+          <li>Screw one end of the shin part to the horn of the knee servo motor.</li>  
+          <li>Set the ankle servo motor to 300 PWM (90 degrees).</li>  
+          <li>Screw the ankle servo motor onto the other end of the shin.</li>  
+          <li>Screw the foot onto the ankle servo motor via its motor bracket.</li> 
        </ol>  
     </td>
   </tr>  
