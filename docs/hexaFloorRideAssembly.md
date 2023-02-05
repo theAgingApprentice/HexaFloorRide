@@ -27,7 +27,7 @@ Repeat the steps in this section three times in order to create the three right 
           <li>Set hip motor to 300 PWM (center position).</li>  
           <li>Assemble servo blocks</li> 
           <li>Screw servo blocks into place over hip servos.</li>  
-          <li>Attach thigh to hip servo using M4-07 x 12mm screws.<li> 
+          <li>Attach thigh to hip servo using M4-07 x 12mm screws.</li> 
           <li>Screw the knee servo motor into the thigh motor bracket.</li>  
           <li>Set the knee servo to 300 PWM (90 degrees).</li>  
           <li>Screw one end of the shin part to the horn of the knee servo motor.</li>  
@@ -57,7 +57,7 @@ Repeat the steps in this section three times in order to create the three left l
           <li>Set hip motor to 300 PWM (center position).</li>  
           <li>Assemble servo blocks</li> 
           <li>Screw servo blocks into place over hip servos.</li>  
-          <li>Attach thigh to hip servo using M4-07 x 12mm screws.<li> 
+          <li>Attach thigh to hip servo using M4-07 x 12mm screws.</li> 
           <li>Screw the knee servo motor into the thigh motor bracket.</li>  
           <li>Set the knee servo to 300 PWM (90 degrees).</li>  
           <li>Screw one end of the shin part to the horn of the knee servo motor.</li>  
