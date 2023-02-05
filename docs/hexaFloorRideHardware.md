@@ -4,25 +4,24 @@ This page lists all the parts that you need in order to build your own HexaFloor
 
 ## Chassis
 
-HexaFloorRide's chassis is comprised of a lower main body section with six protruding legs and a PCB mounted on top. The body and legs are milled out of 6061 extruded aluminium. When pully assembed HexaFloorRide's physical dimensions are roughly:
+HexaFloorRide's chassis is comprised of a lower main body section with six protruding legs with 3 axis of movement. The body and legs are milled out of 6061 extruded aluminium. When fully assembed HexaFloorRide's physical dimensions are roughly:
 
-* Height = ~ 5 inches when in neutral standing position.
-* Length = ~ 14 inches when in neutral standing position.
-* Weight = ~ 3 lbs 7.5 Oz without battery or PCB.
+* Height = ~ 7.5 inches when in neutral standing position.
+* Length = ~ 15.5 inches when in neutral standing position.
+* Weight = ~ 4.1 lbs (1856g) without battery or PCB.
 
 HexaFloorRide's chassis is comprised of:
 * 1 lower body panel
-* 1 mounting post
+* 1 mounting post with #2-56 threaded holes on all 4 sides for mounting things
 * 2 mounting brackets
 * 1 battery holder
 * 1 battery
 * 18 servo motors
 * 6 thigh components
+* 6 ServoBlock assembles (for the hips)
 * 6 shin components
 * 6 foot components
 * 6 shoe components
-
-*Note that you will need to fabricate your own upper body component used for mounting the electronics*.   
 
 <table>
    <caption>HexaFloorRide Components</caption>
@@ -40,7 +39,7 @@ HexaFloorRide's chassis is comprised of:
       </td>
       <td align ="left"> 
          <figure>
-            <img src="/physicalDesign/fusionExports/hexaFloorRideLowerBody.png" alt="Lower body" width="100" height="100">
+            <img src="/physicalDesign/fusionExports/hfrChassis.png" alt="Lower body" width="100" height="100">
             <figcaption>Fig.1 - Lower body</figcaption>
          </figure> 
       </td>
@@ -54,8 +53,8 @@ HexaFloorRide's chassis is comprised of:
       </td>
       <td align ="left"> 
          <figure>
-            <img src="/physicalDesign/fusionExports/hexaFloorRideThigh.png" alt="Hip" width="100" height="100">
-            <figcaption>Fig.2 - Hip</figcaption>
+            <img src="/physicalDesign/fusionExports/hfrThigh.png" alt="Hip" width="100" height="100">
+            <figcaption>Fig.2 - Thigh</figcaption>
          </figure> 
       </td>
    </tr>
@@ -68,7 +67,7 @@ HexaFloorRide's chassis is comprised of:
       </td>
       <td align ="left"> 
          <figure>
-            <img src="/physicalDesign/fusionExports/hexaFloorRideShin.png" alt="Shin" width="100" height="100">
+            <img src="/physicalDesign/fusionExports/hfrShin.png" alt="Shin" width="100" height="100">
             <figcaption>Fig.3 - Shin</figcaption>
          </figure> 
       </td>
@@ -82,7 +81,7 @@ HexaFloorRide's chassis is comprised of:
       </td>
       <td align ="left"> 
          <figure>
-            <img src="/physicalDesign/fusionExports/hexaFloorRideFoot.png" alt="Foot" width="100" height="100">
+            <img src="/physicalDesign/fusionExports/hfrFoot.png" alt="Foot" width="100" height="100">
             <figcaption>Fig.4 - Foot</figcaption>
          </figure> 
       </td>
@@ -96,8 +95,8 @@ HexaFloorRide's chassis is comprised of:
       </td>
       <td align ="left"> 
          <figure>
-            <img src="/physicalDesign/fusionExports/hexaFloorRideShoe.png" alt="Foot" width="100" height="100">
-            <figcaption>Fig.5 - Foot</figcaption>
+            <img src="/physicalDesign/fusionExports/hfrShoe.png" alt="Foot" width="100" height="100">
+            <figcaption>Fig.5 - Shoe</figcaption>
          </figure> 
       </td>
    </tr>
@@ -110,7 +109,7 @@ HexaFloorRide's chassis is comprised of:
       </td>
       <td align ="left"> 
          <figure>
-            <img src="/physicalDesign/fusionExports/hexaFloorRideMountingTube.png" alt="Mounting Post" width="100" height="100">
+            <img src="/physicalDesign/fusionExports/hfrMountingPost.png" alt="Mounting Post" width="100" height="100">
             <figcaption>Fig.6 - Mounting Post</figcaption>
          </figure> 
       </td>
@@ -124,7 +123,7 @@ HexaFloorRide's chassis is comprised of:
       </td>
       <td align ="left"> 
          <figure>
-            <img src="/physicalDesign/fusionExports/hexaFloorRideMountingBracket.png" alt="Mounting Bracket" width="100" height="100">
+            <img src="/physicalDesign/fusionExports/hfrMountingBracket.png" alt="Mounting Bracket" width="100" height="100">
             <figcaption>Fig.7 - Mounting Bracket</figcaption>
          </figure> 
       </td>
@@ -138,7 +137,7 @@ HexaFloorRide's chassis is comprised of:
       </td>
       <td align ="left"> 
          <figure>
-            <img src="/physicalDesign/fusionExports/hexaFloorRideBatteryHolder.png" alt="Battery Holder" width="100" height="100">
+            <img src="/physicalDesign/fusionExports/hfrBatteryHolder.png" alt="Battery Holder" width="100" height="100">
             <figcaption>Fig.8 - Battery Holder</figcaption>
          </figure> 
       </td>
@@ -152,7 +151,7 @@ HexaFloorRide's chassis is comprised of:
       </td>
       <td align ="left"> 
          <figure>
-            <img src="/physicalDesign/fusionExports/hexaFloorRideBattery.png" alt="Battery" width="100" height="100">
+            <img src="/physicalDesign/fusionExports/hfrBattery.png" alt="Battery" width="100" height="100">
             <figcaption>Fig.9 - Battery</figcaption>
          </figure> 
       </td>
@@ -166,7 +165,7 @@ HexaFloorRide's chassis is comprised of:
       </td>
       <td align ="left"> 
          <figure>
-            <img src="/physicalDesign/fusionExports/hexaFloorRideServoMotor.png" alt="Battery" width="100" height="100">
+            <img src="/physicalDesign/fusionExports/hfrServoMotor.png" alt="Battery" width="100" height="100">
             <figcaption>Fig.10 - Servo Motor</figcaption>
          </figure> 
       </td>
@@ -176,12 +175,13 @@ HexaFloorRide's chassis is comprised of:
          18
       </td>
       <td align ="left"> 
-         Servo horns
+         Servo Block<br>
+         <a href="https://www.servocity.com/servoblock-standard-size-24-tooth-spline-hub-shaft/">24T Spline horn & block</a>
       </td>
       <td align ="left"> 
          <figure>
-            <img src="/physicalDesign/fusionExports/hexaFloorRideServoHorn.png" alt="Battery" width="100" height="100">
-            <figcaption>Fig.11 - Servo Horn</figcaption>
+            <img src="/physicalDesign/fusionExports/hfrServoBlock.png" alt="Battery" width="100" height="100">
+            <figcaption>Fig.11 - Servo Block</figcaption>
          </figure> 
       </td>
    </tr>
