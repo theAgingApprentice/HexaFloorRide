@@ -192,6 +192,8 @@ HexaFloorRide's chassis is comprised of:
 In addition to the parts above you will also need 
 
 * 120 [#2-56 x 3/8" cap head screws](https://www.amazon.ca/gp/product/B073W96K9C/ref=ppx_yo_dt_b_asin_title_o07_s00?ie=UTF8&psc=1)
+* 48 [M4-0.7 x 12mm socket head cap screws](https://www.amazon.ca/dp/B07CJ7PTRS?psc=1&ref=ppx_yo2ov_dt_b_product_details)
+* 12 M4-07 x 8mm socket head cap screws (come with ServoBlock kit from ServoCity)
  
 ## Servo Motors & Horns 
 
