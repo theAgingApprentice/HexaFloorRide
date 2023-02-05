@@ -9,7 +9,7 @@ We use our own custom inverse kinematic (ik) model to manipulate the legs of Hex
 </figure> 
 
 <figure>
-  <img src="./physicalDesign/fusionExports/hfrFrontLegDimentions.png" alt="Model" style="width:100%">
+  <img src="/physicalDesign/fusionExports/hfrFrontLegDimentions.png" alt="Model" style="width:100%">
   <figcaption>Fig.2 - HexaFloorRide front leg dimension view.</figcaption>
 </figure> 
 
