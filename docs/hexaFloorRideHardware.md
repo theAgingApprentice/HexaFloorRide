@@ -187,7 +187,7 @@ HexaFloorRide's chassis is comprised of:
    </tr>
 </table>  
 
-## Micellaneous Hardware
+## Miscellaneous Hardware
 
 In addition to the parts above you will also need 
 
