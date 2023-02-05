@@ -14,9 +14,8 @@ We use our own custom inverse kinematic (ik) model to manipulate the legs of Hex
 </figure> 
 
 <h1>Reference Material</h1> 
-This 
+* This 
 <a href="https://www.mathworks.com/help/fuzzy/modeling-inverse-kinematics-in-a-robotic-arm.html">matlab article</a>
 discusses a fuzzy logic approach to manipulating a leg. 
-<p>
-There is an inverted kinematic Ardiuno library called <a href="https://github.com/cgxeiji/CGx-InverseK">CGx-InverseK</a> that could be used to manipulate your robot. We have elected to use our own logic. 
+* There is an inverted kinematic Ardiuno library called <a href="https://github.com/cgxeiji/CGx-InverseK">CGx-InverseK</a> that could be used to manipulate your robot. We have elected to use our own logic. 
 
