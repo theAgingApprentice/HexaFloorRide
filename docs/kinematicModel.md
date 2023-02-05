@@ -3,7 +3,8 @@
 We use our own custom inverse kinematic (ik) model to manipulate the legs of HexaFloorRide robot. Figure 1 and 2 below provide the dimentions used in our model. An explanation of our approach to the ik model problem is on our "to do" list  and will appear here when ready. 
 
 <figure>
-  <img src="./physicalDesign/fusionExports/hfrTopLegDimensions.png" alt="Model" style="width:100%">
+  <img src="https://github.com/theAgingApprentice/HexaFloorRide/blob/main/physicalDesign/fusionExports/hfrTopLegDimensions.png" alt="Model" style="width:100%">
+  
   <figcaption>Fig.1 - HexaFloorRide top leg dimension view.</figcaption>
 </figure> 
 
