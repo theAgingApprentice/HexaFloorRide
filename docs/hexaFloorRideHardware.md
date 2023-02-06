@@ -35,7 +35,8 @@ HexaFloorRide's chassis is comprised of:
          1
       </td>
       <td align ="left"> 
-         Lower body
+         Lower body<br>
+         Weight 141g
       </td>
       <td align ="left"> 
          <figure>
@@ -49,7 +50,8 @@ HexaFloorRide's chassis is comprised of:
          6
       </td>
       <td align ="left"> 
-         Thigh
+         Thigh<br>
+         Weight 7g
       </td>
       <td align ="left"> 
          <figure>
@@ -63,7 +65,8 @@ HexaFloorRide's chassis is comprised of:
          6
       </td>
       <td align ="left"> 
-         Shin
+         Shin<br>
+         Weight 13g
       </td>
       <td align ="left"> 
          <figure>
@@ -77,7 +80,8 @@ HexaFloorRide's chassis is comprised of:
          6
       </td>
       <td align ="left"> 
-         Foot
+         Foot<br>
+         Weight 12g
       </td>
       <td align ="left"> 
          <figure>
@@ -92,6 +96,7 @@ HexaFloorRide's chassis is comprised of:
       </td>
       <td align ="left"> 
          Shoe
+         Weight <0.16g
       </td>
       <td align ="left"> 
          <figure>
@@ -105,7 +110,8 @@ HexaFloorRide's chassis is comprised of:
          1
       </td>
       <td align ="left"> 
-         Mounting Post
+         Mounting Post<br>
+         Weight 133g
       </td>
       <td align ="left"> 
          <figure>
@@ -119,7 +125,8 @@ HexaFloorRide's chassis is comprised of:
          2
       </td>
       <td align ="left"> 
-         Mounting Bracket
+         Mounting Bracket<br>
+         Weight included in Mounting Post
       </td>
       <td align ="left"> 
          <figure>
@@ -133,7 +140,8 @@ HexaFloorRide's chassis is comprised of:
          1
       </td>
       <td align ="left"> 
-         Battery Holder
+         Battery Holder<br>
+         Weight 73g
       </td>
       <td align ="left"> 
          <figure>
@@ -147,7 +155,8 @@ HexaFloorRide's chassis is comprised of:
          1
       </td>
       <td align ="left"> 
-         Battery
+         Battery<br>
+         Weight 542g
       </td>
       <td align ="left"> 
          <figure>
@@ -161,7 +170,8 @@ HexaFloorRide's chassis is comprised of:
          18
       </td>
       <td align ="left"> 
-         Servo motor
+         Servo motor<br>
+         Weight 43g
       </td>
       <td align ="left"> 
          <figure>
@@ -176,7 +186,8 @@ HexaFloorRide's chassis is comprised of:
       </td>
       <td align ="left"> 
          Servo Block<br>
-         <a href="https://www.servocity.com/servoblock-standard-size-24-tooth-spline-hub-shaft/">24T Spline horn & block</a>
+         <a href="https://www.servocity.com/servoblock-standard-size-24-tooth-spline-hub-shaft/">24T Spline horn & block</a><br>
+         49g
       </td>
       <td align ="left"> 
          <figure>
