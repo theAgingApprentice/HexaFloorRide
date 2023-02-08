@@ -3,7 +3,6 @@
  * @brief File containing all reset button RGB LED functions.
  *******************************************************************************/
 #ifndef rgbLed_cpp // Start of precompiler check to avoid dupicate inclusion of this code block.
-
 #define rgbLed_cpp // Precompiler macro used for precompiler check.
 
 /**
@@ -21,12 +20,18 @@
  * ==========================================================================*/
 void createPredefinedColours()
 {
-   Log.traceln("<createPredefinedColours> Creating array of colours.");
+   #undef localRNum
+   #define localRNum 11
+   //Log.traceln("<createPredefinedColours> Creating array of colours.");
+   traceL("Creating array of colours");
    statusColour[RED].name = "RED";
    statusColour[RED].redDutyCycle = 256;
    statusColour[RED].greenDutyCycle = 0;
    statusColour[RED].blueDutyCycle = 0;
-   Log.verboseln("<createPredefinedColours> Red (%d) settings  - red = %d, green = %d, blue = %d.", RED, statusColour[RED].redDutyCycle, statusColour[RED].greenDutyCycle, statusColour[RED].blueDutyCycle);
+   
+   //Log.verboseln("<createPredefinedColours> Red (%d) settings  - red = %d, green = %d, blue = %d.", RED, statusColour[RED].redDutyCycle, statusColour[RED].greenDutyCycle, statusColour[RED].blueDutyCycle);
+   String rstatus= String(RED) +",  "+String(statusColour[RED].redDutyCycle) +", "+ String(statusColour[RED].greenDutyCycle) +", "+ String(statusColour[RED].blueDutyCycle);
+   traceLs("for Red:","ID,RGB= "+ rstatus);
 
    statusColour[GREEN].name = "GREEN";
    statusColour[GREEN].redDutyCycle = 0;

@@ -131,9 +131,16 @@
 #define sp Serial.print(" ");
 #define nl Serial.println();
 
+// specify how much detail we want when identifying source location of a trace.
+// uncomment just one of the following lines
+#define t$SFolderFileFuncLine 1    // most detailed, but longest trace source location info
+//#define t$SFileFuncLine 1           // like above, with folder, if present, suppressed
+//#define t$SFuncLine 1             // function name <id-number>, and line number
+//#define t$SFunc 1                 // just function name <id-number>
+
 // symbols to help in constructing trace messages
 
-// first, the message type
+// first, the message types
 const int t$H = 1;      // high level info/status
 const int t$M = 2;      // medium level info/status
 const int t$L = 4;      // low level info/status
@@ -167,14 +174,93 @@ const int t$E = 16;     // error
   
     // compiler won't let me populate the table here, so I'm going to try in configDetails.cpp
 
-void tracer(String, int, int, String, float);
+// traces are made using the macros below, like traceH, but we need to declare underlying routines.
 
-//#define trace(name,functionID,tType,labelText,var)  \
-//   tracer(localRName, localRNum, tType, labelText, var);
+void tracer_n(String, String, String, int, int, String);           // trace with no variable display
+void tracer_s(String, String, String, int, int, String, String);   // trace with String variable display
+void tracer_i(String, String, String, int, int, String, int);      // trace with Integer variable display
+void tracer_f(String, String, String, int, int, String, float);    // trace with Foat variable display
+                                                   // actual routines are in terminal.cpp
 
-// speedy version that doesn't require entry of name or function ID
-#define trace(tType,labelText,var)  \
-   tracer(localRName, localRNum, tType, labelText, var);
+// speedy trace macro versions where the trace command name implies some of the arguments
+
+//-------------------commands for type H traces - High Level info/status
+//  traceH  - trace type is t$H, and there is no variable to be displayed
+//          - form: traceH(labelText), 
+//          - example: traceH("I2C initialization successful")
+#define traceH(LabelText) tracer_n(__FILE__,__func__,String(__LINE__),localRNum,t$H,LabelText)
+
+//  traceHs - trace type is t$H, and there is a String variable to be displayed after the lebelText string
+//          - form: traceHs(labelText, stringVariable), 
+//          - example: traceHs("network setup complete on Network ", SSID)
+#define traceHs(LabelText,sVar) tracer_s(__FILE__,__func__,String(__LINE__),localRNum,t$H,LabelText,sVar)
+
+//  traceHi - trace type is t$H, and there is an integer variable to be displayed after the labelText string
+//          - form: traceHi(labelText,intVariable), 
+//          - example: traceHi("I2C init complete, device count= ", numDevFound)
+#define traceHi(LabelText,iVar) tracer_i(__FILE__,__func__,String(__LINE__),localRNum,t$H,LabelText,iVar)
+
+//  traceHf - trace type is t$Hm and here is a float variable to be displayed after the labelText string
+//          - form: traceHf(labelText,floatVariable), 
+//          - example: traceHf("Flash memory percent used= ", FlashPercent)
+#define traceHf(LabelText,fVar) tracer_f(__FILE__,__func__,String(__LINE__),localRNum,t$H,LabelText,fVar)
+
+
+//--------------------commands for type M traces - Medium level info/status, similar variations
+//  traceM  - trace type is t$M, and there is no variable to be displayed
+#define traceM( LabelText ) tracer_n(__FILE__,__func__,String(__LINE__),localRNum, t$M, LabelText )
+
+//  traceMs - trace type is t$M, and there is a String variable to be displayed after the lebelText string
+#define traceMs(LabelText,sVar) tracer_s(__FILE__,__func__,String(__LINE__),localRNum,t$M,LabelText,sVar)
+
+//  traceMi - trace type is t$M, and there is an integer variable to be displayed after the labelText string
+#define traceMi(LabelText,iVar) tracer_i(__FILE__,__func__,String(__LINE__),localRNum,t$M,LabelText,iVar)
+
+//  traceMf - trace type is t$Mm and there is a float variable to be displayed after the labelText string
+#define traceMf(LabelText,fVar) tracer_f(__FILE__,__func__,String(__LINE__),localRNum,t$M,LabelText,fVar)
+
+
+//--------------------commands for type L traces - Low level info/status, similar variations
+//  traceL  - trace type is t$H, and there is no variable to be displayed
+#define traceL(LabelText) tracer_n(__FILE__,__func__,String(__LINE__),localRNum,t$L,LabelText)
+
+//  traceLs - trace type is t$H, and there is a String variable to be displayed after the lebelText string
+#define traceLs(LabelText,sVar) tracer_s(__FILE__,__func__,String(__LINE__),localRNum,t$L,LabelText,sVar)
+
+//  traceLi - trace type is t$H, and there is an integer variable to be displayed after the labelText string
+#define traceLi(LabelText,iVar) tracer_i(__FILE__,__func__,String(__LINE__),localRNum,t$L,LabelText,iVar)
+
+//  traceLf - trace type is t$Hm and there is a float variable to be displayed after the labelText string
+#define traceLf(LabelText,fVar) tracer_f(__FILE__,__func__,String(__LINE__),localRName,localRNum,t$L,LabelText,fVar)
+
+
+//----------------------commands for type W traces - Warnings, similar variations
+//  traceW  - trace type is t$H, and there is no variable to be displayed
+#define traceW(LabelText) tracer_n(__FILE__,__func__,String(__LINE__),localRNum,t$W,LabelText)
+
+//  traceWs - trace type is t$H, and there is a String variable to be displayed after the lebelText string
+#define traceWs(LabelText,sVar) tracer_s(__FILE__,__func__,String(__LINE__),localRNum,t$W,LabelText,sVar)
+
+//  traceWi - trace type is t$H, and there is an integer variable to be displayed after the labelText string
+#define traceWi(LabelText,iVar) tracer_i(__FILE__,__func__,String(__LINE__),localRNum,t$W,LabelText,iVar)
+
+//  traceWf - trace type is t$Hm and there is a float variable to be displayed after the labelText string
+#define traceWf(LabelText,fVar) tracer_f(__FILE__,__func__,String(__LINE__),localRNum,t$W,LabelText,fVar)
+
+
+//-------------------------commands for type E traces - Errors, similar variations
+//  traceE  - trace type is t$H, and there is no variable to have it's value displayed
+#define traceE(LabelText) tracer_n(__FILE__,__func__,String(__LINE__),localRNum,t$E,LabelText)
+
+//  traceEs - trace type is t$H, and there is a String variable to be displayed after the lebelText string
+#define traceEs(LabelText,sVar) tracer_s(__FILE__,__func__,String(__LINE__),localRNum,t$E,LabelText,sVar)
+
+//  traceEi - trace type is t$H, and there is an integer variable to be displayed after the labelText string
+#define traceEi(LabelText,iVar) tracer_i(__FILE__,__func__,String(__LINE__),localRNum,t$E,LabelText,iVar)
+
+//  traceEf - trace type is t$Hm and there is a float variable to be displayed after the labelText string
+#define traceEf(LabelText,fVar) tracer_f(__FILE__,__func__,String(__LINE__),localRNum,t$E,LabelText,fVar)
+
 
 int8_t displayPage = 1;
 

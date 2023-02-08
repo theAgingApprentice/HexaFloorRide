@@ -144,7 +144,7 @@ bool checkNumArg(int8_t numArgumentsRequired, int argN, String *arg)
 bool processCmd(String payload)
 {
    // prepare for traces
-   #define localRName "processCmd"
+   #undef localRNum
    #define localRNum 6
 
    // Serial.println("<processCmd>");
@@ -737,26 +737,29 @@ bool processCmd(String payload)
       //
       // The MQTT TR command allows $traceTab entries to be overwritten at run time, changing how tracing is don
       // If routine is zereo, the non-zero entries in $traceTab are displayed (in a series of routable trace commands?)
-
+      sp1l("======================= started TR routine =====================");
       int rout = arg[1].toInt();    // first arg is routine #
       int bits = arg[2].toInt();    // second argument is the bit combination to be stored
       if ( rout == 0 )              // request to dispay the $traceTab
       {
-         sp1l(" trace table display not implemented yet");
-         trace(t$M,"Trace Control table entries, in form: index, decimal value",0)
+         traceM("Trace Control table entries, in form: index, decimal value");
          char buffer [50];
-         for(int i=1; i<=maxTraceCount; i++)    // step through the trace control table
-            {  if($traceTab[i] != 0 )           // skip over boring zero entries
-               int t = sprintf(buffer, "%3d  %3d",i,$traceTab[i]) ;
-               trace(t$M,buffer,0);
+         for(int ti = 1; ti < int(maxTraceCount); ti++ )    // step through the trace control table
+         {  if($traceTab[ti] != 0 )           // skip over boring zero entries
+            {  int t = sprintf(buffer, "%3d  %3d",ti,$traceTab[ti]) ;
+               traceM(buffer);
             }
+         }
+         sp1l("================ fell out of loop ========================");
+         return sr_OK;
       }
       if ( rout>0 && rout <= maxTraceCount)  // if we have a valid index into $traceTab..
       {  $traceTab[rout] = bits ;            // write value from TR command into the table
       }
-
+      return sr_OK;
 
    } //  if(cmd == "TR")
+
 // add new commands above this comment, in this form, with one tab before "if"
 //    if ( cmd == "COMMAND" || cmd == "SHORT-FORM")
 //    {
