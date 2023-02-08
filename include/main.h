@@ -14,7 +14,7 @@
 /************************************************************************************
  * @section mainDeclare Declare functions in main.cpp.
  ************************************************************************************/
-void tracer(String name, int subID, int functionID, int tType, int tLevel, String dataLabel, float var);
+void tracer(int subID, int functionID, int tType, int tLevel, String dataLabel, String sVar);
 // void setup(); // Arduino mandatory function #1. Runs once at boot. 
 // void loop(); // Arduino mandatory function #2. Runs continually.
 

@@ -254,11 +254,17 @@ bool aaNetwork::pingIP(IPAddress address, int8_t numPings)
  =============================================================================*/
 const char* aaNetwork::_lookForAP()
 {
+   //#undef localRNum
+   //#define localRNum 8
    Serial.println("<aaNetwork::_lookForAP> Scanning the 2.4GHz radio spectrum for known Access Points.");
+   //traceL("Scanning the 2.4GHz radio spectrum for known Access Points.");
+   // above doesn't work because libraries are compiled independently of main.cpp, and lack tracing support
+
    _ssid = _unknownAP; //  At the start no known Access Point has been foundto connect to
    int numberOfNetworks = WiFi.scanNetworks(); // Used to track how many APs are detected by the scan
    int StrongestSignal = -127; // Used to find the strongest signal. Set as low as possible to start
    bool APknown; // Flag to indicate if the current AP appears in the known AP list
+   Serial.print("<_lookForAP> Number of networks= ");
    Serial.println(numberOfNetworks);
 
    // Loop through all detected APs

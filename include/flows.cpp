@@ -5,13 +5,11 @@
 int8_t rgbLedClr = 0; //  Track what colour to set the rgb led to next when working on a new flow row.
 void setupFlows()
 {  
-   // test tracing function with a simple "we got here" trace
-   // following is used to save typing in trace macro calls, at the cost of compiler redefinition warnings
-   #define localRName "setupFlows"
-   // following is used to save typing in trace macro calls, at the cost of compiler redefinition warnings
+   #undef localRNum     // avoid compiler warnings about redefining localRNum
    #define localRNum 3
-   trace(t$M,"entered routine", 0)
-   
+
+   traceL("fresh routine entry");
+  
    // initialize params for the accumulation of flow rows from MQTT FLOW commands
    f_active = 0;      // what row number we fill next, and also the count of rows seen for current flow
                               // set up leg info that's indexable by leg number from 1 to 6
@@ -75,7 +73,7 @@ void setupFlows()
    legNum[6] = "6" ;
 
 // initialize dynamic home position in local coords for each leg
-trace(t$L,"completed flows setup",0)
+traceL("completed flows setup");
 
 } // void setupFlows()
 
@@ -104,14 +102,14 @@ trace(t$L,"completed flows setup",0)
 int32_t mapDegToPWM(float degrees, int servo)
 {
    // tracing preparation for this routine
-   #define localRName "mapDegToPWM"
-   #define locanRNum 4
+   #undef localRNum
+   #define localRNum 4
    // some test traces, one for all trace types
-   trace(t$H,"sample High level info",0) ;
-   trace(t$M,"sample Medium level info",0) ;
-   trace(t$L,"sample Low level info",0) ;
-   trace(t$W,"sample Warning message",0) ;
-   trace(t$E,"sample Error message",0) ;
+   traceH("sample High level info") ;
+   traceM("sample Medium level info") ;
+   traceL("sample Low level info") ;
+   traceW("sample Warning message") ;
+   traceE("sample Error message") ;
 
    // degrees is the desired angle, between -90 and +90 degrees
    // servo is the servo number (1 - 18) used for software position calibration table lookup

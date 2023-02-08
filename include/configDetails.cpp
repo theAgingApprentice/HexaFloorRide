@@ -3,7 +3,6 @@
  * @brief setup & display config parameters and boot status
  *******************************************************************************/
 #ifndef showCfgDetails_cpp // Start of precompiler check to avoid dupicate inclusion of this code block.
-
 #define showCfgDetails_cpp // Precompiler macro used for precompiler check.
 
 /**
@@ -15,15 +14,19 @@
  =============================================================================*/
  void setupPerBotConfig()     // do the robot-specific setup
  {
+    #undef localRNum
+    #define localRNum 9
     String macAdd = WiFi.macAddress(); // Get MAC address as String
-    sp2("<setupPerBotConfig> MAC Address: ", macAdd);  // see if we can read this variable
+    //sp2("<setupPerBotConfig> MAC Address: ", macAdd);  // see if we can read this variable
+    traceLs("MAC Address: ", macAdd);
 
     // handle the case where Doug's using newest ESP32 in new robot,
     //   and the case where CPU from old robot is swapped into new robot
     // if you're running this code, it must be a release 2 robot supporting soft servo offsets
     if(macAdd == "3C:61:05:4A:DD:98" || macAdd == "94:B9:7E:5F:48:B8")  // Doug's 2 ESP32 MAC addresses
     {
-       sp1l("  Doing bot-specific setup for one of Doug's MAC addresses");
+       //sp1l("  Doing bot-specific setup for one of Doug's MAC addresses");
+       traceMs("Config setup for Doug's MAC address:",String(macAdd));
        // set up the servo calibration offsets
        // PWM value used = (PWM calculated from angle) + (calibration offset for this servo) - 299
        // note that servoOffset[0] is not used
@@ -53,7 +56,8 @@
     // if you're running this code, it must be a release 2 robot supporting soft servo offsets
     else if(macAdd == "94:B9:7E:5F:4A:40" || macAdd == "94:B9:7E:5F:52:DC")  // Andrew's MAC addresses
     {
-       sp1l("  Doing bot-specific setup for one of Andrew's MAC addresses");
+       //sp1l("  Doing bot-specific setup for one of Andrew's MAC addresses");
+       traceMs("Config setup for Andrew's MAC address:",macAdd);
        // set up the servo calibration offsets
        // PWM value used = (PWM calculated from angle) + (calibration offset for this servo)
        // note that servoOffset[0] is not used. Updated Jan 31, 2023.
@@ -80,6 +84,7 @@
     {
        nl;
        sp2l("<setupPerBotConfig> Unrecognized MAC address. Per Bot configuration was bypassed", macAdd);
+       traceEs("Unrecognized MAC, bypassing per bot setup: ",macAdd);
     }
  } // void setupPerBotConfig()
 
@@ -88,25 +93,22 @@
  * ============================================================================*/
 void showCfgDetails()
 {
-   // tracing preparation for this routine
-   #define localRName "showCfgDetails"
-   #define locanRNum 5
+    #undef localRNum     // trace prep, avoiding localRNum redefinition warnings
+   #define localRNum 5
    // some test traces, one for all trace types
-   trace(t$H,"sample High level info",0) ;
-   trace(t$M,"sample Medium level info",0) ;
-   trace(t$L,"sample Low level info",0) ;
-   trace(t$W,"sample Warning message",0) ;
-   trace(t$E,"sample Error message",0) ;
-
-   Log.verboseln("<showCfgDetails> Robot Configuration Report");
-   Log.verboseln("<showCfgDetails> ==========================");
+ 
+   traceH(" Robot Configuration Report");
+   traceH(" ==========================");
+   // next line is a call to aaChip library which can't support tracing
    appCpu.cfgToConsole(); // Display core0 information on the console.
    if(networkConnected == true)
    {
       Log.verboseln("<showCfgDetails> Network connection status = TRUE");
+      // next line is a call to aaNetwork library which can't support tracing
       network.cfgToConsole(); // Display network information on the console.
       if(mqttBrokerConnected == true)
       {
+         traceH("Broker is connected, info follows:");
          Log.verboseln("<showCfgDetails> MQTT broker connection status = TRUE");
          Log.verbose("<showCfgDetails> MQTT broker IP address = ");
          Log.verboseln(getMqttBrokerIP());
@@ -171,14 +173,19 @@ void displayCfgDetails(int8_t menuToShow)
  * ============================================================================*/
 void checkBoot()
 {
+   #undef localRNum
+   #define localRNum 10
+   traceL("entry");
    Log.traceln("<checkBoot> Checking boot status flags."); 
    if(networkConnected == true && mqttBrokerConnected == true && oledConnected == true && mobilityStatus == true)
    {
+      traceL("incomplete startup");
       Log.verboseln("<checkBoot> Bootup was normal. Set RGB LED to normal colour."); 
       setStdRgbColour(GREEN); // Indicates that bootup was normal.
    } // if
    else
    {
+      traceL("complete startup");
       Log.verboseln("<checkBoot> Bootup had an issue. Set RGB LED to warning colour."); 
       setStdRgbColour(YELLOW); // Indicates that there was a bootup issue.
    } // else
@@ -230,12 +237,21 @@ const int t$E = 16;     // error
   $traceTab[t$routing] = t$SM ;     // direct traces messages to serial monitor
 
   // following table entries specified trace enables for individua routines
-  //$traceTab[3] = t$H + t$M + t$L + t$W + t$E ;  // routine 3 = setupFlows() has all traces enabled
-  $traceTab[3] = t$L + t$W + t$E ;  // routine 3 = setupFlows() in flows.cpp
-  $traceTab[4] = t$E + t$W;         // routine 4 = mapDegToPWM in flows.cpp
-  $traceTab[5] = t$E + t$W;         // routine 4 = showCfgDetails in configDetails.cpp
-  $traceTab[6] = t$M ;              // routine 6 = processCmd in mqttBroker.cpp
-  
+  // define a shortcut for common case where everythin's enabled except low level details
+  #define t$allButL t$H + t$M + t$W + t$E
+  #define t$all t$H + t$M + t$L + t$W + t$E
+
+  $traceTab[3] = t$M +t$W +t$E ;       // routine 3 = setupFlows() in flows.cpp
+  $traceTab[4] = t$E + t$W;            // routine 4 = mapDegToPWM in flows.cpp
+  $traceTab[5] = t$E + t$W;            // routine 4 = showCfgDetails in configDetails.cpp
+  $traceTab[6] = t$M ;                 // routine 6 = processCmd in mqttBroker.cpp
+  $traceTab[7] = t$allButL;            // routine 7 = setup in main.cpp
+  $traceTab[8] = t$allButL;            // routine 8 = aaNetwork::_lookForAP()
+  // above entry doesn't work because it's in a library, independently compiled without our tracing
+  $traceTab[9] = t$all;                // routine 9 = configDetails::setupPerBotConfig
+  $traceTab[10]= t$all;                // routine 10 = configDetails::checkBoot
+  $traceTab[11]= t$all;             // routine 11 = rgbLed::createPredefinedColours
+
 } // void setupTracing()
 
 #endif // End of precompiler protected code block

@@ -96,29 +96,44 @@
  * ==========================================================================*/
 void setup()
 {
+   #undef localRNum     // avoid compiler warnings if we redefine localRNum
+   #define localRNum 7
+
    setupSerial(); // Set serial baud rate.
-    setupTracing();      //build the table that controls trace generation before we do any
+   setupTracing();      //build the trace control table in configDetails.cpp before any trace usage
    Log.begin(LOG_LEVEL_VERBOSE, &Serial, true);
-   Log.traceln("<setup> Start of setup.");
-   Log.verboseln("<setup> Initialize I2C buses.");
+   traceH("Start of setup ##########################################################################");
+   //Log.verboseln("<setup> Initialize I2C buses.");
+   traceL("Initialize I2C buses");
    Wire.begin(G_I2C_BUS0_SDA, G_I2C_BUS0_SCL, I2C_BUS0_SPEED); // Init I2C bus0.
    scanBus0();                                                 // Scan bus0 and show connected devices.
-   Log.traceln("<setup> Initialize OLED.");
+   //Log.traceln("<setup> Initialize OLED.");
+   traceL("Initialize OLED");
    initOled();
-   Log.verboseln("<setup> Initialize status RGB LED.");
+   //Log.verboseln("<setup> Initialize status RGB LED.");
+   traceL("Initialize RGB LED");
    setupStatusLed();       // Configure the status LED on the reset button.
    setStdRgbColour(WHITE); // Indicates that boot up is in progress.
-   Log.verboseln("<setup> Set up wifi connection.");
+   //Log.verboseln("<setup> Set up wifi connection.");
+   traceL("Setup Wifi connection");
    setupNetwork();
    setupPerBotConfig(); // do setup unique to each hexbot.(configDetails.cpp)
-   Log.traceln("<setup> Initialize servo drivers.");
-   Log.verboseln("<setup> Display robot configuration in console trace.");
-   showCfgDetails(); // Show all configuration details in one summary.
-   Log.verboseln("<setup> Initialize flows.");
+   //Log.traceln("<setup> Initialize servo drivers.");
+   traceL("Setup servo drivers");
+   //Log.verboseln("<setup> Display robot configuration in console trace.");
+   traceL("Display robot configuration");
+   // if($traceTab[t$global] & (t$L))  // temp kludge to suppress chip detail messages
+   {   showCfgDetails(); // Show all configuration details in one summary.
+   }   // need to recode aaChip, or modify all embedded messges
+   // need to collapse aaChip library to one subroutine for above
+   //Log.verboseln("<setup> Initialize flows.");
+   traceL("Initialize leg movement flows");
    setupFlows();
-   Log.verboseln("<setup> Review status flags to see how boot sequence went.");
+   //Log.verboseln("<setup> Review status flags to see how boot sequence went.");
+   traceM("Review boot sequence status flags");
    checkBoot();
-   Log.traceln("<setup> End of setup.");
+   //Log.traceln("<setup> End of setup.");
+   traceM("End of setup #############################################################################");
 } // setup()
 
 /**
