@@ -133,10 +133,10 @@
 
 // specify how much detail we want when identifying source location of a trace.
 // uncomment just one of the following lines
-#define t$SFolderFileFuncLine 1    // most detailed, but longest trace source location info
+//#define t$SFolderFileFuncLine 1    // most detailed, but longest trace source location info
 //#define t$SFileFuncLine 1           // like above, with folder, if present, suppressed
 //#define t$SFuncLine 1             // function name <id-number>, and line number
-//#define t$SFunc 1                 // just function name <id-number>
+#define t$SFunc 1                 // just function name <id-number>
 
 // symbols to help in constructing trace messages
 

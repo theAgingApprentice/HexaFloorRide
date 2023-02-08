@@ -60,7 +60,7 @@ void tracer(String file, String func, String line,int functionID, int tType, Str
       String t_source = func +"{" +functionID + "}-L" + line ;
       #endif
 
-      #ifdef t$Func              // just function
+      #ifdef t$SFunc              // just function
       String t_source = func + "{" +functionID + "}" ;
       #endif
 

@@ -237,10 +237,11 @@ const int t$E = 16;     // error
   $traceTab[t$routing] = t$SM ;     // direct traces messages to serial monitor
 
   // following table entries specified trace enables for individua routines
-  // define a shortcut for common case where everythin's enabled except low level details
+  // define a typing shortcut for common case where everything's enabled except low level details
   #define t$allButL t$H + t$M + t$W + t$E
   #define t$all t$H + t$M + t$L + t$W + t$E
 
+  // special trace table entries 1 (t$global) and 2 (t$routing) are defined above
   $traceTab[3] = t$M +t$W +t$E ;       // routine 3 = setupFlows() in flows.cpp
   $traceTab[4] = t$E + t$W;            // routine 4 = mapDegToPWM in flows.cpp
   $traceTab[5] = t$E + t$W;            // routine 4 = showCfgDetails in configDetails.cpp
@@ -250,7 +251,7 @@ const int t$E = 16;     // error
   // above entry doesn't work because it's in a library, independently compiled without our tracing
   $traceTab[9] = t$all;                // routine 9 = configDetails::setupPerBotConfig
   $traceTab[10]= t$all;                // routine 10 = configDetails::checkBoot
-  $traceTab[11]= t$all;             // routine 11 = rgbLed::createPredefinedColours
+  $traceTab[11]= t$all;                // routine 11 = rgbLed::createPredefinedColours
 
 } // void setupTracing()
 

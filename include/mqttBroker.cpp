@@ -750,7 +750,6 @@ bool processCmd(String payload)
                traceM(buffer);
             }
          }
-         sp1l("================ fell out of loop ========================");
          return sr_OK;
       }
       if ( rout>0 && rout <= maxTraceCount)  // if we have a valid index into $traceTab..
