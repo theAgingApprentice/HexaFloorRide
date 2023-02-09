@@ -357,6 +357,7 @@ void displaySplashScreen(String);
 // Config ralted functions
 void showCfgDetails();
 void displayCfgDetails(int8_t);
+void cfgToConsole() ;       // from /lib/aaChip-1.0.1 conversion to configDetails.cpp::cfgConsole()
 void checkBoot();
 // MQTT related functions
 bool connectToMqttBroker(aaNetwork &);

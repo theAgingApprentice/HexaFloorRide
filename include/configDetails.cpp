@@ -100,7 +100,7 @@ void showCfgDetails()
    traceH(" Robot Configuration Report");
    traceH(" ==========================");
    // next line is a call to aaChip library which can't support tracing
-   appCpu.cfgToConsole(); // Display core0 information on the console.
+   cfgToConsole(); // Display core0 information on the console.
    if(networkConnected == true)
    {
       Log.verboseln("<showCfgDetails> Network connection status = TRUE");
@@ -147,6 +147,18 @@ void showCfgDetails()
       Log.verboseln("<showCfgDetails> Right servo driver connection status = FALSE.");
    } // else
 } //showCfgDetails()
+
+void cfgToConsole()  // migrated from /lib/aaChip-1.0.1
+{
+   Serial.println("<cfgToConsole> APP_CPU (core 1) settings:");  
+   Serial.print("<cfgToConsole> ... Chip revision = "); Serial.println(ESP.getChipRevision()); 
+   Serial.print("<cfgToConsole> ... SDK version = "); Serial.println(ESP.getSdkVersion()); 
+   Serial.print("<cfgToConsole> ... Sketch size = "); Serial.print(ESP.getSketchSize()); Serial.println(" bytes");  
+   Serial.print("<cfgToConsole> ... Free heap = "); Serial.print(ESP.getFreeHeap()); Serial.println(" bytes"); 
+   Serial.print("<cfgToConsole> ... Serial baud rate = "); Serial.print(Serial.baudRate()); Serial.println(" Hz");
+   Serial.print("<cfgToConsole> ... Arduino core = "); Serial.println(xPortGetCoreID());
+   Serial.print("<cfgToConsole> ... Arduino core clock frequency = "); Serial.print(getCpuFrequencyMhz()); Serial.println(" MHz"); 
+}
 
 /** 
  * @brief Show the environment details of this application on OLED.
@@ -233,7 +245,7 @@ const int t$E = 16;     // error
     // compiler won't let me populate the table here, so I'm going to try in configDetails.cpp
 */
   // first 2 table entries are special purpose ones
-  $traceTab[t$global] = t$H + t$M + t$E + t$W ;  // error and warning messages are globally enabled
+  $traceTab[t$global] = t$H + t$M + t$E + t$W ;  // error, warning, high, and medium messages are globally enabled
   $traceTab[t$routing] = t$SM ;     // direct traces messages to serial monitor
 
   // following table entries specified trace enables for individua routines

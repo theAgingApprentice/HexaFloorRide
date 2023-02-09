@@ -47,7 +47,7 @@
 
 // include all libraries ============================================================================
 // libraries that we've modified
-#include <aaChip.h> // Core (CPU) details that the code running on.
+// Core (CPU) details that the code running on.
 #include <aaNetwork.h> // Wifi functions. 
 #include <aaWebService.h> // Realtime web-based network config and OTA code updates.
 #include <aaFlash.h> // Use Flash memory to store values that persist past reboot.
@@ -70,7 +70,7 @@
 // (being called from setup() isn't sufficient, because compiler needs to see this early)
 
    // these seem to be calls to OOP constructors or methods, which our new header standard excludes
-   aaChip appCpu; // Access information about the ESP32 application microprocessor (Core1).
+   //aaChip appCpu; // Access information about the ESP32 application microprocessor (Core1).
    aaNetwork network(HOST_NAME_PREFIX); // WiFi session management.
    aaFlash flash; // Non-volatile memory management. 
    aaMqtt mqtt; // Publish and subscribe to MQTT broker. 
