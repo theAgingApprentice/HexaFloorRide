@@ -737,7 +737,7 @@ bool processCmd(String payload)
       //
       // The MQTT TR command allows $traceTab entries to be overwritten at run time, changing how tracing is don
       // If routine is zereo, the non-zero entries in $traceTab are displayed (in a series of routable trace commands?)
-      sp1l("======================= started TR routine =====================");
+ 
       int rout = arg[1].toInt();    // first arg is routine #
       int bits = arg[2].toInt();    // second argument is the bit combination to be stored
       if ( rout == 0 )              // request to dispay the $traceTab
