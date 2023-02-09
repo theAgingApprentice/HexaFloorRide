@@ -70,9 +70,9 @@ void tracer(String file, String func, String line,int functionID, int tType, Str
       {sp1l(tMsg) ;     // print the string followed by a newline
       }
       if(($traceTab[t$routing] & t$MQ) != 0)    // if we're routing traces to MQTT...
-      {   // need to work on MQTT output     // send the string to MQTT, followed by a newline
+      {  bool x = false; 
+         x = mqtt.publishMQTT(healthTopicTree, tMsg.c_str());
       }
-
    }
    return ;
 }  // voi tracer
