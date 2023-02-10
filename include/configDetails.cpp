@@ -265,6 +265,13 @@ const int t$E = 16;     // error
   $traceTab[10]= t$all;                // routine 10 = configDetails::checkBoot
   $traceTab[11]= t$all;                // routine 11 = rgbLed::createPredefinedColours
 
+  return ;
 } // void setupTracing()
+
+// put setupDimensions() here, from flows
+void setupDimensions()     // set up variables that depend on physical dimensions of robot
+{
+
+} // void setupDimensions()
 
 #endif // End of precompiler protected code block

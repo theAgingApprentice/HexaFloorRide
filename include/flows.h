@@ -80,19 +80,19 @@ float f_lastLegX[7] ;              // working copy of coords for each leg
 float f_lastLegY[7] ;
 float f_lastLegZ[7] ;
 
-float f_tmpX ;                  // temporary coord storage for do_flow processing
+float f_tmpX ;                // temporary coord storage for do_flow processing
 float f_tmpY ;
 float f_tmpZ ;
 
-float f_deltaX[7];         // distance in X direction to be travelled, in frames, in this flow row
+float f_deltaX[7];            // distance in X direction to be travelled, in frames, in this flow row
 float f_deltaY[7];
 float f_deltaZ[7];
 
-float f_endLegX[7] ;               // local coords of end poing of line for current flow row
-float f_endLegY[7] ;               // used to calculate delta movements needed for each frame movement
+float f_endLegX[7] ;          // local coords of end poing of line for current flow row
+float f_endLegY[7] ;          // used to calculate delta movements needed for each frame movement
 float f_endLegZ[7] ;
 
-float f_lastAngH[7];             // remember last angle for each servo so you can skip redundant ones
+float f_lastAngH[7];          // remember last angle for each servo so you can skip redundant ones
 float f_lastAngK[7];
 float f_lastAngA[7];
 
@@ -148,13 +148,6 @@ int toeMoveAction = 8;           // binary coded action to take when you calcula
 
 const float pi = 3.1415926 ;
 
-   // hexbot body measurements
-   const float BT = 2.915 ;   // thigh length (between hip and knee, horizontally)
-   const float BS = 7.620 ;   // shin length (between knee and ankle)
-   const float BF = 11.059;   // foot length (diagonal between ankle and toe)
-   const float BTOA = 17.063; // toe offset angle = angle between ankle servo vertical, and toe, in degrees
-   const float BTOD = 3.245;  // toe offset distance. perpendicular distance from toe to ankle servo vertical line
-
 // coordinate system memory mnemonic:
 // if direction dude is riding the bot like a bronco, 
 //     ...global X, Y, and Z follow the BLT rule:
@@ -174,10 +167,6 @@ float f_dynGHomeX[7] ;         // X coord for home in global coords, for each of
 float f_dynGHomeY[7] ;         //  initialized in setupFlows(), changable by FLOW operation newHomexxx cmds
 float f_dynGHomeZ[7] ;
 
-const float f_staticHomeX = 13.78;   // home position in local coordinates
-const float f_staticHomeY = -10.60;  // (same for all legs)
-const float f_staticHomeZ = 0.0;
-
 float f_dynLHomeX[7] ;         // dynamic home's X coord in local coords, for each of 6 legs
 float f_dynLHomeY[7] ;         //  changable by FLOW operation newHomexxx cmds
 float f_dynLHomeZ[7] ;
@@ -186,23 +175,11 @@ float f_dynLHomeZ[7] ;
 float f_hipX[7];           //global X coordinate for hip, for each leg
 float f_hipY[7];           // and Y, init'd in flows.cpp setupFlows()
 
-// symbols for key x, y position coordinates for leg movements
-float fp_frontToeHomeX = 3.82739 + 20.91875 * .707107;   // 707107 is sin of 45 degrees
-float fp_frontToeHomeY = 20.91875 * .707107;
-float fp_sideToeHomeX = 0;
-float fp_sideToeHomeY = 6.9423 + 2.9165 + 7.61998 + 3.23019;
-
-float fp_frontHipX = 3.82739 + 7.13528 * .707107;  // = 8.872796
-float fp_frontHipY = 5.04750;
-float fp_sideHipX = 0;
-float fp_sideHipY = 6.9423;
-
 int legIndexDriver[7];     // for a lookup based on leg # to get driver number ( could just use int(leg/3)
 int legIndexHipPin[7];      // for a lookup based on leg # to get pin number for hip ( could just use 3*(mod(leg-1,3))
                            // knee pin is 1 more than hip, ankle is 2 more
                            // these are initialized in flows.cpp:setupFlows()
 String legNum[7];          // lookup table to convert leg# to corresponding string
-bool DF;    // debug flag for conditionalizing generation of debug tracing
 
 // defines for routines acessed from elsewhere
 bool globCoordsToLocal(int legNumber, float gx, float gy, float gz, float *lx, float *ly, float *lz);
@@ -213,10 +190,10 @@ void do_flow();
 void setupPerBotConfig();   // do the hardware specific setup
 
 // precalculate the computationally expensive trig values used in coordinate translation   
-   float sin_p45 = +.707107;      // sin( + 45 degrees)
-   float sin_m45 = -.707107;      // sin( - 45 degrees)
-   float cos_p45 = +.707107;      // cos( + 45 degrees) 
-   float cos_m45 = +.707107;     // cos( - 45 degrees)
+   const float sin_p45 = +.707107;      // sin( + 45 degrees)
+   const float sin_m45 = -.707107;      // sin( - 45 degrees)
+   const float cos_p45 = +.707107;      // cos( + 45 degrees) 
+   const float cos_m45 = +.707107;     // cos( - 45 degrees)
 
 // routine call templates
 bool prepNextLine();

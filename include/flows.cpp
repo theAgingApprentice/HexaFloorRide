@@ -17,12 +17,20 @@ void setupFlows()
 // GLOBAL coords for each leg's home position
 // these are now dynamic, due to the fo_newHomexxx flow operations
 // these 6 lines are re-executed in the fo_newHomeReset operation
-   f_dynGHomeX[1] =  18.62 ; f_dynGHomeY[1] = -14.79 ; f_dynGHomeZ[1] = -10.60 ; 
-   f_dynGHomeX[2] =   0    ; f_dynGHomeY[2] = -20.71 ; f_dynGHomeZ[2] = -10.60 ;
-   f_dynGHomeX[3] = -18.62 ; f_dynGHomeY[3] = -14.79 ; f_dynGHomeZ[3] = -10.60 ;
-   f_dynGHomeX[4] =  18.62 ; f_dynGHomeY[4] =  14.79 ; f_dynGHomeZ[4] = -10.60 ;
-   f_dynGHomeX[5] =   0    ; f_dynGHomeY[5] =  20.71 ; f_dynGHomeZ[5] = -10.60 ;
-   f_dynGHomeX[6] = -18.62 ; f_dynGHomeY[6] =  14.79 ; f_dynGHomeZ[6] = -10.60 ;
+// do some prep first
+   float legLen = d$thighL + d$shinL;
+   float d$cornerToeX = d$cornerX + legLen * sin_p45 ;
+   float d$cornerToeY = d$cornerY + legLen * cos_p45 ;
+   float d$sideToeX = d$sideX + 0.0 ;
+   float d$sideToeY = d$sideY + legLen ;
+   float d$allToeZ = -1.0 * d$footL ;
+
+   f_dynGHomeX[1] =        d$cornerToeX  ; f_dynGHomeY[1] = -1.0 * d$cornerToeY  ; f_dynGHomeZ[1] = -1.0 * d$allToeZ ; 
+   f_dynGHomeX[2] =        d$sideToeX    ; f_dynGHomeY[2] = -1.0 * d$sideToeY    ; f_dynGHomeZ[2] = -1.0 * d$allToeZ ;
+   f_dynGHomeX[3] = -1.0 * d$cornerToeX  ; f_dynGHomeY[3] = -1.0 * d$cornerToeY  ; f_dynGHomeZ[3] = -1.0 * d$allToeZ ;
+   f_dynGHomeX[4] =        d$cornerToeX  ; f_dynGHomeY[4] =        d$cornerToeY  ; f_dynGHomeZ[4] = -1.0 * d$allToeZ ;
+   f_dynGHomeX[5] =        d$sideToeX    ; f_dynGHomeY[5] =        d$sideToeY    ; f_dynGHomeZ[5] = -1.0 * d$allToeZ ;
+   f_dynGHomeX[6] = -1.0 * d$cornerToeX  ; f_dynGHomeY[6] =        d$cornerToeY  ; f_dynGHomeZ[6] = -1.0 * d$allToeZ ;
 
 // perform a variety of per-leg initialization tasks
 
@@ -58,12 +66,12 @@ void setupFlows()
    f_flowOps[18] = fo_toeSafetyReset;  //TSR    Toe Safety Reset
 
 // global coords for each leg's hip position
-   f_hipX[1] = 8.87;  f_hipY[1] = -5.05;     
-   f_hipX[2] =   0 ;  f_hipY[2] = -6.94;
-   f_hipX[3] =-8.87;  f_hipY[3] = -5.05;
-   f_hipX[4] = 8.87;  f_hipY[4] =  5.05;
-   f_hipX[5] =   0 ;  f_hipY[5] =  6.94;
-   f_hipX[6] =-8.87;  f_hipY[6] =  5.05;
+   f_hipX[1] =        d$cornerX  ;  f_hipY[1] = -1.0 * d$cornerY ;     
+   f_hipX[2] =        d$sideX    ;  f_hipY[2] = -1.0 * d$sideY   ;
+   f_hipX[3] = -1.0 * d$cornerX  ;  f_hipY[3] = -1.0 * d$cornerY ;
+   f_hipX[4] =        d$cornerX  ;  f_hipY[4] =        d$cornerY ;
+   f_hipX[5] =        d$sideX    ;  f_hipY[5] =        d$sideY   ;
+   f_hipX[6] = -1.0 * d$cornerX  ;  f_hipY[6] =        d$cornerY ;
 
    legNum[1] = "1" ;       // crude way to convert leg numbers to strings via lookup
    legNum[2] = "2" ;       // ..for safe toe position checking in flows.cpp:PrepNextLine()
@@ -154,9 +162,9 @@ int32_t mapDegToPWM(float degrees, int servo)
 void anglesToCoords(float hip, float knee, float ankle, float *toeX, float *toeY, float *toeZ)
 {
    // todo #93
-   *toeX = (BT + BS * cos(radians(-knee)) + BF *sin(radians(ankle - knee + BTOA))) * cos(radians(hip));
-   *toeY = -BS * sin(radians(knee)) - BF * cos(radians(ankle - knee + BTOA));
-   *toeZ = sin(radians(hip)) * ( BT + BS * cos(radians(-knee)) + BF * sin(radians(ankle - knee + BTOA) ) );
+   *toeX = (d$thighL + d$shinL * cos(radians(-knee)) + d$footL *sin(radians(ankle - knee))) * cos(radians(hip));
+   *toeY = -d$shinL * sin(radians(knee)) - d$footL * cos(radians(ankle - knee));
+   *toeZ = sin(radians(hip)) * ( d$thighL + d$shinL * cos(radians(-knee)) + d$footL * sin(radians(ankle - knee) ) );
 } // anglesToCoords()
 
 /**
@@ -181,33 +189,27 @@ void coordsToAngles(float Tx, float Ty, float Tz)
    float DET;           // determinant in quadratic formula
    float Ax, Ay;        // coordinates of ankle after rotation to local XY plane
 
-   // hexbot body measurements, copied from flows.h for convenience
-   // const float BT = 2.915 ;   // thigh length (between hip and knee, horizontally)
-   // const float BS = 7.620 ;   // shin length (between knee and ankle)
-   // const float BF = 11.059;   // foot length (diagonal between ankle and toe)
-   // const float BTOA = 17.063; // toe offset angle = angle between ankle servo vertical, and toe, in degrees
-   // const float BTOD = 3.245;  // toe offset distance. perpendicular distance from toe to ankle servo vertical line
-
    f_angH = degrees( atan2(Tz, Tx) ) ;       // the hip angle is the easy one.
 
    // now reduce to a 2D problem by rotating leg into xy plane (around y axis)
    Ux = Tx * cos(radians(- f_angH)) - Tz * sin(radians(- f_angH));
    Uy = Ty; // the rotation doesn't change the y value
    // documentation explains the use of 2 coefficients to simplify the algebra
-   C1 = BS * BS - BF * BF + Ux * Ux + Uy * Uy - BT * BT ;
-   C2 = 2 * BT - 2 * Ux ;
+   C1 = d$shinL * d$shinL - d$footL * d$footL + Ux * Ux + Uy * Uy - d$thighL * d$thighL ;
+   C2 = 2 * d$thighL - 2 * d$thighL ;
    // the equations of 2 intersecting circles reduces to a quadratic equation for Ax
    // calculate the quadratic coefficients for A*x^2 + B*x +c = 0
    QA = 1 + (C2 * C2) / (4 * Uy * Uy) ;
-   QB = (-2 * BT) + (2 * C1 * C2) / (4 * Uy * Uy);
-   QC = BT * BT + (C1 * C1) / (4 * Uy * Uy) - BS * BS;
+   QB = (-2 * d$footL) + (2 * C1 * C2) / (4 * Uy * Uy);
+   QC = d$thighL * d$thighL + (C1 * C1) / (4 * Uy * Uy) - d$shinL * d$shinL;
    // The x quadratic solution is the ankle's x coordinate, and will be referred to as Ax
    // We'll optimistically use the plus case choice for the "plus or minus" in the quadratic solution...
    //   x = (-B +/- SQRT( B*B - 4 * A * C) / (2 * A)
    DET = round(( QB * QB - 4 * QA * QC) * 10000) / 10000 ;  //if roundoff error causes a tiny -Ve #, SQRT barfs
    if(DET < 0) {Log.noticeln("=== negative determinant in coordsToAngles === %d", DET) ; };
    Ax = ( -QB + sqrt( DET)) / (2 * QA) ;
-   Ay = (BS*BS - BF*BF + Ux*Ux + Uy*Uy - BT*BT + Ax*(2*BT - 2*Ux)) / (2*Uy) ; // derived by substituting x in earlier equation
+   Ay = (d$shinL * d$shinL - d$footL * d$footL + Ux*Ux + Uy*Uy - d$thighL * d$thighL + Ax*(2*d$thighL - 2*Ux)) / (2*Uy) ;
+   // above derived by substituting x in earlier equation
    // maybe do some sanity checks to see if we should be using the minus case in the quadratic slution
        //    if(f_AyMinus > f_AyPlus && f_AxMinus >= origXOffset)
        //    if that puts x to the -ve side of knee, where ankle can't go, pick the other case
@@ -216,11 +218,11 @@ void coordsToAngles(float Tx, float Ty, float Tz)
     // now that we know where the ankle is, we can finally work on the angles
     // the knee is easy since we defined the ankle position above
     // could use old formula: f_angK = -1 * asin(radians(f_Ay / shinLen)) , or...
-    f_angK = degrees( atan2(-Ay,(Ax - BT)) );
+    f_angK = degrees( atan2(-Ay,(Ax - d$thighL)) );
 
     // the ankle angle needs to reflect the 17 degree offset within the "foot"
     // and the effect of knee movement on foot angle
-    f_angA = degrees( atan2( Ux - Ax, Ay - Uy)) - BTOA + f_angK ;
+    f_angA = degrees( atan2( Ux - Ax, Ay - Uy)) + f_angK ;
    
 } // coordsToAngles()
 
@@ -241,39 +243,39 @@ bool globCoordsToLocal(int legNumber, float gx, float gy, float gz)
    {
       case 1:
         // Front Right leg
-        Xrt = cos_m45 * (gx-fp_frontHipX) - sin_m45 * (gy + fp_frontHipY);  // rotated (Xg,Yg)
-        Yrt = sin_m45 * (gx-fp_frontHipX) + cos_m45 * (gy + fp_frontHipY);
+        Xrt = cos_m45 * (gx-d$cornerX) - sin_m45 * (gy + d$cornerY);  // rotated (Xg,Yg)
+        Yrt = sin_m45 * (gx-d$cornerX) + cos_m45 * (gy + d$cornerY);
         f_endLegX[legNumber] = -1 * Yrt;
         f_endLegZ[legNumber] = Xrt;
         break;
       case 2:
         // Middle Right leg
-        f_endLegX[legNumber] = -1 * gy - fp_sideHipY;
+        f_endLegX[legNumber] = -1 * gy - d$sideY;
         f_endLegZ[legNumber] = gx;
         break;
       case 3:
         // Back Right leg
-        Xrt = cos_p45 * (gx + fp_frontHipX) - sin_p45 * (gy + fp_frontHipY);  // rotated (Xg,Yg)
-        Yrt = sin_p45 * (gx + fp_frontHipX) + cos_p45 * (gy + fp_frontHipY);
+        Xrt = cos_p45 * (gx + d$cornerX) - sin_p45 * (gy + d$cornerY);  // rotated (Xg,Yg)
+        Yrt = sin_p45 * (gx + d$cornerX) + cos_p45 * (gy + d$cornerY);
         f_endLegX[legNumber] = -1 * Yrt;
         f_endLegZ[legNumber] = Xrt;        
         break;
       case 4:
         // Front Left leg
-        Xrt = cos_p45 * (gx - fp_frontHipX) - sin_p45 * (gy - fp_frontHipY);  // rotated (Xg,Yg)
-        Yrt = sin_p45 * (gx - fp_frontHipX) + cos_p45 * (gy - fp_frontHipY);
+        Xrt = cos_p45 * (gx - d$cornerX) - sin_p45 * (gy - d$cornerY);  // rotated (Xg,Yg)
+        Yrt = sin_p45 * (gx - d$cornerX) + cos_p45 * (gy - d$cornerY);
         f_endLegX[legNumber] = Yrt;
         f_endLegZ[legNumber] = -1 * Xrt;         
         break;
       case 5:  
         // Middle Left leg
-        f_endLegX[legNumber] = gy - fp_sideHipY;
+        f_endLegX[legNumber] = gy - d$sideY;
         f_endLegZ[legNumber] = -1 * gx ;
         break;
       case 6:
         // Back Left leg
-        Xrt = cos_m45 * (gx - (-fp_frontHipX)) - sin_m45 * (gy - fp_frontHipY);  // rotated (Xg,Yg)
-        Yrt = sin_m45 * (gx - (-fp_frontHipX)) + cos_m45 * (gy - fp_frontHipY);
+        Xrt = cos_m45 * (gx - (-d$cornerX)) - sin_m45 * (gy - d$cornerY);  // rotated (Xg,Yg)
+        Yrt = sin_m45 * (gx - (-d$cornerX)) + cos_m45 * (gy - d$cornerY);
         f_endLegX[legNumber] = Yrt;
         f_endLegZ[legNumber] = -1* Xrt;        
         break;
@@ -321,7 +323,6 @@ void localCoordsToGlobal(int legNumber, float lx, float ly, float lz)
       default:
          break;
    }
-   //sp4sl("legnum,lx,f_graphY",legNumber,lx,f_graphY);
    return;
 
 }
@@ -904,13 +905,21 @@ void handle_fo_newHomeLReset()
 // GLOBAL coords for each leg's home position
 // these are now dynamic, due to the fo_newHomexxx flow operations
 // these 6 lines are re-executed in the fo_newHomeReset operation
-   f_dynGHomeX[1] =  18.62 ; f_dynGHomeY[1] = -14.79 ; f_dynGHomeZ[1] = -10.60 ; 
-   f_dynGHomeX[2] =   0    ; f_dynGHomeY[2] = -20.71 ; f_dynGHomeZ[2] = -10.60 ;
-   f_dynGHomeX[3] = -18.62 ; f_dynGHomeY[3] = -14.79 ; f_dynGHomeZ[3] = -10.60 ;
-   f_dynGHomeX[4] =  18.62 ; f_dynGHomeY[4] =  14.79 ; f_dynGHomeZ[4] = -10.60 ;
-   f_dynGHomeX[5] =   0    ; f_dynGHomeY[5] =  20.71 ; f_dynGHomeZ[5] = -10.60 ;
-   f_dynGHomeX[6] = -18.62 ; f_dynGHomeY[6] =  14.79 ; f_dynGHomeZ[6] = -10.60 ;
+// do some prep first
+   float legLen = d$thighL + d$shinL;
+   float d$cornerToeX = d$cornerX + legLen * sin_p45 ;
+   float d$cornerToeY = d$cornerY + legLen * cos_p45 ;
+   float d$sideToeX = d$sideX + 0.0 ;
+   float d$sideToeY = d$sideY + legLen ;
+   float d$allToeZ = -1.0 * d$footL ;
 
+   f_dynGHomeX[1] =        d$cornerToeX  ; f_dynGHomeY[1] = -1.0 * d$cornerToeY  ; f_dynGHomeZ[1] = -1.0 * d$allToeZ ; 
+   f_dynGHomeX[2] =        d$sideToeX    ; f_dynGHomeY[2] = -1.0 * d$sideToeY    ; f_dynGHomeZ[2] = -1.0 * d$allToeZ ;
+   f_dynGHomeX[3] = -1.0 * d$cornerToeX  ; f_dynGHomeY[3] = -1.0 * d$cornerToeY  ; f_dynGHomeZ[3] = -1.0 * d$allToeZ ;
+   f_dynGHomeX[4] =        d$cornerToeX  ; f_dynGHomeY[4] =        d$cornerToeY  ; f_dynGHomeZ[4] = -1.0 * d$allToeZ ;
+   f_dynGHomeX[5] =        d$sideToeX    ; f_dynGHomeY[5] =        d$sideToeY    ; f_dynGHomeZ[5] = -1.0 * d$allToeZ ;
+   f_dynGHomeX[6] = -1.0 * d$cornerToeX  ; f_dynGHomeY[6] =        d$cornerToeY  ; f_dynGHomeZ[6] = -1.0 * d$allToeZ ;
+   
 // LOCAL coords for each leg's home position
 // these are now dynamic, due to the fo_newHomexxx flow operations
 // this is re-executed in the fo_newHomeReset operation

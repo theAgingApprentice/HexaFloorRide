@@ -264,6 +264,44 @@ void tracer_f(String, String, String, int, int, String, float);    // trace with
 
 int8_t displayPage = 1;
 
+// physical dimensions - key measurements. All other measurements are based on these
+
+// centimeters from center of a corner hip servo to lateral center line
+#define d$cornerX 8.901
+
+// centimeters from center of a corner hip servo to the front/back center line
+#define d$cornerY 5.090
+
+//centometers from side hip servo center to lateral center line
+#define d$sideX 0.000
+
+//centimeters from side hip servo center to front/back center line
+#define d$sideY 6.535
+
+//centimeters vertical distance from chassis top surface (extended) to center of knee servo
+#define d$kneeW 3.683
+
+//centimeters horizontal distance from hip servo center to knee servo center
+#define d$thighL 4.702
+
+//centimeters from knee servo center to ankle servo center
+#define d$shinL 7.620
+
+//centimeters from ankle servo center to tip of toe
+#define d$footL 11.059
+
+// variables are initialize in configDetails.cpp:
+
+// now define the global home position of toes when all servos are centered
+// starting with leg 1, at front right
+float d$leg1X = d$cornerX;
+float d$leg1Y = -d$cornerY;
+float d$leg1Z = d$kneeW - 0;
+
+const float f_staticHomeX = d$thighL + d$shinL;    // home position in local coordinates
+const float f_staticHomeY = -1. * d$footL;         // (same for all legs) origin is at knee servo level
+const float f_staticHomeZ = 0.0; 
+
 // start of big xfer from main.h =============================
 const char* HOST_NAME_PREFIX = "HexaFloorRide"; // Prefix for our unique network name.
 
