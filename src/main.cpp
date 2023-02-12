@@ -84,6 +84,7 @@
 #include <terminal.cpp> // Serial port management.
 #include <configDetails.cpp> // Show the environment details of this application.
 #include <web.cpp> // Manage locally hosted web service. 
+#include <deviceSupport.cpp>  // suppport for h/w devices, initially PCA9685 PWM driver
 #include <rgbLed.cpp> // Control status LEDs.
 #include <network.cpp> // Control networking activities.
 #include <mqttBroker.cpp> // Establish connect to the the MQTT broker.
@@ -120,6 +121,7 @@ void setup()
    setupPerBotConfig(); // do setup unique to each hexbot.(configDetails.cpp)
    //Log.traceln("<setup> Initialize servo drivers.");
    traceL("Setup servo drivers");
+   setupPwmdriver();
    //Log.verboseln("<setup> Display robot configuration in console trace.");
    traceL("Display robot configuration");
    // if($traceTab[t$global] & (t$L))  // temp kludge to suppress chip detail messages

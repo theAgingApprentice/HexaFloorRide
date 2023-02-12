@@ -49,24 +49,24 @@ void identifyDevice(int deviceAddress)
       motorController2Connected = true;
       Log.noticeln("<identifyDevice> Device with I2C address %d (%X) identified as PCA9685 16-channel 12-bit servo motor driver 2", deviceAddress, deviceAddress);
       break;
-    case PCA9685ServoDriver3:
-      Log.noticeln("<identifyDevice> Device with I2C address %d (%X) identified as PCA9685 16-channel 12-bit servo motor driver 3", deviceAddress, deviceAddress);
-      break;
-    case PCA9685ServoDriver4:
-      Log.noticeln("<identifyDevice> Device with I2C address %d (%X) identified as PCA9685 16-channel 12-bit servo motor driver 4", deviceAddress, deviceAddress);
-      break;
-    case PCA9685ServoDriver5:
-      Log.noticeln("<identifyDevice> Device with I2C address %d (%X) identified as PCA9685 16-channel 12-bit servo motor driver 5", deviceAddress, deviceAddress);
-      break;
-    case PCA9685ServoDriver6:
-      Log.noticeln("<identifyDevice> Device with I2C address %d (%X) identified as PCA9685 16-channel 12-bit servo motor driver 6", deviceAddress, deviceAddress);
-      break;
-    case PCA9685ServoDriver7:
-      Log.noticeln("<identifyDevice> Device with I2C address %d (%X) identified as PCA9685 16-channel 12-bit servo motor driver 7", deviceAddress, deviceAddress);
-      break;
-    default: 
-      Log.noticeln("<identifyDevice> Device with I2C address %d (%X) Identified as UKNOWN");
-      break;
+//    case PCA9685ServoDriver3:
+//      Log.noticeln("<identifyDevice> Device with I2C address %d (%X) identified as PCA9685 16-channel 12-bit servo motor driver 3", deviceAddress, deviceAddress);
+//      break;
+//    case PCA9685ServoDriver4:
+//      Log.noticeln("<identifyDevice> Device with I2C address %d (%X) identified as PCA9685 16-channel 12-bit servo motor driver 4", deviceAddress, deviceAddress);
+//      break;
+//    case PCA9685ServoDriver5:
+//      Log.noticeln("<identifyDevice> Device with I2C address %d (%X) identified as PCA9685 16-channel 12-bit servo motor driver 5", deviceAddress, deviceAddress);
+//      break;
+//    case PCA9685ServoDriver6:
+//      Log.noticeln("<identifyDevice> Device with I2C address %d (%X) identified as PCA9685 16-channel 12-bit servo motor driver 6", deviceAddress, deviceAddress);
+//      break;
+//    case PCA9685ServoDriver7:
+//      Log.noticeln("<identifyDevice> Device with I2C address %d (%X) identified as PCA9685 16-channel 12-bit servo motor driver 7", deviceAddress, deviceAddress);
+//      break;
+//    default: 
+//      Log.noticeln("<identifyDevice> Device with I2C address %d (%X) Identified as UKNOWN");
+//      break;
   } //switch
 } //identifyDevice()
 

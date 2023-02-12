@@ -358,11 +358,13 @@ struct_Colour memColour; // Used to switch back RGB LED colour when it is tempor
 #define PCA9685ServoDriverAllCall 0x70 // Global I2C address for all servo drivers.
 #define PCA9685ServoDriver1 0x40 // I2C address for first servo driver.
 #define PCA9685ServoDriver2 0x41 // I2C address for second servo driver.
-#define PCA9685ServoDriver3 0x42 // I2C address for third servo driver.
-#define PCA9685ServoDriver4 0x43 // I2C address for fourth servo driver.
-#define PCA9685ServoDriver5 0x44 // I2C address for fifth servo driver.
-#define PCA9685ServoDriver6 0x45 // I2C address for sixth servo driver.
-#define PCA9685ServoDriver7 0x46 // I2C address for seventh servo driver.
+#define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates.
+uint32_t oscFreq = 27000000; // Frequency of oscilator on motor driver. 
+//#define PCA9685ServoDriver3 0x42 // I2C address for third servo driver.
+//#define PCA9685ServoDriver4 0x43 // I2C address for fourth servo driver.
+//#define PCA9685ServoDriver5 0x44 // I2C address for fifth servo driver.
+//#define PCA9685ServoDriver6 0x45 // I2C address for sixth servo driver.
+//#define PCA9685ServoDriver7 0x46 // I2C address for seventh servo driver.
 
 // Define OLED related variables.
 bool buttonA_flag = false; // Flag used by hardware ISR for button A.
@@ -430,14 +432,20 @@ void displaySplashScreen(String);
 void displayStatusScreen();
 void checkOledButtons();
 void initOled();
-// Define servoLegs related functions.
-void startPositionLegs(int8_t, int8_t);
-void initServos();
-void initLegs();
-bool moveLeg(int8_t, int8_t, float, float, float);
-void setupMobility();  
+
+// Define servoLegs related functions. <<<< no longer used
+//void startPositionLegs(int8_t, int8_t);
+//void initServos();
+//void initLegs();
+//bool moveLeg(int8_t, int8_t, float, float, float);
+//void setupMobility();  
+
+//define functions related to device setup
+void setupPwmdriver() ;  // in deviceSupport.cpp, called from main.cpp:setup()
+
 // Define terminal related functions.
 void setupSerial();
+
 // Define local web server related functions.
 void monitorWebServer();
 void startWebServer();
