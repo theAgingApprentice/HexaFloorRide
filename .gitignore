@@ -32,3 +32,6 @@ platformio.ini
 
 ## Microsoft fake assembly files.  Also used in ransomware hacks.
 .fake 
+
+## MAC OneDrive files
+.DS_Store
