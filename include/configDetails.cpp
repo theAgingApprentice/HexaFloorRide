@@ -264,6 +264,7 @@ const int t$E = 16;     // error
   $traceTab[9] = t$all;                // routine 9 = configDetails::setupPerBotConfig
   $traceTab[10]= t$all;                // routine 10 = configDetails::checkBoot
   $traceTab[11]= t$all;                // routine 11 = rgbLed::createPredefinedColours
+  $traceTab[12]= t$all;                // routine 11 = deviceSupport::setupPwmdriver
 
   return ;
 } // void setupTracing()
