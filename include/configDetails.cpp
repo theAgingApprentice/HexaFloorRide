@@ -30,24 +30,24 @@
        // set up the servo calibration offsets
        // PWM value used = (PWM calculated from angle) + (calibration offset for this servo) - 299
        // note that servoOffset[0] is not used
-       servoOffset[ 1] = 299;
-       servoOffset[ 2] = 299;
-       servoOffset[ 3] = 299;
-       servoOffset[ 4] = 299;
-       servoOffset[ 5] = 299;
-       servoOffset[ 6] = 299;
-       servoOffset[ 7] = 299;
-       servoOffset[ 8] = 299;
-       servoOffset[ 9] = 299;
-       servoOffset[10] = 299;
-       servoOffset[11] = 299;
-       servoOffset[12] = 299;
-       servoOffset[13] = 299;
-       servoOffset[14] = 299;
-       servoOffset[15] = 299;
-       servoOffset[16] = 299;
-       servoOffset[17] = 299;
-       servoOffset[18] = 299;
+       servoOffset[ 1] = 295;  //updated for config with HiTek HS-485-HB servos 2-23-02-12
+       servoOffset[ 2] = 290;
+       servoOffset[ 3] = 300;
+       servoOffset[ 4] = 304;
+       servoOffset[ 5] = 295;
+       servoOffset[ 6] = 310;
+       servoOffset[ 7] = 316;
+       servoOffset[ 8] = 285;
+       servoOffset[ 9] = 307;
+       servoOffset[10] = 315;
+       servoOffset[11] = 297;
+       servoOffset[12] = 298;
+       servoOffset[13] = 310;
+       servoOffset[14] = 306;
+       servoOffset[15] = 292;
+       servoOffset[16] = 298;
+       servoOffset[17] = 315;
+       servoOffset[18] = 293;
 
     }
     
