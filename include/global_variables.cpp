@@ -303,7 +303,7 @@ const float f_staticHomeY = -1. * d$footL;         // (same for all legs) origin
 const float f_staticHomeZ = 0.0; 
 
 // start of big xfer from main.h =============================
-const char* HOST_NAME_PREFIX = "HexaFloorRide"; // Prefix for our unique network name.
+const char* HOST_NAME_PREFIX = "hfr"; // concise prefix for our unique network name. LC to contrast with hex MAC suffix.
 
 bool networkConnected = false;
 bool mqttBrokerConnected = false;

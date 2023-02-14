@@ -184,6 +184,7 @@ bool processCmd(String payload)
    if (cmd == "HELP")
    {
       Log.noticeln("<processCmd> Received help command.");
+      sp2sl("helpTopicTree= ",helpTopicTree);
       bool x = false;
       while (x == false)
       {

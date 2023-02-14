@@ -94,6 +94,10 @@ bool aaNetwork::areWeConnected()
 void aaNetwork::getUniqueName(char *ptrNameArray)
 { 
    String macAdd = WiFi.macAddress(); // Get MAC address as String
+   String uniqueName = _HOST_NAME_PREFIX + macAdd.substring(12);  // = "hfr" + last 2 bytes of MAC
+   uniqueName.replace(":","");   // remove the colon from MAC suffix
+   strcpy(ptrNameArray, uniqueName.c_str());   // return the name via pointer in routine call
+   /*
    const char* myMacChar; // Pointer to char array containing the SOC MAC address.   
    const int8_t macNumBytes = 6; // MAC addresses have 6 byte addresses.
    byte myMacByte[macNumBytes]; // Byte array containing the 6 bytes of the SOC Mac address.
@@ -101,6 +105,7 @@ void aaNetwork::getUniqueName(char *ptrNameArray)
    _convert.macToByteArray(myMacChar, myMacByte); // Convert to Byte array
    _convert.joinTwoConstChar(_HOST_NAME_PREFIX, _convert.noColonMAC(macAdd), _uniqueNamePtr);
    strcpy(ptrNameArray, _uniqueName); // Copy unique name to variable pointer from main.
+   */
 } // aaNetwork::getUniqueName()
 
 /**
