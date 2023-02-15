@@ -21,8 +21,8 @@ void monitorWebServer()
       {
          IPAddress tmpIP = localWebService.getBrokerIP(); // Get awaiting IP address.
          Log.noticeln("<monitorWebServer> Set broker IP to %p", tmpIP); 
-         flash.writeBrokerIP(tmpIP); // Write address to flash.
-         brokerIP = flash.readBrokerIP(); // Retrieve MQTT broker IP address from NV-RAM.
+         flashWriteBrokerIP(tmpIP); // Write address to flash.
+         brokerIP = flashReadBrokerIP(); // Retrieve MQTT broker IP address from NV-RAM.
          Log.noticeln("<monitorWebServer> MQTT broker IP believed to be %p", brokerIP);
       } //if
    } //if     

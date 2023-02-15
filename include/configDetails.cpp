@@ -111,7 +111,7 @@ void showCfgDetails()
          traceH("Broker is connected, info follows:");
          Log.verboseln("<showCfgDetails> MQTT broker connection status = TRUE");
          Log.verbose("<showCfgDetails> MQTT broker IP address = ");
-         Log.verboseln(getMqttBrokerIP());
+         Log.verboseln(brokerIP);
       } // if
       else
       {

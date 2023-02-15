@@ -206,7 +206,7 @@ void checkOledButtons()
       display.print("\nRobot: ");
       display.println(WiFi.localIP());
       display.print("Broker: ");
-      display.println(getMqttBrokerIP());
+      display.println(brokerIP);    // replace routine call with reference to global variable
       delay(10);
       yield();      
       display.display(); // actually display all of the above   
