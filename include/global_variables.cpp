@@ -266,8 +266,8 @@ int8_t displayPage = 1;
 
 // physical dimensions - key measurements. All other measurements are based on these
 
-// centimeters from center of a corner hip servo to lateral center line
-#define d$cornerX 8.901
+
+#define d$cornerX 8.901    // centimeters from center of a corner hip servo to lateral center line
 
 // centimeters from center of a corner hip servo to the front/back center line
 #define d$cornerY 5.090
@@ -311,10 +311,16 @@ bool oledConnected = false;
 bool motorController1Connected = false;
 bool motorController2Connected = false;
 bool mobilityStatus = false;
-//int8_t displayPage = 1;
+
+// variables and declarations related to keeping Broker IP adress in NVM
+IPAddress brokerIP; // IP address of the MQTT broker.
+const char* DEFAULT_MQTT_IP = "192.168.0.99";
+const char* FLASH_APP_NAME = "my_app";
+IPAddress flashReadBrokerIP();
+void flashWriteBrokerIP(IPAddress address);
+
+
 // MQTT related variables.
-
-
 char uniqueName[HOST_NAME_SIZE]; // Character array that holds unique name for Wifi network purposes. 
 char *uniqueNamePtr = &uniqueName[0]; // Pointer to first address position of unique name character array.
 char healthTopicTree[50] = ""; // Char array to hold full health topic tree name.
@@ -407,7 +413,7 @@ uint8_t convertStrToUint8_t(String);
 int8_t convertStrToInt8_t(String);
 bool checkNumArg(int8_t, String *);
 bool processCmd(String);
-IPAddress getMqttBrokerIP();
+//IPAddress getMqttBrokerIP();
 void checkMqtt();
 // RGB LED related functions.
 void createPredefinedColours();

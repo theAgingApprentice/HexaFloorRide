@@ -27,7 +27,7 @@ bool connectToMqttBroker(aaNetwork &network)
    strcpy(helpTopicTree, uniqueName);
    strcat(helpTopicTree, HELP_MQTT_TOPIC);
    Log.noticeln("<connectToMqttBroker> Full help topic tree = %s (length = %d).", helpTopicTree, strlen(helpTopicTree));
-   brokerIP = flash.readBrokerIP(); // Retrieve MQTT broker IP address from NV-RAM.
+   brokerIP = flashReadBrokerIP(); // Retrieve MQTT broker IP address from NV-RAM.
    Log.noticeln("<connectToMqttBroker> MQTT broker IP believed to be %p.", brokerIP);
    bool tmpPingResult = network.pingIP(brokerIP, 5);
    String tmpResult[2];

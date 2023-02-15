@@ -32,4 +32,32 @@ void setupPwmdriver()       // initialization of pmdriver which handles PCA9685 
    pwmDriver[1].setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
    traceL("Initialized servo driver 1 - left side");
    delay(10);
-}  // void setupPmdriver()    
+}  // void setupPmdriver()  
+
+// support for reading and writing to flash NVM, migrated from aaFlash.cpp library
+// used for storing MQTT broker's IP adress
+// two routines provided:
+//    flashReadBrokerIP()
+//    flashWriteBrokerIP(address)
+
+IPAddress flashReadBrokerIP()  // read Broker's IP address from NVM 
+{
+   bool RW_MODE = false;
+   IPAddress addrIP; // Broker IP address in String format.
+   String addrStr; // Broker IP address in IPAddress format.
+   preferences.begin(FLASH_APP_NAME, RW_MODE); // Open flash memory in read/write mode.
+   addrStr = preferences.getString("brokerIP", DEFAULT_MQTT_IP).c_str(); // Read IP address.
+   preferences.end(); // Close access to flash memory.
+   addrIP.fromString(addrStr); // Convert String to IPAddress format.
+   return addrIP;
+}  // IPAddress flashReadBrokerIP()
+
+void flashWriteBrokerIP(IPAddress address)   // write an new IP broker address to NVM
+{
+   bool RW_MODE = false;
+   Serial.print("<aaFlash::write> Writing this address to flash memory: ");
+   Serial.println(address);
+   preferences.begin(FLASH_APP_NAME, RW_MODE); // Open flash memory in read/write mode.
+   preferences.putString("brokerIP", address.toString()); // Write IP address.
+   preferences.end(); // Close access to flash memory.    
+}

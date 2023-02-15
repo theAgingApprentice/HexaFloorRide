@@ -69,15 +69,13 @@
 // However, it needs to follow the library inclusions above
 // (being called from setup() isn't sufficient, because compiler needs to see this early)
 
-   // these seem to be calls to OOP constructors or methods, which our new header standard excludes
-   //aaChip appCpu; // Access information about the ESP32 application microprocessor (Core1).
+   // these seem to be calls to OOP constructors or instantiationsmethods, which our new header standard excludes
    aaNetwork network(HOST_NAME_PREFIX); // WiFi session management.
-   aaFlash flash; // Non-volatile memory management. 
    aaMqtt mqtt; // Publish and subscribe to MQTT broker. 
    Adafruit_PWMServoDriver pwmDriver[numDrivers]; // Servo driver object.
    aaWebService localWebService(WEB_APP_TITLE); // Webserver hosted by microcontroller.
    Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
-   IPAddress brokerIP; // IP address of the MQTT broker.
+   Preferences preferences; // Save to SPI NOR flash for variables to persist past reset
 
 // our code modules and code "bags" ===================================================================
 #include <flows.cpp>          // routines relates to leg movements
@@ -90,6 +88,7 @@
 #include <mqttBroker.cpp> // Establish connect to the the MQTT broker.
 #include <i2c.cpp> // Scan I2C buses to see what devices are present.
 #include <oled.cpp> // Control OLED.
+#include <Preferences.h> // Required for saving variables into Flash memory.
 
 
 /**
