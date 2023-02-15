@@ -196,11 +196,11 @@ void coordsToAngles(float Tx, float Ty, float Tz)
    Uy = Ty; // the rotation doesn't change the y value
    // documentation explains the use of 2 coefficients to simplify the algebra
    C1 = d$shinL * d$shinL - d$footL * d$footL + Ux * Ux + Uy * Uy - d$thighL * d$thighL ;
-   C2 = 2 * d$thighL - 2 * d$thighL ;
+   C2 = 2 * d$thighL - 2 * Ux ;
    // the equations of 2 intersecting circles reduces to a quadratic equation for Ax
    // calculate the quadratic coefficients for A*x^2 + B*x +c = 0
    QA = 1 + (C2 * C2) / (4 * Uy * Uy) ;
-   QB = (-2 * d$footL) + (2 * C1 * C2) / (4 * Uy * Uy);
+   QB = (-2 * d$thighL) + (2 * C1 * C2) / (4 * Uy * Uy);
    QC = d$thighL * d$thighL + (C1 * C1) / (4 * Uy * Uy) - d$shinL * d$shinL;
    // The x quadratic solution is the ankle's x coordinate, and will be referred to as Ax
    // We'll optimistically use the plus case choice for the "plus or minus" in the quadratic solution...
