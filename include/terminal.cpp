@@ -9,8 +9,7 @@
 /**
  * @brief Initialize the serial output.
  * ==========================================================================*/
-#include <iostream>
-#include <string>
+
 void setupSerial()
 {
    Serial.begin(serialBaudRate); // Open a serial at specified baud rate. 
