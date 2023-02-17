@@ -475,100 +475,67 @@ bool processCmd(String payload)
          }
          return true;
    } // if (cmd == "DO_FLOW" || cmd == "DF")  
-      
+
    // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
-   /*
-   // MOVE_LEG command - move leg to coordinates that can be given in various ways
-   if (cmd == "MOVE_LEGx" || cmd == "MLx")   // the "x" additions effectively disable this commmand
+   
+   // MoveLegAngles command - move one leg to specified angles for hip, knee and ankle servos
+   // format: MLA, leg-num, hip-angle, knee-angle, ankle-angle
+   //   angles are expressed in degrees. 0 at centerpoint, and +ve is forward, down, and out respectively
+   // use exact same method as flow execution so testing replicates script execution
+
+   if (cmd == "MOVELEGANGLES" || cmd == "MLA")   //MoveLegAngles command
    { // command format: ML, f_operation, leg, X, Y, Z
-   // *************************** this command needs to be reworked to:
-   // todo #92
-   // allow all movement methods used in flow rows
-   // use changed format of globCoordsToLocal routine
-      //  f_operation is one of:
-      //   fo_moveAbs = 1;     // move to absolute location, coords are in global system
-      //   fo_moveLocal = 2;   // move to location given, interpreted as local coords
-      //   fo_moveRelHome = 3; // move to loc'n relative to home, coords = deltas relative to home position
-      
-      if (argN != 5)          // did we get command pls 5 arguments?
+   
+      if (argN != 4)          // did we get command pls 4 arguments?
       {                       // ignore command altogether
-         sp1l("******* MOVE_LEG command didn't have 5 additional arguments");
+         sp1l("******* MoveLegAngles command didn't have 4 additional arguments");
          return false;
       }
       else // convert args to appropriate format
       {
-         int argOp = arg[1].toInt();    // next arg is operations code
-         int argLeg = arg[2].toInt();   // .. then leg #
-         float argX = arg[3].toFloat(); // then X coord
-         float argY = arg[4].toFloat(); // then Y
-         float argZ = arg[5].toFloat(); // and finally, Z
+         int argLeg = arg[1].toInt();      // first arg is leg number
+         float argH = arg[2].toFloat();   // .. then hip angle
+         float argK = arg[3].toFloat();   // then knee angle
+         float argA = arg[4].toFloat();   // then ankle angle
 
-         f_goodData = true;           // initially assume all will go well
-         if (argOp == fo_moveGRelHome) // check if X, Y, Z are relative to home position
-         {                            // we were given offsets relative to home position, so add in home coords
-            //      sp1l("--global toe coords including offsets--");
+         // stealing code from do_flow in flows.cpp ...
 
-            f_tmpX = argX + f_homeX[argLeg];
-            f_tmpY = argY + f_homeY[argLeg];
-            f_tmpZ = argZ + f_homeZ[argLeg];
-            //         sp2s(f_tmpX[L],f_tmpY[L]); sp2l(" ",f_tmpZ[L]);
+         argH = -1 * argH;    // matching empiracal testing
+         argK = -1 * argK;
+         argA = -1 * argA;
+         
+         if(argLeg >= 4)            // might need to negate some angles...
+         {  argK = -1 * argK;   //... because servos are mounted opposite ways on opposite sides of bot
+            argH = -1 * argH;
+            argA = -1 * argA;
+         }  // if L>=4
+         
+ 
+         // the per servo calibration is done inside the mapDegToPWM function 
 
-            // now convert final global coords to local coords we can feed to servos
-            sp1l("--final local coords including offsets--");
+         // starting with the hip...
+         int servoNum = ((argLeg - 1) * 3) +1;   // servo numbers go from 1 to 9. This is hip servo for leg argLeg
+         int PWM = mapDegToPWM(argH,servoNum);
+         sp3sl("  Hip angle, PWM=",argH,PWM);
+         pwmDriver[legIndexDriver[argLeg]].setPWM(legIndexHipPin[argLeg],  pwmClkStart, PWM);
 
- //           globCoordsToLocal(argLeg, f_tmpX, f_tmpY, f_tmpZ, &locX, &locY, &locZ);
-            //          sp2s(locX,locY); sp2l(" ",locZ);
-         }
-         else if (argOp == fo_moveAbs)
-         { // we were given absolute coords, and just need to convert to local coords
- //           globCoordsToLocal(argLeg, argX, argY, argZ, &locX, &locY, &locZ);
-         }
-         else if (argOp == fo_moveLocal)
-         { // we were given local coords, just copy and use them directy
-            locX = argX;
-            locY = argY;
-            locZ = argX;
-         }
-         else
-         {                      // unsupported op code in nextfirst row - abort
-            f_flowing = false;  // stop executing the flow
-            f_goodData = false; // bypass rest of do_flow processing
-            // need to avoid falling into following code. use a flag for "good data seen" ?
-         }
-         if (f_goodData) // continue only if we haven't aborted due to an error
-         {
-            // get here if we've been able to calculate local coordinates for next toe position
-            // now we need to see if requested position is within "safe positions box"
-            String badLegs = ""; // error message identifying unsafe positions
-            if (locX - f_localHomeX > safeMaxPosX)  {badLegs = badLegs + legNum[argLeg] + "XP "; }
-            if (f_localHomeX - locX > safeMaxNegX)  {badLegs = badLegs + legNum[argLeg] + "XN "; }
-            if (locY - f_localHomeY > safeMaxPosY)  {badLegs = badLegs + legNum[argLeg] + "YP "; }
-            if (f_localHomeY - locY > safeMaxPosY)  {badLegs = badLegs + legNum[argLeg] + "YN "; }
-            if (locZ - f_localHomeZ > safeMaxPosZ)  {badLegs = badLegs + legNum[argLeg] + "ZP "; }
-            if (f_localHomeZ - locZ > safeMaxPosZ)  {badLegs = badLegs + legNum[argLeg] + "ZN "; }
+         // then the knee
+         servoNum = ((argLeg - 1) * 3) +2;   // servo numbers go from 1 to 9. This is knee servo for leg argLeg
+         PWM = mapDegToPWM(argK,servoNum);
+         sp3sl(" Knee angle, PWM=",argK,PWM);
+         pwmDriver[legIndexDriver[argLeg]].setPWM(legIndexHipPin[argLeg]+1,pwmClkStart, PWM);
 
-            if (badLegs != "") // if any safety violation ocurred..
-            {
-               f_goodData = false; // abort further processing of    f_flowing = false;         // and stop fow processing
-               sp2l("****************** toe safety violation(s) [<leg><coord><positive or negative side> : ", badLegs);
-            }               // if badLegs != ""
-            if (f_goodData) // if there haven't been any fatal problems so far
-            {               // translate the local coords to servo angles
-               coordsToAngles(locX, locY, locZ);
-               // and feed them to the servos on the selected leg
-               sp2s("moving leg ", argLeg); sp2s("  to local coords (X,Y,Z) = ", locX); sp; sp2sl(locY, locZ);
-               L = argLeg; // use leg specified in the MQTT MOVE_LEG command
-               pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L],     pwmClkStart, mapDegToPWM(f_angH, 0));
-               pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L] + 1, pwmClkStart, mapDegToPWM(f_angK, 0));
-               pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L] + 2, pwmClkStart, mapDegToPWM(f_angA, 0));
-            
-               return true;
-            }
-         }
-      } // else
-   }    // if cmd = "MOVE_LEG"
+         //then the ankle
+         servoNum = ((argLeg - 1) * 3) +3;   // servo numbers go from 1 to 9. This is ankle servo for leg argLeg
+         PWM = mapDegToPWM(argA,servoNum);
+         sp3sl("Ankle angle, PWM=",argA,PWM);
+         pwmDriver[legIndexDriver[argLeg]].setPWM(legIndexHipPin[argLeg]+2,pwmClkStart, PWM);
+  
+         return true;
+      } // else..if (argN != 4) 
    
-*/
+   } // else... if (cmd == "MOVELEGANGLES" || cmd == "MLA")
+   
    // declare variables for upcoming servo test commands
    int sr_deg, sr_pwm, sr_srv, sr_srv2, sr_side, sr_port;
    bool sr_OK;

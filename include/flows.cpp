@@ -109,12 +109,9 @@ traceL("completed flows setup");
  * @param centreDeg Mid point of motor movement range.
  * @return PWM value.
  * ==========================================================================*/
+
 int32_t mapDegToPWM(float degrees, int servo)
 {
-   // tracing preparation for this routine
-   #undef localRNum
-   #define localRNum 4
-
    // degrees is the desired angle, between -90 and +90 degrees
    // servo is the servo number (1 - 18) used for software position calibration table lookup
    // maxServoAngle is the max allowed deviation from center position, in degrees
@@ -139,6 +136,7 @@ int32_t mapDegToPWM(float degrees, int servo)
    if(servo != 0)                   // if a servo number was given
    {
       adjust = servoOffset[servo];  // look up its software corrected center
+      if(adjust == 0) {adjust = 299;}   // if calibration data is absent, fall back to 299 values
    }
    return (degrees - (fixup - maxServoAngle)) * 300 / 142 + 109.3 + (adjust - 299) ;
 } // mapDegToPWM()
@@ -175,7 +173,6 @@ void anglesToCoords(float hip, float knee, float ankle, float *toeX, float *toeY
 void coordsToAngles(float Tx, float Ty, float Tz)    
 {
    // results are returned in f_angH, f_angK and f_angA
-   // TODO #27 create constants for all magic numbers in this function.
    // documentation for this routine is found in the file: docs/explain-angles-from-coords.odt
    // see also the spreadsheet formulas-angles-from-coords.ods
 
@@ -376,13 +373,12 @@ void do_flow()          // called from loop if there's a flow executing that nee
                //   the pin can be derived from legIndexHipPin[leg]
                //   to get pwm value, we convert local coords to angles, then from angles to pwm values
                coordsToAngles(f_endLegX[L], f_endLegY[L], f_endLegZ[L]); 
-   //            Log.noticeln("<do_flow> Leg %u, angH = %F, angK = %F, angA = %F",L,f_angH,f_angK,f_angA);
-               f_lastAngH[L] = f_angH;       // remember angles so we can skip redundant moves in future
-               f_lastAngK[L] = f_angK;
-               f_lastAngA[L] = f_angA;
 
                // now, one servo wihin the leg at a time, figure the pwm value, and move the servo
                // might have to temporarily negate angles, due to opposite servo mounting on either side of bot
+
+               // This change doesn't make sense to me. Here's the old code, that seemed to work
+               /*  
                t_angH = f_angH;    // may need to negate this angle for PWM calculation purposes, depending on leg
                t_angK = f_angK;
                t_angA = f_angA;
@@ -391,6 +387,23 @@ void do_flow()          // called from loop if there's a flow executing that nee
                   t_angK = -1 * t_angK;   //... because servos are mounted opposite ways on opposite sides of bot
                   t_angA = -1 * t_angA;
                }  // if L>=4
+               */
+
+              // and here's the new approach, which works as tested by MLA test code
+              // It's almost like the new servos have the opposite rotation???
+               t_angH = -1* f_angH;    // may need to negate this angle for PWM calculation purposes, depending on leg
+               t_angK = -1* f_angK;
+               t_angA = -1* f_angA;
+               if(L >= 4)
+               {  t_angH = -1 * t_angH;   // need to use -ve angles for PWM calculation purposes on one side of bot,
+                  //t_angK = -1 * t_angK;   //... because servos are mounted opposite ways on opposite sides of bot
+                  t_angA = -1 * t_angA;
+               }  // if L>=4
+
+   //            Log.noticeln("<do_flow> Leg %u, angH = %F, angK = %F, angA = %F",L,f_angH,f_angK,f_angA);
+               f_lastAngH[L] = t_angH;       // remember angles so we can skip redundant moves in future
+               f_lastAngK[L] = t_angK;
+               f_lastAngA[L] = t_angA;
 
 
                // starting with the hip...
@@ -462,10 +475,10 @@ void do_flow()          // called from loop if there's a flow executing that nee
                t_angA = f_angA;
                t_angH = f_angH;
 
-               if(L >= 4)
+               if(L < 4)
                {  t_angK = -1 * t_angK;   // need to use -ve angles for PWM calculation purposes on one side of bot,
                   t_angA = -1 * t_angA;   //... because servos are mounted opposite ways on opposite sides of bot
-                  // t_angH = -1 * t_angH;   
+                  t_angH = -1 * t_angH;   
                }  // if L>=4
 
                // starting with the hip...
