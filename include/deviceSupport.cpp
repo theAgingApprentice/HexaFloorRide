@@ -17,6 +17,8 @@
 
 void setupPwmdriver()       // initialization of pmdriver which handles PCA9685 PWM controllers
 {                          // this code was extracted from servoLegs.cpp which is no longer used
+   #undef localRNum
+   #define localRNum 12
    // the argument in the next line is actually the I2C bus address of the right side controller, = 0x40
    pwmDriver[0] =  Adafruit_PWMServoDriver(PCA9685ServoDriver1); 
    pwmDriver[0].begin();

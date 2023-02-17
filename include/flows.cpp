@@ -65,6 +65,8 @@ void setupFlows()
    f_flowOps[17] = fo_toeSafetyX  ;    //TSZ    Toe Safety Z limits
    f_flowOps[18] = fo_toeSafetyReset;  //TSR    Toe Safety Reset
 
+   stepMode = 0;     // start out with single stepping through MQTT flow scripts disabled
+
 // global coords for each leg's hip position
    f_hipX[1] =        d$cornerX  ;  f_hipY[1] = -1.0 * d$cornerY ;     
    f_hipX[2] =        d$sideX    ;  f_hipY[2] = -1.0 * d$sideY   ;
@@ -112,12 +114,6 @@ int32_t mapDegToPWM(float degrees, int servo)
    // tracing preparation for this routine
    #undef localRNum
    #define localRNum 4
-   // some test traces, one for all trace types
-   traceH("sample High level info") ;
-   traceM("sample Medium level info") ;
-   traceL("sample Low level info") ;
-   traceW("sample Warning message") ;
-   traceE("sample Error message") ;
 
    // degrees is the desired angle, between -90 and +90 degrees
    // servo is the servo number (1 - 18) used for software position calibration table lookup
@@ -334,10 +330,12 @@ void localCoordsToGlobal(int legNumber, float lx, float ly, float lz)
 
 void do_flow()          // called from loop if there's a flow executing that needs attention
 {
+   #undef localRNum
+   #define localRNum 13
    float t_angK, t_angA, t_angH; // temp angles used in PWM calculations for oppositely mounted servos
    if(f_active == 0)             // starting a new flow, so need to do some setup
    {
-      sp1l(" start of flow row # 0");
+      traceL(" start of flow row # 0");
 // do conditional display of entire flow here, nicely formatted, with row numbering
       if((toeMoveAction & fa_dispFlow) != 0)    // if requested in the FG command at the end of the script
       {  // display the entire flow, nicely formatted, with row numbers
@@ -427,12 +425,12 @@ void do_flow()          // called from loop if there's a flow executing that nee
                                     // so we'll be ready at next 20 ms mark
             f_frame = 1 ;           // initialize frame counter
             f_framesPerPosn = int((f_msecs[1] / f_msecPerFrame) + .5);  // rounded count of how many frames fit in time)
-            sp1l(" start of flow row # 1");
+            traceL("start of flow row #1");
             if((toeMoveAction & fa_graphPrint) != 0) { sp1s(f_active);} // keep output for Calc graphing uniform
          } // if f_count > 1
          else  // if f_count > 1. else case  means only initial position was given in flow
          {  f_flowing = false;      // stop flow processing
-            sp1l(" end of single row flow processing");
+            traceL(" end of single row flow processing");
          }
       }  // if(goodData)
       else   // f_goodData was false - abort flow
@@ -523,7 +521,7 @@ void do_flow()          // called from loop if there's a flow executing that nee
             if(f_active < f_count)              // have we run out of flow rows to do?
             {  // there are rows left, f_active points to a valid flow row
                if((toeMoveAction & fa_graphPrint) == 0)  // if we're NOT doing Calc compatible output...
-               { sp2sl(" start of flow row #",f_active);   // announce start of this flow row 
+               { traceLi(" start of flow row #",f_active);   // announce start of this flow row 
                }
                for(L=1; L<=6; L++)              // remember end of last line as start of next one
                {  f_lastLegX[L] = f_endLegX[L];
@@ -532,13 +530,24 @@ void do_flow()          // called from loop if there's a flow executing that nee
                }
                f_goodData = true;               // assume thing will go well, & f_operation is valid
 
+               if(stepMode != 0)             // are we in some sort of single stepping mode?
+               {
+                  f_flowing = false;          // yes - stop loop() from calling us
+                                             // although we're going to stall the whole robot anyway until resume command
+                  while(Serial.available() == 0) // anything typed on serial monitor?
+                  {                              // nope - keep waiting until something comes in
+                  }
+                  int byte = Serial.read();     // read the byte
+                  f_flowing = true;              // re-enable flow processing and carry on
+               }
+
                prepNextLine();                  // process active flow row, leaving local coords in f_endLegX[L], Y, Z
             }                                   // ..and figuring frame deltas, and framesPerPosition
             else                                // we ran out of rows in the flow. end flow processing
             {
                f_flowing = false;               // stop flow processing triggered from loop()
                f_nextTime=0;                    // kill any 20 ms processing
-               sp1l(" end of multi row flow processing");
+               traceL(" end of multi row flow processing");
             }
          } // if(f_frame > f_framesPerPosn) 
          if((toeMoveAction & fa_graphPrint) != 0) {sp1s(f_active); }  // put flow row # at start of Calc fa_graphPrint lines
