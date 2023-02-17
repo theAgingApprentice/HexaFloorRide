@@ -302,6 +302,11 @@ const float f_staticHomeX = d$thighL + d$shinL;    // home position in local coo
 const float f_staticHomeY = -1. * d$footL;         // (same for all legs) origin is at knee servo level
 const float f_staticHomeZ = 0.0; 
 
+// variables related to flow processing
+int stepMode;    // control parameter for single stepping throgh slow scripts
+#define stepMode_SM 1      // we are doing single stepping controlled by serial monitor
+#define stepMode_MQ 2      // we are doing single stepping controlled by mMQTT commands STEPSM and STEPMQ
+
 // start of big xfer from main.h =============================
 const char* HOST_NAME_PREFIX = "hfr"; // concise prefix for our unique network name. LC to contrast with hex MAC suffix.
 

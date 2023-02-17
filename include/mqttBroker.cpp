@@ -760,6 +760,62 @@ bool processCmd(String payload)
 
    } //  if(cmd == "TR")
 
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   if(cmd == "REPLAY")      // request to re-execute the last MQTT.fx script that was loaded & is still in memory 
+   //  Format: REPLAY, <toeAction>
+   //          (Note there are REPLAYSM and REPLAYMQ commands that allow a replay with single stepping through a flow script)
+   //     where <toeaction> is the bit battern that determines what is done one a new set of toe positions is calculated
+   //                         (bits are defined in flows.h - search for toeMoveAction )
+   {
+      // stealing some code from DO_FLOW handler...     
+      if (f_count == 0) // is there a flow defined to run?
+      {
+         Serial.println("replay: tried to run flow, but none defined");
+         return false;
+      }
+
+      
+      // default value for toeMoveAction is whatever the script left it at
+      // if REPLAY command has an argument, it's a replacement toeMoveAction
+      if (argN >= 1)  { toeMoveAction = arg[1].toInt(); }
+
+      f_active = 0;  // starting at the 0th entry in the flow arrays
+      f_flowing = 1; // we're now executing a flow
+      return true;
+
+   }  // if(cmd == "REPLAY") 
+
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   if(cmd == "STEPSM")      // request to single step flow execution via the serial monitor 
+   //  Format: STEPSM, value
+   //          (Note there is also a STEPMQ command for stepping control via MQTT)
+   //     where <value> is 0 to turn off single stepping
+   //                      1 to turn on single stepping controlled by the serial monitor
+   //                      absent to get current value of stepMode displayed
+   {
+
+      if (argN == 0) { sp2sl("stepMode (0-disabled, 1-serial monitor, 2-MQTT)",stepMode);}  
+      else { stepMode = arg[1].toInt(); }  // probably should validate arg
+  
+      return true;
+
+   }  // if(cmd == "STEPSM") 
+
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   if(cmd == "STEPMQ")      // request to single step flow execution via MQTT commands 
+   //  Format: STEPMQ, value
+   //          (Note there is also a STEPMQ command for stepping control via MQTT)
+   //     where <value> is 0 to turn off single stepping
+   //                      1 to turn on single stepping controlled by MQTT commands
+   //                      absent to get current value of stepMode displayed
+   {
+      if (argN = 0) { sp2sl("stepMode (0-disabled, 1-serial monitor, 2-MQTT)",stepMode);}  
+      else { stepMode = 2 * arg[1].toInt(); }  // probably should validate arg
+  
+      return true;
+
+   }  // if(cmd == "STEPMQ") 
+      
 // add new commands above this comment, in this form, with one tab before "if"
 //    if ( cmd == "COMMAND" || cmd == "SHORT-FORM")
 //    {
