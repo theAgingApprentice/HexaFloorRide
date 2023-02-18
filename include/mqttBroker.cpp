@@ -535,7 +535,89 @@ bool processCmd(String payload)
       } // else..if (argN != 4) 
    
    } // else... if (cmd == "MOVELEGANGLES" || cmd == "MLA")
+
+
+
+
+
+
+
+
+   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
    
+   // MoveLegCoords command - move one leg to specified local X, Y and Z coordinates
+   // format: MLA, leg-num, X, Y, Z
+      // use exact same method as flow execution so testing replicates script execution
+
+   if (cmd == "MOVELEGCOORDS" || cmd == "MLC")   //MoveLegAngles command
+   { // command format: MLC, leg, X, Y, Z
+   
+      if (argN != 4)          // did we get command pls 4 arguments?
+      {                       // ignore command altogether
+         sp1l("******* MoveLegCoords command didn't have 4 additional arguments");
+         return false;
+      }
+      else // convert args to appropriate format
+      {
+         int argLeg = arg[1].toInt();      // first arg is leg number
+         float argX = arg[2].toFloat();   // .. then hip angle
+         float argY = arg[3].toFloat();   // then knee angle
+         float argZ = arg[4].toFloat();   // then ankle angle
+
+         sp4sl("coordinatess= ",argX, argY, argZ);
+
+         coordsToAngles(argX, argY, argZ); // creates f_angH, f_angK, f_angA
+         // now, one servo within the leg at a time, figure the pwm value, and move the servo
+         // might have to temporarily negate angles, due servos mounted opposite on either side of bot
+
+         sp4sl("direct angles= ",f_angH, f_angK, f_angA);
+
+         float argK =  f_angK;    // may need to negate this angle for PWM calculation purposes, depending on leg
+         float argA =  f_angA;
+         float argH =  f_angH;
+         
+         if(argLeg < 4)            // might need to negate some angles...
+         {  argK = -1 * argK;   //... because servos are mounted opposite ways on opposite sides of bot
+            argH = -1 * argH;
+            argA = -1 * argA;
+         }  // if L>=4
+
+         sp4sl("changed angles= ",argH, argK, argA);
+          
+         // the per servo calibration is done inside the mapDegToPWM function 
+
+         // starting with the hip...
+         int servoNum = ((argLeg - 1) * 3) +1;   // servo numbers go from 1 to 9. This is hip servo for leg argLeg
+         int PWM = mapDegToPWM(argH,servoNum);
+         //sp3sl("  Hip angle, PWM=",argH,PWM);
+         pwmDriver[legIndexDriver[argLeg]].setPWM(legIndexHipPin[argLeg],  pwmClkStart, PWM);
+
+         // then the knee
+         servoNum = ((argLeg - 1) * 3) +2;   // servo numbers go from 1 to 9. This is knee servo for leg argLeg
+         PWM = mapDegToPWM(argK,servoNum);
+         //sp3sl(" Knee angle, PWM=",argK,PWM);
+         pwmDriver[legIndexDriver[argLeg]].setPWM(legIndexHipPin[argLeg]+1,pwmClkStart, PWM);
+
+         //then the ankle
+         servoNum = ((argLeg - 1) * 3) +3;   // servo numbers go from 1 to 9. This is ankle servo for leg argLeg
+         PWM = mapDegToPWM(argA,servoNum);
+         //sp3sl("Ankle angle, PWM=",argA,PWM);
+         pwmDriver[legIndexDriver[argLeg]].setPWM(legIndexHipPin[argLeg]+2,pwmClkStart, PWM);
+  
+         return true;
+      } // else..if (argN != 4) 
+   
+   } // else... if (cmd == "MOVELEGANGLES" || cmd == "MLA")
+
+
+
+
+
+
+
+
+
+
    // declare variables for upcoming servo test commands
    int sr_deg, sr_pwm, sr_srv, sr_srv2, sr_side, sr_port;
    bool sr_OK;
@@ -728,7 +810,7 @@ bool processCmd(String payload)
    } //  if(cmd == "TR")
 
 // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
-   if(cmd == "REPLAY")      // request to re-execute the last MQTT.fx script that was loaded & is still in memory 
+   if(cmd == "REPLAY" || cmd == "R")      // request to re-execute the last MQTT.fx script that was loaded & is still in memory 
    //  Format: REPLAY, <toeAction>
    //          (Note there are REPLAYSM and REPLAYMQ commands that allow a replay with single stepping through a flow script)
    //     where <toeaction> is the bit battern that determines what is done one a new set of toe positions is calculated
