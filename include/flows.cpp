@@ -331,7 +331,7 @@ void do_flow()          // called from loop if there's a flow executing that nee
    #define localRNum 13
    float t_angK, t_angA, t_angH; // temp angles used in PWM calculations for oppositely mounted servos
    if(f_active == 0)             // starting a new flow, so need to do some setup
-   {
+    {
       traceL(" start of flow row # 0");
 // do conditional display of entire flow here, nicely formatted, with row numbering
       if((toeMoveAction & fa_dispFlow) != 0)    // if requested in the FG command at the end of the script

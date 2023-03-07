@@ -110,6 +110,7 @@ void setup()
    //Log.traceln("<setup> Initialize OLED.");
    traceL("Initialize OLED");
    initOled();
+   setupOnboardLED();   // prepare LED for use, GPio symbol = OnboardLED
    //Log.verboseln("<setup> Initialize status RGB LED.");
    traceL("Initialize RGB LED");
    setupStatusLed();       // Configure the status LED on the reset button.
@@ -134,6 +135,8 @@ void setup()
    traceM("Review boot sequence status flags");
    checkBoot();
    //Log.traceln("<setup> End of setup.");
+   setupTaskTimers();   // initialize for millis() based task dispatches in loop() (in deviceSupport.cpp)
+                        // includes: oneSec, webMon
    traceM("End of setup #############################################################################");
 } // setup()
 
@@ -144,12 +147,199 @@ void loop()
 {
    // check for hi priority 20msec loop first. Should serialize other tasks too,
    //  so at most one of them is done per loop()
-   // ==== track how well we're doing at running the 20msec on time.
-   if (f_flowing == true) // are we executing a predefined flow between positions?
-   {
-      do_flow(); // yes. caclulate and do next servo commands. It's in flow.cpp module
-   }
-   monitorWebServer(); // Handle any pending web client requests.
-   checkOledButtons(); // Check if an OLED button has been pressed.
-   checkMqtt();        // Check the MQTT message queue for incoming commands.
+
+   // each routine called from loop() has its execution and dispatch timing accumulated and
+   // periodically CPU performance info is processed, displayed, and reset for next period.
+
+   // Some of these tasks are triggered by expiration of a millis() timer, and use the macro timerTask(task_call,taskID)
+   // others are triggered by some logic condition becoming true, and use the macro conditionTask(task_call,taskID,condition)
+
+   // the following macro dispatches routine based on timer expiry with metrics accumulation for named taskID
+   // arguments:
+   // task_call is the statement that calls the routine, with no semicolon
+   //           example: process_sensors()
+   // taskID is a brief name for the task, 4 - 8 letters long, which is embedded in variable names
+   //           example: sensor
+
+            #define timerTask(task_call,taskID) \
+            mills = millis(); \
+            mics = micros(); \
+            if(mills >= next_##taskID##_mills ) \
+            {  sched_##taskID##_mills = next_##taskID##_mills; \
+               deltaSched = mills - sched_##taskID##_mills; \
+               cum_##taskID##_delay = cum_##taskID##_delay + deltaSched; \
+               if(deltaSched > max_##taskID##_delay) {max_##taskID##_delay = deltaSched;}  \
+               if(deltaSched > 0 ) {lates_##taskID = lates_##taskID + 1;} \
+                                 \
+               task_call;  \
+                                 \
+               deltaTime = micros() - mics;  \
+               if(deltaTime < 0) \
+               {  sp2sl("----------------------------------------------------old Delta time=",deltaTime); \
+                  deltaTime += 4 * 1024 * 1024; \
+                  sp2sl("----------------------------------------------------new Delta time=",deltaTime); \
+               } \
+               time_##taskID##_mics += deltaTime;  \
+               if(deltaTime > max_##taskID##_mics) { max_##taskID##_mics = deltaTime;} \
+            }
+
+   // the following macro does dispatch and metrics accumulation for routines controlled by some logic condition
+   // being true, which could be a flag bit being set, or a measurement reaching a threshold
+   // example conditions:
+   //   (flags & dispatchBit) != 0
+   //   batteryV < threshold2
+   // CPU usage is measured for conditional tasks, but not dispatch delays
+   // Note that the routine is responsible for clearing the condition that triggers dispatch
+   // Arguments:
+   // task_call is the statement that calls the routine, with no semicolon
+   //           example: process_sensors()
+   // taskID is a brief name for the task, 4 - 8 letters long, which is embedded in variable names
+   //           example: sensor
+   // condition is a logical expression that is used to trgger the event as described above
+  
+            #define conditionTask(task_call,taskID,condition) \
+            mills = millis(); \
+            mics = micros(); \
+            if( condition ) \
+            {  task_call;  \
+               deltaTime = micros() - mics;  \
+               if(deltaTime < 0) { deltaTime += 4 * 1024 * 1024; } \
+               time_##taskID##_mics += deltaTime;  \
+               if(deltaTime > max_##taskID##_mics) { max_##taskID##_mics = deltaTime;} \
+            }
+
+ // order of appearance determines priority (once we get so we only execute one task per loop() )
+
+   // flow processing that does servo position changes to move legs. In flows.cpp
+   conditionTask(do_flow(),flow,f_flowing == true);  // flows that control servo position changes that move legs
+
+   // look for, and process any MQTT commands that came in from the MQTT broker. In mqttBroker.cpp
+   timerTask(checkMqtt(),checkMqtt);               // check for MQTT work to be done
+
+   // do the once per second processing, including calculating and dispalying CPU usage information. In main.cpp
+   timerTask(oneSec(),oneSec);                     // once a second routine that does CPU usage calculations
+
+   // check for new broker IP address, or pending file transfer (OTA?). In web.cpp
+   timerTask(monitorWebServer(),webMon);           // monitor web service (new broker IP, new file transfers)
+
+   // check for Oled button presses, and update display. In Oled.cpp
+   timerTask(checkOledButtons(),checkOled);        // check Oled Buttons
+
+// ... and cycle around and do loop() again.
+ 
 } // loop()
+
+
+// ========================================================================================================
+void oneSec()     // routine that executes once per second to display CPU performance information
+                  // and maybe do other timer related sub-tasks
+{
+   next_oneSec_mills = millis() + 1000 ;   //quickly schedule our next execution
+   #undef localRNum
+   #define localRNum 14
+   String rep;
+
+   // next macro clears out variables at startup, and at end of once per second processing
+            #define taskProcInit(taskID)  \
+            cum_##taskID##_delay = 0; \
+            max_##taskID##_delay = 0; \
+            lates_##taskID = 0; \
+            time_##taskID##_mics = 0; \
+            max_##taskID##_mics = 0;
+
+
+   // code execution starts here - first entry is a special case
+
+   if(firstOneSec)      // on the first entry, just do some setup stuff
+   {  
+      // zero all the counters
+      taskProcInit(webMon);
+      taskProcInit(checkOled);
+      taskProcInit(checkMqtt);
+      taskProcInit(flow);
+      taskProcInit(oneSec);
+
+      // and flag that we've completed initialization and are operational
+      firstOneSec = false;    // next entry will be the real thing
+   }
+   else; // this is the normal entry after the initial setup is done
+   {  
+      // when called, next macro does actual processing of accumulated data for one TIMER-driven taskID
+      // label argument is the very brief text ID info that prefixes CPU usage numbers on each displayed line
+
+      char buffer[20]; 
+            #define doTimerProc(taskID,label) \
+            rep = rep + label +":"; \
+            dtostrf(float(time_##taskID##_mics)/10000.,4,1,buffer); \
+            totCPU += float(time_##taskID##_mics)/10000. ; \
+            rep = rep + buffer +" "; \
+            dtostrf(float(max_##taskID##_mics)/10000.,4,1,buffer); \
+            rep = rep + buffer+ " "+String(lates_##taskID) + " /";
+
+      // when called, next macro does actual processing of accumulated data for one CONDITION-driven taskID
+            #define doConditionProc(taskID,label) \
+            rep = rep + label +":"; \
+            dtostrf(float(time_##taskID##_mics)/10000.,4,1,buffer); \
+            totCPU += float(time_##taskID##_mics)/10000. ; \
+            rep = rep + buffer +" "; \
+            dtostrf(float(max_##taskID##_mics)/10000.,4,1,buffer); \
+            rep = rep + buffer+ " /";
+
+      // start of actual processing that's done each second...
+
+      float totCPU = 0.;      // accumulate total CPU usage from 1st number from each task's report
+      String rep = "";        // report string is extended for each taskID
+      // capstate: quick and dirty state machine to debounce capacitance input
+         // 0 = output enabled
+         // 1 = output disabled
+         // 2 = going to enabled
+         // 3 = going to disabled
+
+      doTimerProc(checkOled,"/Oled");
+      doTimerProc(checkMqtt,"MQTT");
+      doTimerProc(webMon,"webMon");
+      doConditionProc(flow,"Flow");    // dispatched by f_flowing bit now, but will be broken up
+      doTimerProc(oneSec,"1Sec");
+
+      // testing reading capacitive sensors as a way to stall CPU usage output
+      int pinval = 1;    // assume pin is high, i.e. over 30
+      int cap27 = touchRead(27);  //physical pin 25, 6th down from battery connector
+      if(cap27 < 40 ) {pinval = 0;}    // 40 is the observed threshold between touched (low #) and untouched (high #)
+      int touched = 0;   // pinval value that means sensor is being touched
+      int untouched = 1;   // pinval value that means sensor is not being touched
+      
+      int newstate = capstate;        // intermediary variable to avoid unplanned change consequences in if chain below
+      //do any state transitions based on current pinval and current state
+      if((capstate == 0) && (pinval == touched) ) {newstate = 3; } // transition state to disabled
+      else if((capstate == 1) && (pinval == touched) ) {newstate = 2; } // transition state to enabled
+      else if(capstate == 2 ) 
+      {   if(pinval == touched) { newstate = 0; digitalWrite(OnboardLED,LOW); } // confirmed transition
+          else { newstate = 1; } //failed transition
+      }
+      else if(capstate == 3 )
+      {   if(pinval == touched) { newstate = 1 ; digitalWrite(OnboardLED,HIGH); } // confirmed transition
+          else { newstate = 0; } // failed transition
+      }
+      capstate = newstate;    // make the state change from the above logic
+
+      String cpuUse;
+      rep = rep + " cap:" +String(cap27);
+      cpuUse = "CPU: " + String(totCPU) + " " + rep;
+      
+      if(capstate == 0)    // if capacitive sensor has put/left us in output enabled mode, do it
+      {
+      traceMs("",cpuUse);  // trace can be enabled/disabled on the fly, and directed to MQTT and or console
+                           // hint: using MQTT avoids console's tendency to lose older output
+                           // and generates interleaved timestamped CPU info, which can be useful, or messy.
+      }
+
+      // clean up in preparation for next second's data accumulation
+      taskProcInit(checkOled);
+      taskProcInit(checkMqtt);
+      taskProcInit(webMon);
+      taskProcInit(flow);
+      taskProcInit(oneSec);
+
+   } // if(firstOneSec) .. else
+
+} // void oneSec()

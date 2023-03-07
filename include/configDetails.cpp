@@ -245,7 +245,8 @@ const int t$E = 16;     // error
     // compiler won't let me populate the table here, so I'm going to try in configDetails.cpp
 */
   // first 2 table entries are special purpose ones
-  $traceTab[t$global] = t$H + t$M + t$E + t$W ;  // error, warning, high, and medium messages are globally enabled
+  //$traceTab[t$global] = t$H + t$M + t$E + t$W ;  // error, warning, high, and medium messages are globally enabled
+  $traceTab[t$global] = t$E + t$W ;  // error, warning, high, and medium messages are globally enabled
   $traceTab[t$routing] = t$SM ;     // direct traces messages to serial monitor
 
   // following table entries specified trace enables for individua routines
@@ -266,6 +267,7 @@ const int t$E = 16;     // error
   $traceTab[11]= t$all;                // routine 11 = rgbLed::createPredefinedColours
   $traceTab[12]= t$all;                // routine 12 = deviceSupport::setupPwmdriver
   $traceTab[13]= t$all;                // routine 13 = flows.cpp::do_flow
+  $traceTab[14]= t$all;                // routine 14 = CPU usage in main.cpp  oneSec()
 
   return ;
 } // void setupTracing()

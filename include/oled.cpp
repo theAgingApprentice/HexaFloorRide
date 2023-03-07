@@ -197,6 +197,9 @@ void displayStatusScreen()
  * ==========================================================================*/
 void checkOledButtons() 
 {
+   // quickly reschedule our next check before we get busy
+   next_checkOled_mills = millis() + period_checkOled_mills;
+
    if(buttonA_flag == true)
    {
       buttonA_flag = false; 
