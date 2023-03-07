@@ -63,3 +63,20 @@ void flashWriteBrokerIP(IPAddress address)   // write an new IP broker address t
    preferences.putString("brokerIP", address.toString()); // Write IP address.
    preferences.end(); // Close access to flash memory.    
 }
+void setupTaskTimers()   // set up the routine that runs once per second to do timer related stuff
+{
+   next_oneSec_mills = millis() + 1000; // first execution is 1 second from this setup execution,
+                                       // and this setup is intentionally called from very end of setup()
+   
+   firstOneSec = true;              // first execution just gets one second intervals going
+   // initialize the timers
+   next_webMon_mills = millis() + period_webMon_mills;
+   next_checkOled_mills = millis() + period_checkOled_mills;   
+   next_checkMqtt_mills = millis() + period_checkMqtt_mills;
+
+}
+void setupOnboardLED()     // prepare do GPio 13 can control Huzzah32 onboard LED
+{
+   pinMode(OnboardLED,OUTPUT);     // onboard LED id hardwired to GP1013
+   digitalWrite(OnboardLED,LOW);   // start out with it off
+}

@@ -891,6 +891,9 @@ bool processCmd(String payload)
  * =================================================================================*/
    void checkMqtt()
    {
+      // quickly reschedule our next check before we get busy
+      next_checkMqtt_mills = millis() + period_checkMqtt_mills;
+      
       // ====    either check for highest priority first (20 msec move) or use FREERTOS pre-emptive multitasking
       String cmd = mqtt.getCmd();
       if (cmd != "")

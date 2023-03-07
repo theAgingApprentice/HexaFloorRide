@@ -30,7 +30,7 @@ void tracer(String file, String func, String line,int functionID, int tType, Str
    // if either the global enables, or the enables for this routine enable the bit
    //   which identifes this routines type, then generate the trace
    // bit parallel logic: (global enables .or. routine enables ) .and. (routine type) non-zero means do it 
-
+   //sp5sl("trace glob, fID, tt(fID), ttype, = ",$traceTab[t$global],functionID,$traceTab[functionID],tType)
    if((($traceTab[t$global] | $traceTab[functionID]) & tType) != 0)
    {
       String type = "?";    // translate type to letter that starts message
@@ -63,6 +63,10 @@ void tracer(String file, String func, String line,int functionID, int tType, Str
       String t_source = func + "{" +functionID + "}" ;
       #endif
 
+      #ifdef t$timestamps        // feature to add timestamps, in millis(), to trace messages
+      t_source = t_source + "[" +String(millis()) +"]" ;
+      #endif
+      
       String tMsg = type + ") "+ t_source +"> " +dataLabel +" "+ varData ;   // build the trace message
 
       if(($traceTab[t$routing] & t$SM) != 0)    // if we're routing traces to the serial monitor...
@@ -88,7 +92,6 @@ void tracer_n(String file, String func, String line, int functionID, int tType, 
 void tracer_s(String file, String func, String line, int functionID, int tType, String dataLabel, String varData)
 {
    // this is an easy case - building an output string from an input that is a string. Poof! done
-   //String varDataS = varData ;    // we'll just pretend we have an invisible variable with one space
    tracer(file, func, line, functionID, tType, dataLabel, varData);
    return ;
 }

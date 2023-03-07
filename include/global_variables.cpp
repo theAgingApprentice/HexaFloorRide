@@ -133,10 +133,13 @@
 
 // specify how much detail we want when identifying source location of a trace.
 // uncomment just one of the following lines
-//#define t$SFolderFileFuncLine 1    // most detailed, but longest trace source location info
-//#define t$SFileFuncLine 1           // like above, with folder, if present, suppressed
+//#define t$SFolderFileFuncLine 1   // most detailed, but longest trace source location info
+//#define t$SFileFuncLine 1         // like above, with folder, if present, suppressed
 //#define t$SFuncLine 1             // function name <id-number>, and line number
-#define t$SFunc 1                 // just function name <id-number>
+#define t$SFunc 1                   // just function name <id-number>
+
+#define t$timestamps 1            // if defined, adds timestamps, in millis(), to all trace messages
+                                    // comment out above line to remove timestamps from trace messages
 
 // symbols to help in constructing trace messages
 
@@ -377,6 +380,11 @@ uint32_t oscFreq = 27000000; // Frequency of oscilator on motor driver.
 //#define PCA9685ServoDriver6 0x45 // I2C address for sixth servo driver.
 //#define PCA9685ServoDriver7 0x46 // I2C address for seventh servo driver.
 
+// Define variables related to Onboard LED
+int OnboardLED = 13;       // GPio 13 is the onboard LED
+void setupOnboardLED();    // prepare do GPio 13 can control Huzzah32 onboard LED
+int capstate;              // capacitive sensor state in oneSec.
+
 // Define OLED related variables.
 bool buttonA_flag = false; // Flag used by hardware ISR for button A.
 bool buttonB_flag = false; // Flag used by hardware ISR for button B.
@@ -461,6 +469,59 @@ void setupSerial();
 void monitorWebServer();
 void startWebServer();
 
+// variables related to the tasks called from loop), triggered by either timers or orconditions
+// and the once per second calculations of CPU performance numbers
+
+// handy macro to get all the needed CPU usage/dispatching variables defined consistently:
+// arguments are:
+//   taskID - a 4 to 8 character abbreviation of the routine name
+//   period - the number of milliseconds between scheduled executions of the routine
+
+      #define loopTaskVars(taskID,period)  \
+      int sched_##taskID##_mills ; \
+      unsigned long next_##taskID##_mills ; \
+      unsigned long cum_##taskID##_delay ; \
+      int max_##taskID##_delay ; \
+      int lates_##taskID ; \
+      unsigned long time_##taskID##_mics ; \
+      int max_##taskID##_mics ; \
+      const int period_##taskID##_mills = period;
+
+// now generate the variables for our routines in loop() dispatched by millis() timers
+loopTaskVars(webMon,200);     // the monitorWebServer() task runs every 200 milleseonds
+void monitorWebServer();   // in web.cpp
+
+loopTaskVars(checkOled,201);  // check Oled buttons. intentionally desynchronized from webMon
+void checkOledButtons();   // in Oled.cpp for now, moving to deviceSupport.cpp
+
+loopTaskVars(checkMqtt,202);  // checkMqtt() in mqttBroker.cpp
+void checkMqtt();
+
+loopTaskVars(flow,203);       // do_flow, condition call from loop
+void do_flow();
+
+loopTaskVars(oneSec,1000);    // the once per second routine that does CPU usage displays and other things
+void oneSec();                // ... which is itself a timer driven task.
+
+bool firstOneSec;    // flag to identify first entry to oneSec, which does initialization
+int mills;           // timestamp in millis()
+int mics;            // timestamp in micros()
+unsigned long deltaSched;     // diference between scheduled millis() time and when routine actually ran
+unsigned long deltaTime;      // elapsed time = time after take away time before
+
+/*
+// webmonitoring is now dispatched on a timer rather than a loop() mainline function call
+int nextMonWebMillis;         // timestamp in msec to next do monitorWebServer task
+const int monWebTime = 200;   // number of milleseconds between monitorWebServer calls in loop()
+
+// checkOledButtons is now dispatched via a timer
+int nextCheckOledMillis;      // timestamp in msec to next do checkOledButtons() task
+const int checkOledTime = 201;// number of milleseconds between checkOledButtons calls in loop()
+                              // intentionally offset from other timers to even out task execution
+// checkMqtt is now dispatched via a timer
+int nextCheckMqttMillis;      // timestamp in msec to next do checkMqtt() task
+const int checkMqttTime = 202;// number of milleseconds between checkMqtt calls in loop()
+*/
 /*******************************************************************************
  * @section codeModules Functions put into files according to function.
  * @details Order functions here in a way that ensures that variables get 

@@ -15,6 +15,9 @@
  * =================================================================================*/
 void monitorWebServer()
 {
+   // quickly re-schedule our next check before we get busy
+   next_webMon_mills = millis() + period_webMon_mills;
+
    if(localWebService.connectStatus()) // Is there is a valid WiFi connection?
    {
       if(localWebService.checkForClientRequest()) // New binary or broker IP?
