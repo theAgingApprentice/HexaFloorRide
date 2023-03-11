@@ -5,6 +5,9 @@
 #ifndef rgbLed_cpp // Start of precompiler check to avoid dupicate inclusion of this code block.
 #define rgbLed_cpp // Precompiler macro used for precompiler check.
 
+#include <main.h>    // Header file for all header files plus global_variables.cpp
+// main.h is the master header file. Other .cpp files should include main.h as the only included header file
+
 /**
  * @brief Set up a structure array of pre-defined colours for RGB LED.
  * @details The rest button has an embedded RGB LED that contains three
