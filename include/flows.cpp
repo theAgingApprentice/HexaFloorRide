@@ -2,6 +2,9 @@
 // and is invoked by an include statement in main.cpp
 // routines here have corresponding entries in include/flows.h
 
+#include <main.h>    // Header file for all header files plus global_variables.cpp
+// main.h is the master header file. Other .cpp files should include main.h as the only included header file
+
 int8_t rgbLedClr = 0; //  Track what colour to set the rgb led to next when working on a new flow row.
 void setupFlows()
 {  

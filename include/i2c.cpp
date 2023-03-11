@@ -3,8 +3,10 @@
  * @brief File containing all I2C functions.
  *******************************************************************************/
 #ifndef i2c_cpp // Start of precompiler check to avoid dupicate inclusion of this code block.
-
 #define i2c_cpp // Precompiler macro used for precompiler check.
+
+#include <main.h>    // Header file for all header files plus global_variables.cpp
+// main.h is the master header file. Other .cpp files should include main.h as the only included header file
 
 /**
  * @brief Monitor local web service to see if there are any client requests.

@@ -11,9 +11,11 @@
  * @brief File containing support for various hardware devices
  * 
  *******************************************************************************/
-#ifndef deviceSupport_cpp // Standard include guard
+#ifndef deviceSupport_cpp // Standard include guard. (Actually unneeded)
 #define deviceSupport_cpp
-#endif
+
+#include <main.h>    // Header file for all header files plus global_variables.cpp
+// main.h is the master header file. Other .cpp files should include main.h as the only included header file
 
 void setupPwmdriver()       // initialization of pmdriver which handles PCA9685 PWM controllers
 {                          // this code was extracted from servoLegs.cpp which is no longer used
@@ -80,3 +82,4 @@ void setupOnboardLED()     // prepare do GPio 13 can control Huzzah32 onboard LE
    pinMode(OnboardLED,OUTPUT);     // onboard LED id hardwired to GP1013
    digitalWrite(OnboardLED,LOW);   // start out with it off
 }
+#endif

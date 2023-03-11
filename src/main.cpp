@@ -38,16 +38,12 @@
  * IN THE SOFTWARE.
  *****************************************************************************/
 
+/*
 // Arduino.h needs to precede reading .h files because they use types that it defines
 #include <Arduino.h> // Arduino Core for ESP32. Comes with PlatformIO.
 
-#include <main.h>    // Header file for all libraries needed by this program.
-// main.h has includes for all other .h files. No other files should include .h files
-
-
 // include all libraries ============================================================================
 // libraries that we've modified
-// Core (CPU) details that the code running on.
 #include <aaNetwork.h> // Wifi functions. 
 #include <aaWebService.h> // Realtime web-based network config and OTA code updates.
 #include <aaFlash.h> // Use Flash memory to store values that persist past reboot.
@@ -59,9 +55,13 @@
 #include <ArduinoLog.h> // https://github.com/thijse/Arduino-Log.
 #include <Adafruit_GFX.h> // OLED graphics
 #include <Adafruit_SH110X.h> // OLED text
+*/
+
+#include <main.h>    // Header file for all header files plus global_variables.cpp
+// main.h is the master header file. Other .cpp files should include main.h as the only included header file
 
 // global variables ===================================================================================
-#include <global_variables.cpp>  // global variable declarations and global macros ====================
+//129 #include <global_variables.cpp>  // global variable declarations and global macros ====================
 
 //=====================================================================================================
 // OOB stuff that used to be in main.h
@@ -69,7 +69,7 @@
 // However, it needs to follow the library inclusions above
 // (being called from setup() isn't sufficient, because compiler needs to see this early)
 
-   // these seem to be calls to OOP constructors or instantiationsmethods, which our new header standard excludes
+   // these seem to be calls to OOP constructors or instantiations, methods, which our new header standard excludes
    aaNetwork network(HOST_NAME_PREFIX); // WiFi session management.
    aaMqtt mqtt; // Publish and subscribe to MQTT broker. 
    Adafruit_PWMServoDriver pwmDriver[numDrivers]; // Servo driver object.
@@ -323,7 +323,7 @@ void oneSec()     // routine that executes once per second to display CPU perfor
       capstate = newstate;    // make the state change from the above logic
 
       String cpuUse;
-      rep = rep + " cap:" +String(cap27);
+      // rep = rep + " cap:" +String(cap27);  // append current value of capacitive sensor
       cpuUse = "CPU: " + String(totCPU) + " " + rep;
       
       if(capstate == 0)    // if capacitive sensor has put/left us in output enabled mode, do it

@@ -3,8 +3,10 @@
  * @brief File containing all MQTT functions.
  *******************************************************************************/
 #ifndef connectToMqttBroker_h // Start of precompiler check to avoid dupicate inclusion of this code block.
-
 #define connectToMqttBroker_h // Precompiler macro used for precompiler check.
+
+#include <main.h>    // Header file for all header files plus global_variables.cpp
+// main.h is the master header file. Other .cpp files should include main.h as the only included header file
 
 // TODO #7 : A pingable but non MQTT IP address crash loops code.
 /** 
