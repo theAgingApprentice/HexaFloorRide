@@ -88,7 +88,6 @@
 #include <mqttBroker.cpp> // Establish connect to the the MQTT broker.
 #include <i2c.cpp> // Scan I2C buses to see what devices are present.
 #include <oled.cpp> // Control OLED.
-#include <Preferences.h> // Required for saving variables into Flash memory.
 
 
 /**

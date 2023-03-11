@@ -20,6 +20,7 @@
 #include <ArduinoLog.h> // https://github.com/thijse/Arduino-Log.
 #include <Adafruit_GFX.h> // OLED graphics
 #include <Adafruit_SH110X.h> // OLED text
+#include <Preferences.h> // Required for saving variables into Flash memory.
 
 // header files from other files/bags
 #include <huzzah32_gpio_pins.h> // Map pins on Adafruit Huzzah32 dev board to friendly names.
