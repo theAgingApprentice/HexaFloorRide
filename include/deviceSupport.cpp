@@ -65,9 +65,9 @@ void flashWriteBrokerIP(IPAddress address)   // write an new IP broker address t
    preferences.putString("brokerIP", address.toString()); // Write IP address.
    preferences.end(); // Close access to flash memory.    
 }
-void setupTaskTimers()   // set up the routine that runs once per second to do timer related stuff
+void setupTasks()   // set up the routine that runs once per second to do timer related stuff
 {
-   next_oneSec_mills = millis() + 1000; // first execution is 1 second from this setup execution,
+   next_oneSec_mills = millis() + 1000; // first execution is 1 second (1000 millis) from this setup execution,
                                        // and this setup is intentionally called from very end of setup()
    
    firstOneSec = true;              // first execution just gets one second intervals going

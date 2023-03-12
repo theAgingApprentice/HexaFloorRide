@@ -134,8 +134,8 @@ void setup()
    traceM("Review boot sequence status flags");
    checkBoot();
    //Log.traceln("<setup> End of setup.");
-   setupTaskTimers();   // initialize for millis() based task dispatches in loop() (in deviceSupport.cpp)
-                        // includes: oneSec, webMon
+   setupTasks();   // initialize for millis() based and condition based task dispatches in loop() (in deviceSupport.cpp)
+   
    traceM("End of setup #############################################################################");
 } // setup()
 
@@ -212,6 +212,15 @@ void loop()
    // flow processing that does servo position changes to move legs. In flows.cpp
    conditionTask(do_flow(),flow,f_flowing == true);  // flows that control servo position changes that move legs
 
+   // setup processing for a new flow, including initial servo positioning
+   //conditionTask(flowRow_0,fl0,((f_flowing == true) && f_active == 0)); // handle flow row 0 including initial positioning
+
+   //processing for flow row 1, first one with frames, after a 340 msec pause for servo movement after flowRow_0
+   //timerTask(flowRow_1,fl1)      // check to see if 340 msec timer has expired, and if so, process flow row 1
+
+   //processing for remaining flow rows, after the time delay between frames
+   //timerTask(flowRow_x,flx)      // when the time comes, recalculate toe position for next frame, and go there
+
    // look for, and process any MQTT commands that came in from the MQTT broker. In mqttBroker.cpp
    timerTask(checkMqtt(),checkMqtt);               // check for MQTT work to be done
 
@@ -222,7 +231,7 @@ void loop()
    timerTask(monitorWebServer(),webMon);           // monitor web service (new broker IP, new file transfers)
 
    // check for Oled button presses, and update display. In Oled.cpp
-   timerTask(checkOledButtons(),checkOled);        // check Oled Buttons
+   timerTask(checkOledButtons(),checkOled);        // check Oled Buttons()
 
 // ... and cycle around and do loop() again.
  
@@ -233,7 +242,7 @@ void loop()
 void oneSec()     // routine that executes once per second to display CPU performance information
                   // and maybe do other timer related sub-tasks
 {
-   next_oneSec_mills = millis() + 1000 ;   //quickly schedule our next execution
+   next_oneSec_mills = millis() + period_oneSec_mills ;   //quickly schedule our next execution - 1000 msec in future
    #undef localRNum
    #define localRNum 14
    String rep;
