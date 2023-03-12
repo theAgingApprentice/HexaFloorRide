@@ -507,26 +507,4 @@ bool firstOneSec;    // flag to identify first entry to oneSec, which does initi
 int mills;           // timestamp in millis()
 int mics;            // timestamp in micros()
 unsigned long deltaSched;     // diference between scheduled millis() time and when routine actually ran
-unsigned long deltaTime;      // elapsed time = time after take away time before
-
-/*
-// webmonitoring is now dispatched on a timer rather than a loop() mainline function call
-int nextMonWebMillis;         // timestamp in msec to next do monitorWebServer task
-const int monWebTime = 200;   // number of milleseconds between monitorWebServer calls in loop()
-
-// checkOledButtons is now dispatched via a timer
-int nextCheckOledMillis;      // timestamp in msec to next do checkOledButtons() task
-const int checkOledTime = 201;// number of milleseconds between checkOledButtons calls in loop()
-                              // intentionally offset from other timers to even out task execution
-// checkMqtt is now dispatched via a timer
-int nextCheckMqttMillis;      // timestamp in msec to next do checkMqtt() task
-const int checkMqttTime = 202;// number of milleseconds between checkMqtt calls in loop()
-*/
-/*******************************************************************************
- * @section codeModules Functions put into files according to function.
- * @details Order functions here in a way that ensures that variables get 
- * declared in one function prior to being referenced by another function. 
- *******************************************************************************/
-
-
-
+unsigned long deltaTime;      // elapsed time = (time after) take away (time before)
