@@ -340,7 +340,23 @@ void oneSec()     // routine that executes once per second to display CPU perfor
                            // hint: using MQTT avoids console's tendency to lose older output
                            // and generates interleaved timestamped CPU info, which can be useful, or messy.
       }
-
+      if( totCPU > 90)     // if the CPU is very busy, issue a red alert
+      {
+         traceEf("CPU Utilization RED alert = usage% =",totCPU);
+         CPULoad = CPURed ;   // note high CPU usage for load shedding purposes
+         CPUOffLoad();        // try to reduce CPU usage somehow
+      }
+      else if (totCPU > 60)   // if the CPU is busy, issue a yellow alert
+      {  
+         traceEf("CPU Utilization YELLOW alert = usage% =",totCPU);
+         CPULoad = CPUYellow ; // note high CPU usage for load shedding purposes
+         CPUOffLoad();         // try to reduce CPU usage somehow
+      }
+      else
+      {
+         CPULoad = CPUNormal;  // we're comfortable - no action needed
+      }
+      
       // clean up in preparation for next second's data accumulation
       taskProcInit(checkOled);
       taskProcInit(checkMqtt);
@@ -351,3 +367,12 @@ void oneSec()     // routine that executes once per second to display CPU perfor
    } // if(firstOneSec) .. else
 
 } // void oneSec()
+
+void CPUOffLoad()       // attempt to reduce load on CPU
+{
+   // routines that can be delayed should be checking CPULoad variable & delaying appropriately
+   // temporary CPU burst will be detected in oneSec, and may be gone before load shedding can occur
+   // not quite sure what action this routine can take
+
+   int dummy = 1; // compiler doesn't like empty functions
+}

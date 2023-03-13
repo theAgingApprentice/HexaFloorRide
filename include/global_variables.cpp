@@ -508,3 +508,9 @@ int mills;           // timestamp in millis()
 int mics;            // timestamp in micros()
 unsigned long deltaSched;     // diference between scheduled millis() time and when routine actually ran
 unsigned long deltaTime;      // elapsed time = (time after) take away (time before)
+
+void CPUOffLoad();         // attempt to reduce load on CPU
+int CPULoad;               // current state of CPU utilization from oneSec monitoring
+const int CPUNormal = 0;   // normal - below 60%
+const int CPUYellow = 1;   // yellow alert - 60-90%
+const int CPURed = 2;      // red alert, >90%
