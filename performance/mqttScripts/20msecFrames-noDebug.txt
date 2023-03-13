@@ -1,0 +1,72 @@
+M) setup{7}[11005]> End of setup #############################################################################
+M) oneSec{14}[12055]>  CPU: 0.00 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.0  0.0 0 /Flow: 0.0  0.0 /1Sec: 0.0  0.0 0 /
+M) oneSec{14}[13007]>  CPU: 5.56 /Oled: 0.0  0.0 1 /MQTT: 0.0  0.0 1 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 5.0  5.0 0 /
+M) oneSec{14}[14007]>  CPU: 0.73 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 0.1  0.1 0 /
+M) oneSec{14}[15007]>  CPU: 0.72 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 0.1  0.1 0 /
+M) oneSec{14}[16007]>  CPU: 0.72 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 0.1  0.1 0 /
+M) oneSec{14}[17007]>  CPU: 0.74 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 0.1  0.1 0 /
+M) oneSec{14}[18007]>  CPU: 1.07 /Oled: 0.0  0.0 0 /MQTT: 0.3  0.1 0 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 0.1  0.1 0 /
+M) oneSec{14}[19007]>  CPU: 0.99 /Oled: 0.0  0.0 0 /MQTT: 0.3  0.1 0 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 0.1  0.1 0 /
+M) oneSec{14}[20007]>  CPU: 1.06 /Oled: 0.0  0.0 0 /MQTT: 0.3  0.1 0 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 0.1  0.1 0 /
+M) oneSec{14}[21007]>  CPU: 1.07 /Oled: 0.0  0.0 0 /MQTT: 0.3  0.1 0 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 0.1  0.1 0 /
+M) oneSec{14}[22007]>  CPU: 1.07 /Oled: 0.0  0.0 0 /MQTT: 0.4  0.1 0 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 0.1  0.1 0 /
+M) oneSec{14}[23007]>  CPU: 1.05 /Oled: 0.0  0.0 0 /MQTT: 0.3  0.1 0 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[23973]>  start of flow row # 0  
+L) do_flow{13}[24318]> start of flow row #1  
+M) oneSec{14}[24319]>  CPU: 35.44 /Oled: 0.0  0.0 0 /MQTT: 0.3  0.1 1 /webMon: 0.5  0.1 0 /Flow:34.6 34.6 /1Sec: 0.1  0.1 1 /
+L) do_flow{13}[24812]>  start of flow row #  2
+L) do_flow{13}[25312]>  start of flow row #  3
+M) oneSec{14}[25319]>  CPU: 16.31 /Oled: 0.0  0.0 1 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 1 /Flow:14.6  0.3 /1Sec: 1.1  1.1 0 /
+L) do_flow{13}[25812]>  start of flow row #  4
+L) do_flow{13}[26312]>  start of flow row #  5
+M) oneSec{14}[26319]>  CPU: 15.35 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:14.6  0.2 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[26812]>  start of flow row #  6
+L) do_flow{13}[27312]>  start of flow row #  7
+M) oneSec{14}[27319]>  CPU: 15.33 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:14.6  0.2 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[28311]>  start of flow row #  8
+M) oneSec{14}[28319]>  CPU: 11.51 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:10.8  0.1 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[29313]>  start of flow row #  9
+M) oneSec{14}[29319]>  CPU: 22.76 /Oled: 0.0  0.0 1 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:22.0  0.3 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[30313]>  start of flow row #  10
+M) oneSec{14}[30319]>  CPU: 22.75 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 1 /webMon: 0.6  0.1 0 /Flow:22.0  0.3 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[30813]>  start of flow row #  11
+L) do_flow{13}[31313]>  start of flow row #  12
+M) oneSec{14}[31319]>  CPU: 22.66 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:21.9  0.3 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[32313]>  start of flow row #  13
+M) oneSec{14}[32319]>  CPU: 22.81 /Oled: 0.0  0.0 1 /MQTT: 0.0  0.0 1 /webMon: 0.6  0.1 0 /Flow:22.1  0.3 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[33313]>  start of flow row #  14
+M) oneSec{14}[33319]>  CPU: 22.76 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:22.0  0.3 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[33813]>  start of flow row #  15
+L) do_flow{13}[34313]>  start of flow row #  16
+M) oneSec{14}[34319]>  CPU: 22.66 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 1 /webMon: 0.6  0.1 0 /Flow:21.9  0.3 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[34812]>  start of flow row #  17
+M) oneSec{14}[35319]>  CPU: 17.26 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:16.5  0.2 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[35812]>  start of flow row #  18
+M) oneSec{14}[36319]>  CPU: 17.44 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:16.7  0.2 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[36812]>  start of flow row #  19
+L) do_flow{13}[37312]>  start of flow row #  20
+M) oneSec{14}[37319]>  CPU: 17.42 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 1 /webMon: 0.6  0.1 0 /Flow:16.7  0.2 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[37812]>  start of flow row #  21
+M) oneSec{14}[38319]>  CPU: 17.35 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:16.6  0.2 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[38812]>  start of flow row #  22
+M) oneSec{14}[39319]>  CPU: 17.44 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:16.7  0.2 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[39812]>  start of flow row #  23
+L) do_flow{13}[40312]>  start of flow row #  24
+M) oneSec{14}[40319]>  CPU: 17.34 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:16.6  0.2 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[40811]>  start of flow row #  25
+L) do_flow{13}[41312]>  start of flow row #  26
+M) oneSec{14}[41319]>  CPU: 13.43 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:12.7  0.2 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[41812]>  start of flow row #  27
+L) do_flow{13}[42312]>  start of flow row #  28
+M) oneSec{14}[42319]>  CPU: 15.30 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:14.6  0.2 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[42812]>  start of flow row #  29
+L) do_flow{13}[43312]>  start of flow row #  30
+M) oneSec{14}[43319]>  CPU: 15.39 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:14.6  0.2 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[43812]>  start of flow row #  31
+L) do_flow{13}[44311]>  start of flow row #  32
+M) oneSec{14}[44319]>  CPU: 13.44 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:12.7  0.2 /1Sec: 0.1  0.1 0 /
+L) do_flow{13}[45313]>  end of multi row flow processing  
+M) oneSec{14}[45319]>  CPU: 22.53 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow:21.8  0.3 /1Sec: 0.1  0.1 0 /
+M) oneSec{14}[46319]>  CPU: 0.73 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 0.1  0.1 0 /
+M) oneSec{14}[47319]>  CPU: 0.72 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 0.1  0.1 0 /
+M) oneSec{14}[48318]>  CPU: 0.73 /Oled: 0.0  0.0 0 /MQTT: 0.0  0.0 0 /webMon: 0.6  0.1 0 /Flow: 0.0  0.0 /1Sec: 0.1  0.1 0 /
