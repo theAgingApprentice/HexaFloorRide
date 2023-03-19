@@ -502,37 +502,45 @@ bool processCmd(String payload)
 
          // stealing code from do_flow in flows.cpp ...
 
-         argH = -1 * argH;    // matching empiracal testing
-         argK = -1 * argK;
-         argA = -1 * argA;
-         
-         if(argLeg >= 4)            // might need to negate some angles...
-         {  argK = -1 * argK;   //... because servos are mounted opposite ways on opposite sides of bot
-            argH = -1 * argH;
-            argA = -1 * argA;
-         }  // if L>=4
-         
- 
-         // the per servo calibration is done inside the mapDegToPWM function 
+         int lowLeg = argLeg;     // set up for a loop with only one iteration
+         int hiLeg = argLeg;
+         if(argLeg == 0)         // if leg  was 0, do command for all 6 legs
+         {  lowLeg = 1;
+            hiLeg = 6;
+         }
+         for(int LargLeg=lowLeg; LargLeg<=hiLeg; LargLeg++)
+         {
+            float LargH = -1 * argH;    // matching empiracal testing
+            float LargK = -1 * argK;
+            float LargA = -1 * argA;
+            
+            if(LargLeg >= 4)            // might need to negate some angles...
+            {  LargK = -1 * LargK;   //... because servos are mounted opposite ways on opposite sides of bot
+               LargH = -1 * LargH;
+               LargA = -1 * LargA;
+            }  // if LargLeg>=4
+            
+   
+            // the per servo calibration is done inside the mapDegToPWM function 
 
-         // starting with the hip...
-         int servoNum = ((argLeg - 1) * 3) +1;   // servo numbers go from 1 to 9. This is hip servo for leg argLeg
-         int PWM = mapDegToPWM(argH,servoNum);
-         sp3sl("  Hip angle, PWM=",argH,PWM);
-         pwmDriver[legIndexDriver[argLeg]].setPWM(legIndexHipPin[argLeg],  pwmClkStart, PWM);
+            // starting with the hip...
+            int servoNum = ((LargLeg - 1) * 3) +1;   // servo numbers go from 1 to 9. This is hip servo for leg argLeg
+            int PWM = mapDegToPWM(LargH,servoNum);
+            //sp3sl("  Hip angle, PWM=",LargH,PWM);
+            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg],  pwmClkStart, PWM);
 
-         // then the knee
-         servoNum = ((argLeg - 1) * 3) +2;   // servo numbers go from 1 to 9. This is knee servo for leg argLeg
-         PWM = mapDegToPWM(argK,servoNum);
-         sp3sl(" Knee angle, PWM=",argK,PWM);
-         pwmDriver[legIndexDriver[argLeg]].setPWM(legIndexHipPin[argLeg]+1,pwmClkStart, PWM);
+            // then the knee
+            servoNum = ((LargLeg - 1) * 3) +2;   // servo numbers go from 1 to 9. This is knee servo for leg argLeg
+            PWM = mapDegToPWM(LargK,servoNum);
+            //sp3sl(" Knee angle, PWM=",LargK,PWM);
+            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg]+1,pwmClkStart, PWM);
 
-         //then the ankle
-         servoNum = ((argLeg - 1) * 3) +3;   // servo numbers go from 1 to 9. This is ankle servo for leg argLeg
-         PWM = mapDegToPWM(argA,servoNum);
-         sp3sl("Ankle angle, PWM=",argA,PWM);
-         pwmDriver[legIndexDriver[argLeg]].setPWM(legIndexHipPin[argLeg]+2,pwmClkStart, PWM);
-  
+            //then the ankle
+            servoNum = ((LargLeg - 1) * 3) +3;   // servo numbers go from 1 to 9. This is ankle servo for leg argLeg
+            PWM = mapDegToPWM(LargA,servoNum);
+            //sp3sl("Ankle angle, PWM=",LargA,PWM);
+         pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg]+2,pwmClkStart, PWM);
+         }
          return true;
       } // else..if (argN != 4) 
    
@@ -553,7 +561,8 @@ bool processCmd(String payload)
 
    if (cmd == "MOVELEGCOORDS" || cmd == "MLC")   //MoveLegAngles command
    { // command format: MLC, leg, X, Y, Z
-   
+
+
       if (argN != 4)          // did we get command pls 4 arguments?
       {                       // ignore command altogether
          sp1l("******* MoveLegCoords command didn't have 4 additional arguments");
@@ -566,13 +575,79 @@ bool processCmd(String payload)
          float argY = arg[3].toFloat();   // then knee angle
          float argZ = arg[4].toFloat();   // then ankle angle
 
-         sp4sl("coordinatess= ",argX, argY, argZ);
+         coordsToAngles(argX, argY, argZ); // creates f_angH, f_angK, f_angA
+         // now, one servo within the leg at a time, figure the pwm value, and move the servo
+         // might have to temporarily negate angles, due servos mounted opposite on either side of bot
+
+
+         // stealing code from do_flow in flows.cpp ...
+
+         int lowLeg = argLeg;     // set up for a loop with only one iteration
+         int hiLeg = argLeg;
+         if(argLeg == 0)         // if leg  was 0, do command for all 6 legs
+         {  lowLeg = 1;
+            hiLeg = 6;
+         }
+         for(int LargLeg=lowLeg; LargLeg<=hiLeg; LargLeg++)
+         {
+            float LargH = -1 * f_angH;    // matching empiracal testing
+            float LargK = -1 * f_angK;
+            float LargA = -1 * f_angA;
+            
+            if(LargLeg >= 4)            // might need to negate some angles...
+            {  LargK = -1 * LargK;   //... because servos are mounted opposite ways on opposite sides of bot
+               LargH = -1 * LargH;
+               LargA = -1 * LargA;
+            }  // if LargLeg>=4
+         
+            // the per servo calibration is done inside the mapDegToPWM function 
+
+            // starting with the hip...
+            int servoNum = ((LargLeg - 1) * 3) +1;   // servo numbers go from 1 to 9. This is hip servo for leg argLeg
+            int PWM = mapDegToPWM(LargH,servoNum);
+            //sp3sl("  Hip angle, PWM=",LargH,PWM);
+            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg],  pwmClkStart, PWM);
+
+            // then the knee
+            servoNum = ((LargLeg - 1) * 3) +2;   // servo numbers go from 1 to 9. This is knee servo for leg argLeg
+            PWM = mapDegToPWM(LargK,servoNum);
+            //sp3sl(" Knee angle, PWM=",LargK,PWM);
+            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg]+1,pwmClkStart, PWM);
+
+            //then the ankle
+            servoNum = ((LargLeg - 1) * 3) +3;   // servo numbers go from 1 to 9. This is ankle servo for leg argLeg
+            PWM = mapDegToPWM(LargA,servoNum);
+            //sp3sl("Ankle angle, PWM=",LargA,PWM);
+            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg]+2,pwmClkStart, PWM);
+         }
+      }
+      return true;
+
+
+
+
+/*
+
+
+      if (argN != 4)          // did we get command pls 4 arguments?
+      {                       // ignore command altogether
+         sp1l("******* MoveLegCoords command didn't have 4 additional arguments");
+         return false;
+      }
+      else // convert args to appropriate format
+      {
+         int argLeg = arg[1].toInt();      // first arg is leg number
+         float argX = arg[2].toFloat();   // .. then hip angle
+         float argY = arg[3].toFloat();   // then knee angle
+         float argZ = arg[4].toFloat();   // then ankle angle
+
+         //sp4sl("coordinatess= ",argX, argY, argZ);
 
          coordsToAngles(argX, argY, argZ); // creates f_angH, f_angK, f_angA
          // now, one servo within the leg at a time, figure the pwm value, and move the servo
          // might have to temporarily negate angles, due servos mounted opposite on either side of bot
 
-         sp4sl("direct angles= ",f_angH, f_angK, f_angA);
+         //sp4sl("direct angles= ",f_angH, f_angK, f_angA);
 
          float argK =  f_angK;    // may need to negate this angle for PWM calculation purposes, depending on leg
          float argA =  f_angA;
@@ -584,7 +659,7 @@ bool processCmd(String payload)
             argA = -1 * argA;
          }  // if L>=4
 
-         sp4sl("changed angles= ",argH, argK, argA);
+         //sp4sl("changed angles= ",argH, argK, argA);
           
          // the per servo calibration is done inside the mapDegToPWM function 
 
@@ -608,17 +683,9 @@ bool processCmd(String payload)
   
          return true;
       } // else..if (argN != 4) 
+*/
    
    } // else... if (cmd == "MOVELEGANGLES" || cmd == "MLA")
-
-
-
-
-
-
-
-
-
 
    // declare variables for upcoming servo test commands
    int sr_deg, sr_pwm, sr_srv, sr_srv2, sr_side, sr_port;
