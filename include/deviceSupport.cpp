@@ -71,6 +71,7 @@ void setupTasks()   // set up the routine that runs once per second to do timer 
                                        // and this setup is intentionally called from very end of setup()
    
    firstOneSec = true;              // first execution just gets one second intervals going
+   capstate = 1;              // CPU usage is initially disabled, until capacitive touch made
    // initialize the timers
    next_webMon_mills = millis() + period_webMon_mills;
    next_checkOled_mills = millis() + period_checkOled_mills;   
