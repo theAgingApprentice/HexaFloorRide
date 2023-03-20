@@ -64,7 +64,7 @@
  * Some other factors in assignment of functions to pins:
  *    We avoid using A/D controller 2 due to complications with WiFi coexistence
  *    Physical pin 24, GPIO 12 seems to interfere with software download if used
- *    Physical pin 25, GPIO 13 may be same GPIO as CPU’s onboard LED
+ *    Physical pin 25, GPIO 13 is connected to CPU’s onboard LED
  *    ADC1: 7/34, 8/39, 9/36, 20/32, 22/33  ( notation is <physical>/<GPIO> pin number)
  *    ADC2: 5/26, 6/25, 10/4, 19/14, 21/15, 23/27, 24/12, 25/13
  ******************************************************************************/
@@ -103,6 +103,6 @@ const int8_t PIN_25_LBL_13 = 13; // Physical pin 25. Input and output. Onboard L
 // Physical pin 26 is labeled USB
 // Physical pin 27 is labeled EN
 // Physical pin 28 is labeled BAT
-
+const int8_t Pin_25_OnboardLED = 13; // clarifying: physical pin 25 = GPIO13 = Onboard LED
 
 #endif // End of conditional preprocessor code
