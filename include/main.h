@@ -31,6 +31,16 @@
 // to keep linter happy: define global variables in main.h, include main.h in all .cpp files
 #include <global_variables.cpp>  // global variable declarations and global macros
 
+
+// these seem to be calls to OOP constructors, instantiations, or methods, which some cpp files need
+// these may gradually disappear as we convert from OOP libraries to functional code
+aaNetwork network(HOST_NAME_PREFIX);            // WiFi session management.
+aaMqtt mqtt;                                    // Publish and subscribe to MQTT broker. 
+Adafruit_PWMServoDriver pwmDriver[numDrivers];  // Servo driver object.
+aaWebService localWebService(WEB_APP_TITLE);    // Webserver hosted by microcontroller.
+Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
+Preferences preferences;                        // Save to SPI NOR flash for variables to persist past reset
+
 /************************************************************************************
  * @section mainDeclare Declare functions in main.cpp.
  ************************************************************************************/

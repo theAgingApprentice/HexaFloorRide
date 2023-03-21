@@ -60,22 +60,6 @@
 #include <main.h>    // Header file for all header files plus global_variables.cpp
 // main.h is the master header file. Other .cpp files should include main.h as the only included header file
 
-// global variables ===================================================================================
-//129 #include <global_variables.cpp>  // global variable declarations and global macros ====================
-
-//=====================================================================================================
-// OOB stuff that used to be in main.h
-// it's positioned here because some of it has to be compiled before code that refers to it.
-// However, it needs to follow the library inclusions above
-// (being called from setup() isn't sufficient, because compiler needs to see this early)
-
-   // these seem to be calls to OOP constructors or instantiations, methods, which our new header standard excludes
-   aaNetwork network(HOST_NAME_PREFIX); // WiFi session management.
-   aaMqtt mqtt; // Publish and subscribe to MQTT broker. 
-   Adafruit_PWMServoDriver pwmDriver[numDrivers]; // Servo driver object.
-   aaWebService localWebService(WEB_APP_TITLE); // Webserver hosted by microcontroller.
-   Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
-   Preferences preferences; // Save to SPI NOR flash for variables to persist past reset
 
 // our code modules and code "bags" ===================================================================
 #include <flows.cpp>          // routines relates to leg movements
