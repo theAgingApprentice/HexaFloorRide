@@ -171,7 +171,7 @@ bool processCmd(String payload)
                                                          // arguments, excluding the command
    String cmd = arg[0];                                  // first comma separated value in payload is the command
    
-   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: TEST
    
    // TEST command.
    if (cmd == "TEST")
@@ -180,7 +180,7 @@ bool processCmd(String payload)
       return true;
    } // if
    
-   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: HELP
    
    // HELP command.
    if (cmd == "HELP")
@@ -282,7 +282,7 @@ bool processCmd(String payload)
       return true;
    } // if
  
-   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: SET_CUST_RGB_CLR
    
    // SET_CUST_RGB_CLR command.
    if (cmd == "SET_CUST_RGB_CLR")
@@ -303,7 +303,7 @@ bool processCmd(String payload)
       } // else
    }    // if
    
-   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: SET_STD_RGB_CLR
    
    // SET_STD_RGB_CLR command.
     if (cmd == "SET_STD_RGB_CLR")
@@ -321,7 +321,7 @@ bool processCmd(String payload)
       } // else
    }    // if
    
-   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: ROTATE_OLED
    
    // ROTATE_OLED command.
    if (cmd == "ROTATE_OLED")
@@ -339,6 +339,8 @@ bool processCmd(String payload)
          return false;
       } // else
    }    // if cmd = "ROTATE_OLED"
+
+      // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: FLOW
 
    // FLOW command for storing next position in a smooth motion flow between multiple positions
    // the flow command builds arrays describing the desired movement
@@ -423,7 +425,7 @@ bool processCmd(String payload)
       return true;
    } // if cmd = flow
    
-   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: NEW_FLOW
    
    // NEW_FLOW command to prepare for flow commands defining a new flow
    // the FLOW command builds arrays describing the desired movement
@@ -442,6 +444,8 @@ bool processCmd(String payload)
          f_active = 0;
          return true;
    }
+
+   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: DO_FLOW
 
    // command: DO_FLOW
    // format: DO_FLOW,toeMoveAction, msecPerFrame
@@ -478,7 +482,7 @@ bool processCmd(String payload)
          return true;
    } // if (cmd == "DO_FLOW" || cmd == "DF")  
 
-   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: MLA
    
    // MoveLegAngles command - move one leg to specified angles for hip, knee and ankle servos
    // format: MLA, leg-num, hip-angle, knee-angle, ankle-angle
@@ -496,58 +500,18 @@ bool processCmd(String payload)
       else // convert args to appropriate format
       {
          int argLeg = arg[1].toInt();      // first arg is leg number
-         float argH = arg[2].toFloat();   // .. then hip angle
-         float argK = arg[3].toFloat();   // then knee angle
-         float argA = arg[4].toFloat();   // then ankle angle
+         f_angH = arg[2].toFloat();   // .. then hip angle
+         f_angK = arg[3].toFloat();   // then knee angle
+         f_angA = arg[4].toFloat();   // then ankle angle
 
-         // stealing code from do_flow in flows.cpp ...
-
-         int lowLeg = argLeg;     // set up for a loop with only one iteration
-         int hiLeg = argLeg;
-         if(argLeg == 0)         // if leg  was 0, do command for all 6 legs
-         {  lowLeg = 1;
-            hiLeg = 6;
-         }
-         for(int LargLeg=lowLeg; LargLeg<=hiLeg; LargLeg++)
-         {
-            float LargH = -1 * argH;    // matching empiracal testing
-            float LargK = -1 * argK;
-            float LargA = -1 * argA;
-            
-            if(LargLeg >= 4)            // might need to negate some angles...
-            {  LargK = -1 * LargK;   //... because servos are mounted opposite ways on opposite sides of bot
-               LargH = -1 * LargH;
-               LargA = -1 * LargA;
-            }  // if LargLeg>=4
-            
-   
-            // the per servo calibration is done inside the mapDegToPWM function 
-
-            // starting with the hip...
-            int servoNum = ((LargLeg - 1) * 3) +1;   // servo numbers go from 1 to 9. This is hip servo for leg argLeg
-            int PWM = mapDegToPWM(LargH,servoNum);
-            //sp3sl("  Hip angle, PWM=",LargH,PWM);
-            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg],  pwmClkStart, PWM);
-
-            // then the knee
-            servoNum = ((LargLeg - 1) * 3) +2;   // servo numbers go from 1 to 9. This is knee servo for leg argLeg
-            PWM = mapDegToPWM(LargK,servoNum);
-            //sp3sl(" Knee angle, PWM=",LargK,PWM);
-            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg]+1,pwmClkStart, PWM);
-
-            //then the ankle
-            servoNum = ((LargLeg - 1) * 3) +3;   // servo numbers go from 1 to 9. This is ankle servo for leg argLeg
-            PWM = mapDegToPWM(LargA,servoNum);
-            //sp3sl("Ankle angle, PWM=",LargA,PWM);
-         pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg]+2,pwmClkStart, PWM);
-         }
+         goToAngles(argLeg) ;     // move servos to these angles for specified leg(s)
          return true;
       } // else..if (argN != 4) 
    
    } // else... if (cmd == "MOVELEGANGLES" || cmd == "MLA")
 
 
-   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: MLC
    
    // MoveLegCoords command - move one leg to specified local X, Y and Z coordinates
    // format: MLA, leg-num, X, Y, Z
@@ -573,53 +537,12 @@ bool processCmd(String payload)
          // now, one servo within the leg at a time, figure the pwm value, and move the servo
          // might have to temporarily negate angles, due servos mounted opposite on either side of bot
 
-
-         // stealing code from do_flow in flows.cpp ...
-
-         int lowLeg = argLeg;     // set up for a loop with only one iteration
-         int hiLeg = argLeg;
-         if(argLeg == 0)         // if leg  was 0, do command for all 6 legs
-         {  lowLeg = 1;
-            hiLeg = 6;
-         }
-         for(int LargLeg=lowLeg; LargLeg<=hiLeg; LargLeg++)
-         {
-            float LargH = -1 * f_angH;    // matching empiracal testing
-            float LargK = -1 * f_angK;
-            float LargA = -1 * f_angA;
-            
-            if(LargLeg >= 4)            // might need to negate some angles...
-            {  LargK = -1 * LargK;   //... because servos are mounted opposite ways on opposite sides of bot
-               LargH = -1 * LargH;
-               LargA = -1 * LargA;
-            }  // if LargLeg>=4
-         
-            // the per servo calibration is done inside the mapDegToPWM function 
-
-            // starting with the hip...
-            int servoNum = ((LargLeg - 1) * 3) +1;   // servo numbers go from 1 to 9. This is hip servo for leg argLeg
-            int PWM = mapDegToPWM(LargH,servoNum);
-            //sp3sl("  Hip angle, PWM=",LargH,PWM);
-            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg],  pwmClkStart, PWM);
-
-            // then the knee
-            servoNum = ((LargLeg - 1) * 3) +2;   // servo numbers go from 1 to 9. This is knee servo for leg argLeg
-            PWM = mapDegToPWM(LargK,servoNum);
-            //sp3sl(" Knee angle, PWM=",LargK,PWM);
-            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg]+1,pwmClkStart, PWM);
-
-            //then the ankle
-            servoNum = ((LargLeg - 1) * 3) +3;   // servo numbers go from 1 to 9. This is ankle servo for leg argLeg
-            PWM = mapDegToPWM(LargA,servoNum);
-            //sp3sl("Ankle angle, PWM=",LargA,PWM);
-            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg]+2,pwmClkStart, PWM);
-         }
+         goToAngles(argLeg);     // move servos to these angles for specified leg(s)
+         return true;
       }
-      return true;
-
    } // else... if (cmd == "MOVELEGANGLES" || cmd == "MLA")
 
-   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: MLRH
    
    // Move Leg Relative to Home command - move one leg to specified offset from home position
    // format: MLRH, leg-num, X, Y, Z
@@ -645,57 +568,80 @@ bool processCmd(String payload)
          // now, one servo within the leg at a time, figure the pwm value, and move the servo
          // might have to temporarily negate angles, due servos mounted opposite on either side of bot
 
-         // stealing code from do_flow in flows.cpp ...
-
-         int lowLeg = argLeg;     // set up for a loop with only one iteration
-         int hiLeg = argLeg;
-         if(argLeg == 0)         // if leg  was 0, do command for all 6 legs
-         {  lowLeg = 1;
-            hiLeg = 6;
-         }
-         for(int LargLeg=lowLeg; LargLeg<=hiLeg; LargLeg++)
-         {
-            float LargH = -1 * f_angH;    // matching empiracal testing
-            float LargK = -1 * f_angK;
-            float LargA = -1 * f_angA;
-            
-            if(LargLeg >= 4)            // might need to negate some angles...
-            {  LargK = -1 * LargK;   //... because servos are mounted opposite ways on opposite sides of bot
-               LargH = -1 * LargH;
-               LargA = -1 * LargA;
-            }  // if LargLeg>=4
-         
-            // the per servo calibration is done inside the mapDegToPWM function 
-
-            // starting with the hip...
-            int servoNum = ((LargLeg - 1) * 3) +1;   // servo numbers go from 1 to 9. This is hip servo for leg argLeg
-            int PWM = mapDegToPWM(LargH,servoNum);
-            //sp3sl("  Hip angle, PWM=",LargH,PWM);
-            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg],  pwmClkStart, PWM);
-
-            // then the knee
-            servoNum = ((LargLeg - 1) * 3) +2;   // servo numbers go from 1 to 9. This is knee servo for leg argLeg
-            PWM = mapDegToPWM(LargK,servoNum);
-            //sp3sl(" Knee angle, PWM=",LargK,PWM);
-            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg]+1,pwmClkStart, PWM);
-
-            //then the ankle
-            servoNum = ((LargLeg - 1) * 3) +3;   // servo numbers go from 1 to 9. This is ankle servo for leg argLeg
-            PWM = mapDegToPWM(LargA,servoNum);
-            //sp3sl("Ankle angle, PWM=",LargA,PWM);
-            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg]+2,pwmClkStart, PWM);
-         }
+         goToAngles(argLeg);      // move leg, or legs, to the equivalent servo angles
+         return true;
       }
-      return true;
+   } // if (cmd == "MOVELEGRELHOME" || cmd == "MLRH") 
 
-   } // else... if (cmd == "MOVELEGANGLES" || cmd == "MLA")
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: QGH
 
+   if (cmd == "QGH")   // Quick Go to Home position, for all legs
+   { // command format: QGH
+
+      if (argN != 0)          // did we get command pls 4 arguments?
+      {                       // ignore command altogether
+         sp1l("******* QGH should not have arguments");
+         return false;
+      }
+      else // convert args from local offsets to local coordinates
+      {
+         f_angH = 0;    // zero angle for hip servo
+         f_angK = 0;    // ..and for knee
+         f_angA = 0;    // ..and for ankle
+
+         goToAngles( 0 );      // move all legs to these servo angles
+         return true;
+      }
+   } // if (cmd == "QGH") 
+
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: QGS
+
+   if (cmd == "QGS")   // Quick Go to Squat position, for all legs (previously "belly on ground")
+   { // command format: QGS
+
+      if (argN != 0)          // did we get command pls 4 arguments?
+      {                       // ignore command altogether
+         sp1l("******* QGS should not have arguments");
+         return false;
+      }
+      else // convert args from local offsets to local coordinates
+      {  
+         goToSquat();   // also need to squat before QGU - legs up in air, & QGC
+         return true;
+      }
+   } // if (cmd == "QGS") 
+
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: QGU
+
+   if (cmd == "QGU")   // Quick Go to Squat position, for all legs (previously "belly on ground")
+   { // command format: QGS
+
+      if (argN != 0)          // did we get command pls 4 arguments?
+      {                       // ignore command altogether
+         sp1l("******* QGU should not have arguments");
+         return false;
+      }
+      else // convert args from local offsets to local coordinates
+      {  
+         goToSquat();   // also need to squat before QGU - legs up in air, & QGC
+
+         // now safe to raise the legs overhead (only using angles, not coords)
+         f_angH = 0;    // hip facing straight out
+         f_angK = -80;  // knee pointing up
+         f_angA = 80;   // ankle pointing up
+         goToAngles( 0 );      // move all legs to these servo angles
+         
+         return true;
+      }
+   } // if (cmd == "QGU") 
+
+////-----------------------------------------------------
    // declare variables for upcoming servo test commands
    int sr_deg, sr_pwm, sr_srv, sr_srv2, sr_side, sr_port;
    bool sr_OK;
    String sr_cause;
 
-// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: STP
 
 // Servo_Test_PWM command to allow testing of servos using specific PWM values
 //  Servo_Test_PWM <side (0-1)> <port(0-15)> <PWM (100-500?)>
@@ -735,7 +681,7 @@ bool processCmd(String payload)
       return sr_OK;
    } // if(cmd == "SERVO_TEST_PWM" || cmd == "STP")
 
-// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: SSO
 
 // SSD command = Set  Servo(s) to angle, expressed in degrees, zero is center of range
    if(cmd == "SSD")     // set servo(s) to degrees
@@ -774,7 +720,7 @@ bool processCmd(String payload)
       return sr_OK;
    }  //if(cmd == "SSD") 
 
-   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+   // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: SSP
 
    // SSP command - Set Servo(s) to PWM value
    if(cmd == "SSP")     // set servo(s) to PWM value
@@ -809,7 +755,7 @@ bool processCmd(String payload)
       return sr_OK;
    } // if(cmd == "SSP")
 
-// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: SSO
 
    // SSO command - Set Servo(s) to "OFF"
    if(cmd == "SSO")     // set servo(s) to OFF, where servo goes limp and draws no current
@@ -838,7 +784,7 @@ bool processCmd(String payload)
       if(sr_OK == false) { sp2sl("********* invalid SSO command: ",sr_cause);}
       return sr_OK;
    } // if(cmd == "SSO")
-// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: TR
    if(cmd == "TR")      // Dynamic Trace control
    {
       // TR,routine,bits
@@ -848,7 +794,7 @@ bool processCmd(String payload)
       //             $traceTab[3] = t$L + t$W + t$E ;  // routine 3 = setupFlows() in flows.cpp
       // NOTE: there are 2 special routine numbers:
       //       routine 1, or the first offset in $traceTab, offset t$global, represents the global trace enable bits
-      //       routine 2, or the second offset is $traceTab, offset t$routing, controls if traces go to console, MQTT or both
+      //       routine 2, or the second offset is $traceTab, offset t$routing, directs traces to console, MQTT or both
       // bits is the decimal value of the combination of bits to be stored into the corresponding $traceTab entry.
       //      This is some combination of the bits representing trace types:
       //          t$H - High level info/status
@@ -858,7 +804,7 @@ bool processCmd(String payload)
       //          t$E - Error / Exception message. Something went wrong
       //
       // The MQTT TR command allows $traceTab entries to be overwritten at run time, changing how tracing is don
-      // If routine is zereo, the non-zero entries in $traceTab are displayed (in a series of routable trace commands?)
+      // If routine is 0, the non-zero entries in $traceTab are displayed (in a series of routable trace commands?)
  
       int rout = arg[1].toInt();    // first arg is routine #
       int bits = arg[2].toInt();    // second argument is the bit combination to be stored
@@ -881,10 +827,11 @@ bool processCmd(String payload)
 
    } //  if(cmd == "TR")
 
-// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
-   if(cmd == "REPLAY" || cmd == "R")      // request to re-execute the last MQTT.fx script that was loaded & is still in memory 
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: REPLAY
+
+   if(cmd == "REPLAY" || cmd == "R")      // request to re-execute the last MQTT.fx script loaded &  still in memory 
    //  Format: REPLAY, <toeAction>
-   //          (Note there are REPLAYSM and REPLAYMQ commands that allow a replay with single stepping through a flow script)
+   //     (Note there are REPLAYSM and REPLAYMQ commands that allow a replay with single stepping through a flow script)
    //     where <toeaction> is the bit battern that determines what is done one a new set of toe positions is calculated
    //                         (bits are defined in flows.h - search for toeMoveAction )
    {
@@ -906,7 +853,7 @@ bool processCmd(String payload)
 
    }  // if(cmd == "REPLAY") 
 
-// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: STEPSM
    if(cmd == "STEPSM")      // request to single step flow execution via the serial monitor 
    //  Format: STEPSM, value
    //          (Note there is also a STEPMQ command for stepping control via MQTT)
@@ -922,7 +869,7 @@ bool processCmd(String payload)
 
    }  // if(cmd == "STEPSM") 
 
-// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: STEPMQ
    if(cmd == "STEPMQ")      // request to single step flow execution via MQTT commands 
    //  Format: STEPMQ, value
    //          (Note there is also a STEPMQ command for stepping control via MQTT)
@@ -949,6 +896,78 @@ bool processCmd(String payload)
       Log.warningln("<processCmd> Warning - unrecognized command.");
       return false;
 } // processCmd()
+
+void goToAngles(int argLeg)    // inner core of MLA, MLC, MLRH commands, and soon: QGH, QGS, QGU, QGC
+{        // desired angles already set up in f_angH, f_angK, f_angA
+         int lowLeg = argLeg;     // set up for a loop with only one iteration
+         int hiLeg = argLeg;
+         if(argLeg == 0)         // if leg  was 0, do command for all 6 legs
+         {  lowLeg = 1;
+            hiLeg = 6;
+         }
+         for(int LargLeg=lowLeg; LargLeg<=hiLeg; LargLeg++)
+         {
+            float LargH = -1 * f_angH;    // matching empiracal testing
+            float LargK = -1 * f_angK;
+            float LargA = -1 * f_angA;
+            
+            if(LargLeg >= 4)            // might need to negate some angles...
+            {  LargK = -1 * LargK;   //... because servos are mounted opposite ways on opposite sides of bot
+               LargH = -1 * LargH;
+               LargA = -1 * LargA;
+            }  // if LargLeg>=4
+         
+            // the per servo calibration is done inside the mapDegToPWM function 
+
+            // starting with the hip...
+            int servoNum = ((LargLeg - 1) * 3) +1;   // servo numbers go from 1 to 9. This is hip servo for leg argLeg
+            int PWM = mapDegToPWM(LargH,servoNum);
+            //sp3sl("  Hip angle, PWM=",LargH,PWM);
+            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg],  pwmClkStart, PWM);
+
+            // then the knee
+            servoNum = ((LargLeg - 1) * 3) +2;   // servo numbers go from 1 to 9. This is knee servo for leg argLeg
+            PWM = mapDegToPWM(LargK,servoNum);
+            //sp3sl(" Knee angle, PWM=",LargK,PWM);
+            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg]+1,pwmClkStart, PWM);
+
+            //then the ankle
+            servoNum = ((LargLeg - 1) * 3) +3;   // servo numbers go from 1 to 9. This is ankle servo for leg argLeg
+            PWM = mapDegToPWM(LargA,servoNum);
+            //sp3sl("Ankle angle, PWM=",LargA,PWM);
+            pwmDriver[legIndexDriver[LargLeg]].setPWM(legIndexHipPin[LargLeg]+2,pwmClkStart, PWM);
+         }
+} // void goToAngles(argLeg)
+
+void goToSquat()     // gently go to squat position with legs slightly of the ground
+{
+         // want to be gentle when we lay bottom of robot on ground, so go to home position first
+         f_angH = 0;       // zero angle for hip servo
+         f_angK = 0;       // ..and for knee
+         f_angA = 0;       // ..and for ankle
+         goToAngles( 0 );  // move all legs to these servo angles
+         delay(300);       // could be coming from any position, so give it some time
+
+         // then to almost on the ground
+         coordsToAngles(12, -9, 0); // creates f_angH, f_angK, f_angA from local coords
+         goToAngles(0) ;            // move all legs to this position
+         delay(200);                 // give it a bit of time
+
+         // a little closer to ground
+         coordsToAngles(12, -8, 0); // creates f_angH, f_angK, f_angA from local coords
+         goToAngles(0) ;            // move all legs to this position
+         delay(200);                 // give it a bit of time
+
+         // still closer, maybe on the ground by now
+         coordsToAngles(12, -7, 0); // creates f_angH, f_angK, f_angA from local coords
+         goToAngles(0) ;            // move all legs to this position
+         delay(200);                 // give it a bit of time
+
+         // and lift the legs above ground just a bit
+         coordsToAngles(12, -6, 0); // creates f_angH, f_angK, f_angA from local coords
+         goToAngles(0) ;            // move all legs to this position
+         delay(200);                 // give it a bit of time
+}  // goToSquat
 
    /** 
  * @brief Return the MQTT broker IP address.
