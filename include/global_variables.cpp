@@ -334,6 +334,9 @@ char *uniqueNamePtr = &uniqueName[0]; // Pointer to first address position of un
 char healthTopicTree[50] = ""; // Char array to hold full health topic tree name.
 char helpTopicTree[50] = ""; // Char array to hold full health topic tree name.
 String result[2] = {"false","true"}; // Provide english lables for true and flase return codes.
+void goToAngles(int argLeg) ;    // used in mqttBroker command processing for MLA, MLC, MLRH QGH, QGS, QGU, QGC
+void goToSquat();                // also need to squat before QGU & QGC
+
 // RGB OLED related variabes.
 const uint8_t numColoursSupported = 9; // Number of colours LED can be set to.
 const bool commonAnode = true; // Set to true if RGB LED has a common anode, false for common cathode.
