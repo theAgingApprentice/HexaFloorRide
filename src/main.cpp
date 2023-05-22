@@ -1,11 +1,11 @@
 /******************************************************************************
  * @file main.cpp
  *
- * @mainpage Hexbot firmware.
+ * @mainpage HexaFloorRide firmware.
  *
  * @section intro_sec Introduction
  *
- * This code is the firmware for the six legged robot called Hexbot. Full
+ * This code is the firmware for the six legged robot called HexaFloorRide. Full
  * details on how to get the circuit and chassis for this robot are found
  * [here](https://github.com/theAgingApprentice/HexaFloorRide).
  *
@@ -101,7 +101,7 @@ void setup()
    //Log.verboseln("<setup> Set up wifi connection.");
    traceL("Setup Wifi connection");
    setupNetwork();
-   setupPerBotConfig(); // do setup unique to each hexbot.(configDetails.cpp)
+   setupPerBotConfig(); // do setup unique to each HexaFloorRide.(configDetails.cpp)
    //Log.traceln("<setup> Initialize servo drivers.");
    traceL("Setup servo drivers");
    setupPwmdriver();
