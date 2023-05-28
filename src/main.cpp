@@ -295,7 +295,7 @@ void oneSec()     // routine that executes once per second to display CPU perfor
 
       // testing reading capacitive sensors as a way to stall CPU usage output
       int pinval = 1;    // assume pin is high, i.e. over 30
-      int cap27 = touchRead(27);  //physical pin 25, 6th down from battery connector
+      int cap27 = touchRead(G_CAP_TOUCH);  // physical pin 10.
       if(cap27 < 40 ) {pinval = 0;}    // 40 is the observed threshold between touched (low #) and untouched (high #)
       int touched = 0;   // pinval value that means sensor is being touched
       int untouched = 1;   // pinval value that means sensor is not being touched

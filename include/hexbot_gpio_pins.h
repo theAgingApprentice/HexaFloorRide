@@ -6,6 +6,7 @@
 
 #define _HEXBOT_GPIO_PINS_H // Preprocessor variable used by above check
 
+const int8_t G_CAP_TOUCH = PIN_10_LBL_A5; // Capacative touch pin.
 const int8_t G_I2C_BUS0_SDA = PIN_17_LBL_SDA; // Serial Data Line (SDA) for I2C bus 0, physical pin 17
 const int8_t G_I2C_BUS0_SCL = PIN_18_LBL_SCL; // Serial Clock Line (SCL) for I2C bus 0, physical pin 18
 const int8_t G_I2C_BUS1_SDA = PIN_15_LBL_TX; // Serial Data Line (SDA) for I2C bus 1, physical pin 15
