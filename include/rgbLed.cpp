@@ -33,7 +33,7 @@ void createPredefinedColours()
    statusColour[RED].blueDutyCycle = 0;
    
    //Log.verboseln("<createPredefinedColours> Red (%d) settings  - red = %d, green = %d, blue = %d.", RED, statusColour[RED].redDutyCycle, statusColour[RED].greenDutyCycle, statusColour[RED].blueDutyCycle);
-   String rstatus= String(RED) +",  "+String(statusColour[RED].redDutyCycle) +", "+ String(statusColour[RED].greenDutyCycle) +", "+ String(statusColour[RED].blueDutyCycle);
+   String rstatus = String(RED) +",  "+String(statusColour[RED].redDutyCycle) +", "+ String(statusColour[RED].greenDutyCycle) +", "+ String(statusColour[RED].blueDutyCycle);
    traceLs("for Red:","ID,RGB= "+ rstatus);
 
    statusColour[GREEN].name = "GREEN";
@@ -49,33 +49,33 @@ void createPredefinedColours()
    Log.verboseln("<createPredefinedColours> Blue (%d) settings  - red = %d, green = %d, blue = %d.", BLUE, statusColour[BLUE].redDutyCycle, statusColour[BLUE].greenDutyCycle, statusColour[BLUE].blueDutyCycle);
 
    statusColour[YELLOW].name = "YELLOW";
-   statusColour[YELLOW].redDutyCycle = 128;
-   statusColour[YELLOW].greenDutyCycle = 256;
-   statusColour[YELLOW].blueDutyCycle = 0;
+   statusColour[YELLOW].redDutyCycle = 128; // 128
+   statusColour[YELLOW].greenDutyCycle = 210; // 256
+   statusColour[YELLOW].blueDutyCycle = 0; // 0
    Log.verboseln("<createPredefinedColours> YELLOW (%d) settings  - red = %d, green = %d, blue = %d.", YELLOW, statusColour[YELLOW].redDutyCycle, statusColour[YELLOW].greenDutyCycle, statusColour[YELLOW].blueDutyCycle);
 
    statusColour[ORANGE].name = "ORANGE";
-   statusColour[ORANGE].redDutyCycle = 200;
-   statusColour[ORANGE].greenDutyCycle = 256;
-   statusColour[ORANGE].blueDutyCycle = 0;
+   statusColour[ORANGE].redDutyCycle = 220; // 200
+   statusColour[ORANGE].greenDutyCycle = 256; // 256
+   statusColour[ORANGE].blueDutyCycle = 0; // 0
    Log.verboseln("<createPredefinedColours> ORANGE (%d) settings  - red = %d, green = %d, blue = %d.", ORANGE, statusColour[ORANGE].redDutyCycle, statusColour[ORANGE].greenDutyCycle, statusColour[ORANGE].blueDutyCycle);
 
    statusColour[PINK].name = "PINK";
-   statusColour[PINK].redDutyCycle = 128;
-   statusColour[PINK].greenDutyCycle = 0;
-   statusColour[PINK].blueDutyCycle = 256;
+   statusColour[PINK].redDutyCycle = 128; // 128
+   statusColour[PINK].greenDutyCycle = 0; // 0
+   statusColour[PINK].blueDutyCycle = 256; // 230
    Log.verboseln("<createPredefinedColours> PINK (%d) settings  - red = %d, green = %d, blue = %d.", PINK, statusColour[PINK].redDutyCycle, statusColour[PINK].greenDutyCycle, statusColour[PINK].blueDutyCycle);
 
    statusColour[AQUA].name = "AQUA";
-   statusColour[AQUA].redDutyCycle = 0;
-   statusColour[AQUA].greenDutyCycle = 128;
-   statusColour[AQUA].blueDutyCycle = 256;
+   statusColour[AQUA].redDutyCycle = 0; // 0
+   statusColour[AQUA].greenDutyCycle = 256; // 128
+   statusColour[AQUA].blueDutyCycle = 256; // 256
    Log.verboseln("<createPredefinedColours> Aqua (%d) settings  - red = %d, green = %d, blue = %d.", AQUA, statusColour[AQUA].redDutyCycle, statusColour[AQUA].greenDutyCycle, statusColour[AQUA].blueDutyCycle);
 
    statusColour[WHITE].name = "WHITE";
-   statusColour[WHITE].redDutyCycle = 64;
-   statusColour[WHITE].greenDutyCycle = 128;
-   statusColour[WHITE].blueDutyCycle = 128;
+   statusColour[WHITE].redDutyCycle = 40; // 64
+   statusColour[WHITE].greenDutyCycle = 128; // 128
+   statusColour[WHITE].blueDutyCycle = 128; // 128
    Log.verboseln("<createPredefinedColours> White (%d) settings  - red = %d, green = %d, blue = %d.", WHITE, statusColour[WHITE].redDutyCycle, statusColour[WHITE].greenDutyCycle, statusColour[WHITE].blueDutyCycle);
 
    statusColour[BLACK].name = "BLACK";

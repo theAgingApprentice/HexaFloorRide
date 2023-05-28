@@ -339,7 +339,7 @@ void goToSquat();                // also need to squat before QGU & QGC
 
 // RGB OLED related variabes.
 const uint8_t numColoursSupported = 9; // Number of colours LED can be set to.
-const bool commonAnode = true; // Set to true if RGB LED has a common anode, false for common cathode.
+const bool commonAnode = true; // Set to true if RGB LED has a common anode (+), false for common cathode (-).
 const uint8_t RED = 0; // Reset button LED red. 
 const uint8_t GREEN = 1; // Reset button LED green. 
 const uint8_t BLUE = 2; // Reset button LED blue. 
