@@ -82,7 +82,10 @@ void setup()
    #undef localRNum     // avoid compiler warnings if we redefine localRNum
    #define localRNum 7
 
-   setupSerial(); // Set serial baud rate.
+   setupOnboardLED();   // prepare LED for use, GPio symbol = OnboardLED
+   setupLEDISR();       // setup timer3 interrupts, using a simple LED complementing ISR
+                        // onboard LED off during loading, flashes at 1 Hz during setup, 2Hz during loop
+   setupSerial();       // Set serial baud rate.
    setupTracing();      //build the trace control table in configDetails.cpp before any trace usage
    Log.begin(LOG_LEVEL_VERBOSE, &Serial, true);
    traceH("Start of setup ##########################################################################");
@@ -93,7 +96,6 @@ void setup()
    //Log.traceln("<setup> Initialize OLED.");
    traceL("Initialize OLED");
    initOled();
-   setupOnboardLED();   // prepare LED for use, GPio symbol = OnboardLED
    //Log.verboseln("<setup> Initialize status RGB LED.");
    traceL("Initialize RGB LED");
    setupStatusLed();       // Configure the status LED on the reset button.
@@ -119,6 +121,8 @@ void setup()
    checkBoot();
    //Log.traceln("<setup> End of setup.");
    setupTasks();   // initialize for millis() based and condition based task dispatches in loop() (in deviceSupport.cpp)
+   timerAlarmWrite(LED_timer, 500000, true);  // halve the multiplier to speed up LED flash to 2 Hz once you get to loop()
+
    
    traceM("End of setup #############################################################################");
 } // setup()
