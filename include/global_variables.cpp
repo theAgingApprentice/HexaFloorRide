@@ -387,6 +387,8 @@ uint32_t oscFreq = 27000000; // Frequency of oscilator on motor driver.
 int OnboardLED = 13;       // GPio 13 is the onboard LED
 void setupOnboardLED();    // prepare do GPio 13 can control Huzzah32 onboard LED
 int capstate;              // capacitive sensor state in oneSec.
+hw_timer_t *LED_timer = NULL; // for timer 3 interrupts that drive flashing of onboard LED
+
 
 // Define OLED related variables.
 bool buttonA_flag = false; // Flag used by hardware ISR for button A.

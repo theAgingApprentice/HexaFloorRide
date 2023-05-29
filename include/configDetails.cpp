@@ -206,6 +206,17 @@ void checkBoot()
    } // else
 } // checkBoot
 
+void IRAM_ATTR onTimer() { digitalWrite(OnboardLED, !digitalRead(OnboardLED));}   // very simple ISR complements LED
+
+void setupLEDISR()
+{
+   LED_timer = timerBegin(3,40, true);
+   timerAttachInterrupt(LED_timer, &onTimer, true);
+   timerAlarmWrite(LED_timer, 1000000, true);
+   timerAlarmEnable(LED_timer); //just enable
+
+}
+
 void setupTracing()
 {
 // following is extracted from global_variables.cpp for handy reference in table building
