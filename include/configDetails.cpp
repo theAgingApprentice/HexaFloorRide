@@ -247,15 +247,16 @@ const int t$E = 16;     // error
   
     // compiler won't let me populate the table here, so I'm going to try in configDetails.cpp
 */
-  // first 2 table entries are special purpose ones
-  //$traceTab[t$global] = t$H + t$M + t$E + t$W ;  // error, warning, high, and medium messages are globally enabled
-  $traceTab[t$global] = t$E + t$W ;  // error, warning, high, and medium messages are globally enabled
-  $traceTab[t$routing] = t$SM ;     // direct traces messages to serial monitor
 
-  // following table entries specified trace enables for individua routines
   // define a typing shortcut for common case where everything's enabled except low level details
   #define t$allButL t$H + t$M + t$W + t$E
   #define t$all t$H + t$M + t$L + t$W + t$E
+
+  // following table entries specify trace enables for individua routines
+  // first 2 table entries are special purpose ones
+  //$traceTab[t$global] = t$H + t$M + t$E + t$W ;  // error, warning, high, and medium messages are globally enabled
+  $traceTab[t$global] = t$allButL ;  // error, warning, high, and medium messages are globally enabled
+  $traceTab[t$routing] = t$SM ;     // direct traces messages to serial monitor
 
   // special trace table entries 1 (t$global) and 2 (t$routing) are defined above
   $traceTab[3] = t$M +t$W +t$E ;       // routine 3 = setupFlows() in flows.cpp

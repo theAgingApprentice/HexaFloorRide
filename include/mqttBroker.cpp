@@ -170,6 +170,9 @@ bool processCmd(String payload)
                                                          // count of the number of
                                                          // arguments, excluding the command
    String cmd = arg[0];                                  // first comma separated value in payload is the command
+
+   // debug
+   // traceHs("command received:", cmd);
    
    // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: TEST
    
@@ -177,6 +180,7 @@ bool processCmd(String payload)
    if (cmd == "TEST")
    {
       Log.noticeln("<processCmd> Received test command.");
+      traceH("TEST command received. code compiled on: " + String(__DATE__) + ", " + String(__TIME__) );
       return true;
    } // if
    
