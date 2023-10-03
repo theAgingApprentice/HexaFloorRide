@@ -122,8 +122,10 @@ void setup()
    //Log.traceln("<setup> End of setup.");
    setupTasks();   // initialize for millis() based and condition based task dispatches in loop() (in deviceSupport.cpp)
    timerAlarmWrite(LED_timer, 500000, true);  // halve the multiplier to speed up LED flash to 2 Hz once you get to loop()
+   Serial.print("@@@@@@@@@@");
+   Serial.print(WiFi.SSID());
+   Serial.println("@@@@@@@@@@");
 
-   
    traceM("End of setup #############################################################################");
 } // setup()
 
