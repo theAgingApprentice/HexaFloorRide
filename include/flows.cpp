@@ -261,7 +261,8 @@ bool globCoordsToLocal(int legNumber, float gx, float gy, float gz)
         Xrt = cos_p45 * (gx - d$cornerX) - sin_p45 * (gy - d$cornerY);  // rotated (Xg,Yg)
         Yrt = sin_p45 * (gx - d$cornerX) + cos_p45 * (gy - d$cornerY);
         f_endLegX[legNumber] = Yrt;
-        f_endLegZ[legNumber] = -1 * Xrt;         
+        f_endLegZ[legNumber] = -1 * Xrt;  
+        //sp6sl("cornr,gx,gy,lx,ly=",d$cornerX,gx,gy,f_endLegX[legNumber],f_endLegZ[legNumber])       
         break;
       case 5:  
         // Middle Left leg
@@ -483,6 +484,10 @@ void do_flow()          // called from loop if there's a flow executing that nee
                   t_angA = -1 * t_angA;   //... because servos are mounted opposite ways on opposite sides of bot
                   t_angH = -1 * t_angH;   
                }  // if L>=4
+               if(L >= 4)
+               {  
+                  t_angH = -1 * t_angH;
+               }
 
                // starting with the hip...
                if((toeMoveAction & fa_moveServos) != 0)    // did flow_go command options tell us to move servos?
