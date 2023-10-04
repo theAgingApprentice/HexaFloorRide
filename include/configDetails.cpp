@@ -33,24 +33,26 @@
        // set up the servo calibration offsets
        // PWM value used = (PWM calculated from angle) + (calibration offset for this servo) - 299
        // note that servoOffset[0] is not used
-       servoOffset[ 1] = 295;  //updated for config with HiTek HS-485-HB servos 2-23-02-12
-       servoOffset[ 2] = 290;
-       servoOffset[ 3] = 300;
-       servoOffset[ 4] = 304;
-       servoOffset[ 5] = 295;
-       servoOffset[ 6] = 310;
-       servoOffset[ 7] = 316;
-       servoOffset[ 8] = 285;
-       servoOffset[ 9] = 307;
-       servoOffset[10] = 315;
-       servoOffset[11] = 297;
-       servoOffset[12] = 298;
-       servoOffset[13] = 310;
-       servoOffset[14] = 306;
-       servoOffset[15] = 292;
-       servoOffset[16] = 298;
-       servoOffset[17] = 315;
-       servoOffset[18] = 293;
+       // updated for config with HiTek HS-485-HB servos 2-23-02-12
+       // Updated again on October 3, 2023
+       servoOffset[ 1] = 295; // Hip leg 1, was 295 
+       servoOffset[ 2] = 295; // Knee leg 1, was 290
+       servoOffset[ 3] = 310; // Ankle leg 1, was 300
+       servoOffset[ 4] = 304; // Hip leg 2, was 304
+       servoOffset[ 5] = 295; // Knee leg 2, was 295
+       servoOffset[ 6] = 310; // Ankle leg 2, was 310
+       servoOffset[ 7] = 319; // Hip leg 3, was 316
+       servoOffset[ 8] = 285; // Knee leg 3, was 285
+       servoOffset[ 9] = 307; // Ankle leg 3, was 307
+       servoOffset[10] = 297; // Hip leg 4, was 315
+       servoOffset[11] = 277; // Knee leg 4, was 297 
+       servoOffset[12] = 278; // Ankle leg 4, was 298
+       servoOffset[13] = 289; // Hip leg 5, was 310
+       servoOffset[14] = 288; // Knee leg 5, was 306
+       servoOffset[15] = 276; // Ankle leg 5, was 292
+       servoOffset[16] = 280; // Hip leg 6, was 298
+       servoOffset[17] = 300; // Knee leg 6, was 315
+       servoOffset[18] = 294; // Ankle leg 6, was 293
 
     }
     
@@ -64,22 +66,23 @@
        // set up the servo calibration offsets
        // PWM value used = (PWM calculated from angle) + (calibration offset for this servo)
        // note that servoOffset[0] is not used. Updated Jan 31, 2023.
-       servoOffset[ 1] = 293;
-       servoOffset[ 2] = 283;
-       servoOffset[ 3] = 294;
-       servoOffset[ 4] = 300;
-       servoOffset[ 5] = 279;
+       // Updated October 3, 2023
+       servoOffset[ 1] = 299; // Hip leg 1, was 293
+       servoOffset[ 2] = 283; // Knee leg 1, was  
+       servoOffset[ 3] = 294; 
+       servoOffset[ 4] = 301; // Hip leg 2, was 300
+       servoOffset[ 5] = 285; // Knee leg 2, was 279
        servoOffset[ 6] = 275;
-       servoOffset[ 7] = 290;
+       servoOffset[ 7] = 290; // Hip leg 3, was 290
        servoOffset[ 8] = 275;
        servoOffset[ 9] = 275;
-       servoOffset[10] = 290;
+       servoOffset[10] = 275; // Hip leg 4, was 290
        servoOffset[11] = 302;
        servoOffset[12] = 306;
-       servoOffset[13] = 306;
+       servoOffset[13] = 294; // Hip leg 5, was 306
        servoOffset[14] = 299;
        servoOffset[15] = 295;
-       servoOffset[16] = 286;
+       servoOffset[16] = 286; // Hip leg 6, was 286
        servoOffset[17] = 312;
        servoOffset[18] = 316;
     }
