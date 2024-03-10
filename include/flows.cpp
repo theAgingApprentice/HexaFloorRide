@@ -246,11 +246,11 @@ bool globCoordsToLocal(int legNumber, float gx, float gy, float gz)
         break;
       case 2:
         // Middle Right leg
-        f_endLegX[legNumber] = -1 * gy - d$sideY;
+        f_endLegX[legNumber] = gy - d$sideY;       // gy is +ve, so is d$sideY
         f_endLegZ[legNumber] = gx;
         break;
       case 3:
-        // Back Right leg
+      // back Right leg
         Xrt = cos_p45 * (gx + d$cornerX) - sin_p45 * (gy + d$cornerY);  // rotated (Xg,Yg)
         Yrt = sin_p45 * (gx + d$cornerX) + cos_p45 * (gy + d$cornerY);
         f_endLegX[legNumber] = -1 * Yrt;
@@ -266,7 +266,7 @@ bool globCoordsToLocal(int legNumber, float gx, float gy, float gz)
         break;
       case 5:  
         // Middle Left leg
-        f_endLegX[legNumber] = gy - d$sideY;
+        f_endLegX[legNumber] = (-1 * gy) - d$sideY;       // gy is -ve, d$sideY is +ve
         f_endLegZ[legNumber] = -1 * gx ;
         break;
       case 6:
