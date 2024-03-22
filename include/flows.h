@@ -32,7 +32,7 @@
 //
 // These are the arrays that contain the flow currently being executed
 
-#define flowLength  200          // maximum number of positions in a flow
+#define flowLength  500          // maximum number of positions in a flow
 //  -----------------------------// start of flow row arraysq
 int f_msecs[flowLength];         // time duration in milliseconds for movement to this location
 
@@ -57,6 +57,10 @@ int f_operation[flowLength];        // type of operation specified for this posi
    const int fo_toeSafetyY = 61;    // specify new plus and minus safety limits for local Y coordinate
    const int fo_toeSafetyZ = 62;    // specify new plus and minus safety limits for local Z coordinate
    const int fo_toeSafetyReset = 63;// return toe safety limits to default values defined at compile time
+   const int fo_doMacro = 64;       // execute the macro that is named in a parameter, with a repeat parameter
+   const int fo_beginOfMacros = 65; // beginning of macro definitions which shouldn't be executed
+   const int fo_endOfMacros = 66;   // end of macro definitions
+   const int fo_saveMacro = 67;     // save currently accumulated sequence as a named macro
 
 int f_lShape1[flowLength];    // description of type of line to follow between last position and this one
    const int fl_straight = 10;   // straight line
@@ -72,7 +76,7 @@ float f_legY[flowLength] [7];    // Y coord for each of 6 legs, 2nd index is leg
 float f_legZ[flowLength] [7];    // size 7 means indices 0 - 6, so can number legs from 1 to 6
 //  -----------------------------// end of flow row arrays
 
-int f_flowOps[20] ;              // flow command operation codes, for translation of alpha mnemonics
+int f_flowOps[40] ;              // flow command operation codes, for translation of alpha mnemonics
                                  // initialized in flows.cpp/setupFlows(), used in mqttBroker.cpp/ flow command  handler
 int servoNum ;                     // servo number, used in do_flow()                                 
 
@@ -104,7 +108,18 @@ int f_cycle;                  // cycle number variable used in processing cycle 
 int f_resumeRow;              // flow row number to resume at after a repeatable cycle is completed
 bool didControl;              // flag in procNextLine to flag that we did a control operation that didn't set up leg movement
 
+byte macrosStart[27];         // starting index for macros with 26 letters as names, zero if not in use
+byte macrosLast[27];          // last index included in each macro
+int f_nextSeqStart;           // contains the index to use next when a sequence is started by by NEW_FLOW command
+int f_macroCount;             // number of iterations to go for current macro
+int f_activeMacro;            // ID number (1-26) of currently executing macro
+int ms_top;                   // index in macro stack that is next to be used. ie above last pushed value
+int ms_stack[30];             // stack to handle macro calls within macro calls.
+                              // stack fills to higher addresses: when you push a value, ms_top is inc' & value's stored in that offset
+                              // on macro start 3 things are pushed: current macro name, current flow table index, and current macro iteration count
+bool f_inMacroDefs;            // flag: we're in a macro definition, so not executing current sequence until definition ends
 int f_count = 0;                 // counter as we process FLOW commands, accumulating flow rows, ends up as row count
+int f_lastSeqStart = 0;          // to remember where current sequence started
 int f_active = 0;                // what row number we're executing, after a FLOW_GO command
 bool f_flowing = false;          // set to true if we're executing a fow
 int f_frame = 0;                 // what frame number we're working on within a flow row
@@ -216,5 +231,9 @@ void handle_fo_toeSafetyX();
 void handle_fo_toeSafetyY();
 void handle_fo_toeSafetyZ();
 void handle_fo_toeSafetyReset();
+void handle_fo_doMacro();
+void handle_fo_beginOfMacros();
+void handle_fo_endOfMacros();
+void handle_fo_saveMacro();
 
 #endif // End of precompiler protected code block
