@@ -149,8 +149,7 @@ bool processCmd(String payload)
    #undef localRNum
    #define localRNum 6
 
-   // Serial.println("<processCmd>");
-   aaFormat format;
+   aaFormat format;                       // instantiate the format object?
    String ucPayload = format.stringToUpper(payload);
    const int8_t maxArg = 30;                      // Allow 1 cmd and up to 29 args in an MQTT message.
    String arg[maxArg];                            // arg[0] = cmd, arg[1] = 1st argument, arg[2] = second ...
@@ -172,15 +171,15 @@ bool processCmd(String payload)
    String cmd = arg[0];                                  // first comma separated value in payload is the command
 
    // debug
-   // traceHs("command received:", cmd);
-   
+   traceHs("command received:", cmd);
+
    // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: TEST
    
    // TEST command.
    if (cmd == "TEST")
    {
-      Log.noticeln("<processCmd> Received test command.");
-      traceH("TEST command received. code compiled on: " + String(__DATE__) + ", " + String(__TIME__) );
+      //Log.noticeln("<processCmd> Received test command.");
+      traceH("TEST command execution: code compiled on: " + String(__DATE__) + ", " + String(__TIME__) );
       return true;
    } // if
    
@@ -382,16 +381,43 @@ bool processCmd(String payload)
          if(op.substring(0,1) == " ") { op = op.substring(1,99);} // if there's a leading space, remove it
          if(op.substring(0,1) == " ") { op = op.substring(1,99);} // if there's another leading space, remove it
          if(op.substring(0,1) == " ") { op = op.substring(1,99);} // if there's another leading space, remove it
-         String opCode = "-" + format.stringToUpper(op) + "-"; // standardize non numeric code tp upper case
+         String opCode = "-" + format.stringToUpper(op) + "-"; // standardize non numeric code to upper case
          // sp2sl("opCode=",opCode);
-         String fcmds="-MGC--MLC--MGRH-MLRH-MGRL-MLRL-NHGC-NHLC-NHH--NHR--CPF--MCS--MCE--DC---TSX--TSY--TSZ--TSR--";
+         String fcmds="-MGC--MLC--MGRH-MLRH-MGRL-MLRL-NHGC-NHLC-NHH--NHR--CPF--MCS--MCE--DC---TSX--TSY--TSZ--TSR--DM---BOM--EOM--SM---";
          int cmdNum = (fcmds.indexOf(opCode) +5) /5; // look up command in above string, and convert to command number
          arg[2] = f_flowOps[cmdNum];  //look up associated numeric operations code, and substitute it in for mnemonic
       }
-      f_operation[f_count] = arg[2].toInt(); // code for operation in this row of the flow, eg fo_moveAbs
+      int tmpOp = arg[2].toInt();   // temporary easy to reference scalar
+      f_operation[f_count] = tmpOp; // code for operation in this row of the flow, eg fo_moveAbs
 
-      if(argN>2) {f_lShape1[f_count] = arg[3].toInt();}   // type of line. initially, always fl_straight
+      // argument after op code is usually the type of line. initially, always fl_straight
+      // except in the DM or SM (Do or Save Macro) opcode, where this arg is an alpha macro name.
+      // In this case, we decode the name, and overwrite it into arg[3]
+
+      if(tmpOp == fo_doMacro || tmpOp == fo_saveMacro)      // are we doing SM or DM?
+      {
+         char char1 = arg[3].charAt(0);
+         if(isAlpha(char1) == true)
+            {
+               // processCmd has already converted command buffer to upper case
+               int charnum = char1 - 64;  // convert to an int between 1 - 26 for macro name
+               arg[3] = charnum;          // arg[3] is a float, but we'll ignore that
+            }
+         else
+            {
+               arg[3] = 26;      // non-alpha gets forced to "Z"
+            }
+      }  // if(tmpOp == fo_doMacro ...)
+
+      if(argN>2) 
+      {     // argument after op code is usually the type of line. initially, always fl_straight
+            // except or the DM (Do Macro) opcode, where this arg is an alpha argument name
+
+            f_lShape1[f_count] = arg[3].toInt();  // copy (possibly modified) arg[3] into the appropriate sequence row array
+                                                  // its nominally the type of line. initially, always fl_straight
+      }  // if(argN>2) 
       if(argN>3) {f_lShape2[f_count] = arg[4].toFloat();} // parameter to define line when it's a parabola, ellipse,...
+                                                          // for doMacro, arg[4] is the repeat count
       if(argN>4) {f_lShape3[f_count] = arg[5].toFloat();} // more line parameters
       if(argN>5) {f_lShape4[f_count] = arg[6].toFloat();}
 
@@ -444,7 +470,8 @@ bool processCmd(String payload)
 
    if (cmd == "NEW_FLOW" || cmd == "NF")  // prep for definition of a new flow
    {     f_flowing = false;
-         f_count = 0;
+         f_count = f_nextSeqStart;   // where we should store sequence commands, avoiding macros
+         f_lastSeqStart = f_nextSeqStart;   // remember where we started this sequence
          f_active = 0;
          return true;
    }
@@ -887,7 +914,9 @@ bool processCmd(String payload)
       return true;
 
    }  // if(cmd == "STEPMQ") 
-      
+
+
+// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> start of new command: New Cmd Here
 // add new commands above this comment, in this form, with one tab before "if"
 //    if ( cmd == "COMMAND" || cmd == "SHORT-FORM")
 //    {
@@ -896,8 +925,8 @@ bool processCmd(String payload)
 //       code
 //       return true;   // command succeeded
 //    }    
-
       Log.warningln("<processCmd> Warning - unrecognized command.");
+      sp1l(cmd);
       return false;
 } // processCmd()
 

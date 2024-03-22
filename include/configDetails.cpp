@@ -269,7 +269,7 @@ const int t$E = 16;     // error
   // following table entries specify trace enables for individua routines
   // first 2 table entries are special purpose ones
   //$traceTab[t$global] = t$H + t$M + t$E + t$W ;  // error, warning, high, and medium messages are globally enabled
-  $traceTab[t$global] = t$allButL ;  // error, warning, high, and medium messages are globally enabled
+  $traceTab[t$global] = t$all ;  // error, warning, high, and medium messages are globally enabled
   $traceTab[t$routing] = t$SM ;     // direct traces messages to serial monitor
 
   // special trace table entries 1 (t$global) and 2 (t$routing) are defined above

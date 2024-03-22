@@ -200,7 +200,7 @@ void loop()
  // order of appearance determines priority (once we get so we only execute one task per loop() )
 
    // flow processing that does servo position changes to move legs. In flows.cpp
-   conditionTask(do_flow(),flow,f_flowing == true);  // flows that control servo position changes that move legs
+   conditionTask(run_sequence(),flow,f_flowing == true);  // flows that control servo position changes that move legs
 
    // setup processing for a new flow, including initial servo positioning
    //conditionTask(flowRow_0,fl0,((f_flowing == true) && f_active == 0)); // handle flow row 0 including initial positioning

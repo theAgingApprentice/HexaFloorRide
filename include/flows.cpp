@@ -67,6 +67,10 @@ void setupFlows()
    f_flowOps[16] = fo_toeSafetyY;      //TSY    Toe Safety Y limits
    f_flowOps[17] = fo_toeSafetyX  ;    //TSZ    Toe Safety Z limits
    f_flowOps[18] = fo_toeSafetyReset;  //TSR    Toe Safety Reset
+   f_flowOps[19] = fo_doMacro;         //DM     Do Macro
+   f_flowOps[20] = fo_beginOfMacros;   //BOM    Beginning of Macro Definitions
+   f_flowOps[21] = fo_endOfMacros;     //EOM    End Macro Definitions
+   f_flowOps[22] = fo_saveMacro;       //SM     Save Macro
 
    stepMode = 0;     // start out with single stepping through MQTT flow scripts disabled
 
@@ -85,10 +89,36 @@ void setupFlows()
    legNum[5] = "5" ;
    legNum[6] = "6" ;
 
+   f_nextSeqStart = 0;       // sequences start at index 0 in the flow arrays
+   f_lastSeqStart = 0;
+   f_activeMacro = 0;        // initially there's no macro executing
+   f_inMacroDefs = false;     // we're not in macro definitions, avoiding sequence execution
+
+   for(int i = 1; i<=26; i++)
+   {  macrosStart[i] = 0;  // table for starting flow index of macros, with letter names
+      macrosLast[i] = 0;   // and the last index in the macro
+   }
+   ms_top = 0 ;      // init macro stack pointer to top of empty stack
+
 // initialize dynamic home position in local coords for each leg
 traceL("completed flows setup");
 
 } // void setupFlows()
+
+// routines to support the macro stack, used to handle calling macros within macros
+
+void ms_push(int data)
+{
+   ms_stack[ms_top] = data;   // top pointer is next, not last, position in stack to be used
+   ms_top++ ;                 // should be checking for stack overflow
+   return;
+}
+
+int ms_pop()                  // value popped from stack is the return value of the function
+{
+   ms_top-- ;                 // adjust ptr to last value pushed
+   return ms_stack[ms_top];   // should be checking for stack underflow
+}
 
 // standard doxygen docs here
 
@@ -246,7 +276,7 @@ bool globCoordsToLocal(int legNumber, float gx, float gy, float gz)
         break;
       case 2:
         // Middle Right leg
-        f_endLegX[legNumber] = gy - d$sideY;       // gy is +ve, so is d$sideY
+        f_endLegX[legNumber] = - gy - d$sideY;       // gy is +ve, so is d$sideY
         f_endLegZ[legNumber] = gx;
         break;
       case 3:
@@ -266,7 +296,7 @@ bool globCoordsToLocal(int legNumber, float gx, float gy, float gz)
         break;
       case 5:  
         // Middle Left leg
-        f_endLegX[legNumber] = (-1 * gy) - d$sideY;       // gy is -ve, d$sideY is +ve
+        f_endLegX[legNumber] = gy - d$sideY;       // gy is -ve, d$sideY is +ve
         f_endLegZ[legNumber] = -1 * gx ;
         break;
       case 6:
@@ -329,20 +359,22 @@ void localCoordsToGlobal(int legNumber, float lx, float ly, float lz)
 // f_active is initially zero, which initiates various setup activities on first do_flow entry
 // in general case, do_flow executes a small servo movement on all 18 servos, at a calculated time interval
 
-void do_flow()          // called from loop if there's a flow executing that needs attention
+void run_sequence()          // called from loop if there's a sequence executing that needs attention
 {
    #undef localRNum
    #define localRNum 13
+   //sp1l("start do_flow from loop");
    float t_angK, t_angA, t_angH; // temp angles used in PWM calculations for oppositely mounted servos
    if(f_active == 0)             // starting a new flow, so need to do some setup
     {
       traceL(" start of flow row # 0");
 // do conditional display of entire flow here, nicely formatted, with row numbering
+// next line changed from != 0
       if((toeMoveAction & fa_dispFlow) != 0)    // if requested in the FG command at the end of the script
       {  // display the entire flow, nicely formatted, with row numbers
          for(int r=0; r<f_count; r++)  // step through the flow rows
          {  // most flow rows are long, except the control ones for cycles, new home positions, toe safety set up, etc which lack the 18 trailing numbers
-            if(f_operation[r] >= fo_markCycleStart && f_operation[r] <= fo_doCycle )   // if it's a short flow row...
+            if(f_operation[r] >= fo_markCycleStart && f_operation[r] <= fo_doCycle || f_operation[r] >= fo_doMacro)   // if it's a short flow row...
             {  printf("%02d)%4d %2d %2d %6.2f %6.2f %6.2f\n",r,f_msecs[r],f_operation[r],f_lShape1[r],f_lShape2[r],f_lShape3[r],f_lShape4[r]);
             }
             else
@@ -358,6 +390,7 @@ void do_flow()          // called from loop if there's a flow executing that nee
          }
       }
       // last flow might have changed the home position. start this new flow with the default home position
+
       handle_fo_newHomeLReset();
       f_active = 0;     // undo the change to f_active that the home reset does
       
@@ -365,10 +398,8 @@ void do_flow()          // called from loop if there's a flow executing that nee
       // the operation code in f_operation[f_active] tells us what kind of coords we were given
       f_goodData = true;               // assume thing will go well, & f_operation is valid
       prepNextLine();         // get local coords of position in active flow row in f_endlegX[L], Y, Z
-
       if(f_goodData)
       {  // f_endLegX[leg],Y,Z arrays contain the local coords of the position we need to jump to
-   //  for(L=1; L<=6; L++)
          for(int l_base=1;l_base<=3;l_base++)   // use alternate sides for leg movements, resting PWM drivers
          {  for(L=l_base;L<=l_base+3;L=L+3)     // i.e. 1, 4, 2, 5, 3, 6         
             {  // move each leg to the position in local coords in f_endLegX[l], f_endLegY[l], f_endLegZ[l]
@@ -409,27 +440,39 @@ void do_flow()          // called from loop if there's a flow executing that nee
                f_lastAngK[L] = t_angK;
                f_lastAngA[L] = t_angA;
 
-
                // starting with the hip...
    //            int legstart = micros();  // timestamp start of leg movement
                servoNum = ((L - 1) * 3) +1;   // servo numbers go from 1 to 10. This is hip servo for leg L
-               pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L],  pwmClkStart, mapDegToPWM(t_angH,servoNum));
+               if(!f_inMacroDefs)
+               {
+                  pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L],  pwmClkStart, mapDegToPWM(t_angH,servoNum));
+               }
    //            Log.noticeln("H: Driver=%d,  Pin=%d, angH=%F,  pwm=%d",legIndexDriver[L],legIndexHipPin[L],f_angH, mapDegToPWM(f_angH,0));
                servoNum = ((L - 1) * 3) +2;   // servo numbers go from 1 to 10. This is knee servo for leg L
-               pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L]+1,pwmClkStart, mapDegToPWM(t_angK,servoNum));
+               if(!f_inMacroDefs)
+               {
+                  pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L]+1,pwmClkStart, mapDegToPWM(t_angK,servoNum));
+               }
    //            Log.noticeln("K: Driver=%d,  Pin=%d, angH=%F,  pwm=%d",legIndexDriver[L],legIndexHipPin[L]+1,f_angK, mapDegToPWM(f_angK,0));
                servoNum = ((L - 1) * 3) +3;   // servo numbers go from 1 to 10. This is ankle servo for leg L
-               pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L]+2,pwmClkStart, mapDegToPWM(t_angA,servoNum));
+               if(!f_inMacroDefs)
+               {
+                  pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L]+2,pwmClkStart, mapDegToPWM(t_angA,servoNum));
+               }
    //            Log.noticeln("A: Driver=%d,  Pin=%d, angH=%F,  pwm=%d",legIndexDriver[L],legIndexHipPin[L]+2,f_angA, mapDegToPWM(f_angA,0));
                f_lastLegX[L] = f_endLegX[L];   // remember this initial location as start of next line
                f_lastLegY[L] = f_endLegY[L];
                f_lastLegZ[L] = f_endLegZ[L];
+
                // ok, the 3 servos in that leg have been moved - on to the next leg
             }  // for(L=l_base;L<=l_base+3;L=L+3) 
          } // for(int l_base=1;l_base<=3;l_base++) 
          //at this point, all legs have been moved to the initial position in the flow
+         //---- what if 1st row was a "beginning of macros" command, and not a cmd to move legs to home position? 
+         //---- we would haveworked thru the non leg movement commands inside prepnextline()
+         //---- so f_active might not be 1, so increment existing value instead of setting it to 1
          // well, move commands have been sent. pause a bit for the servos to actually move
-         delay(340);             // in theory, wost case is about 120 degrees, & servo does 60 degrees in .17 sec
+         delay(340);             // in theory, worst case is about 120 degrees, & servo does 60 degrees in .17 sec
          // start preparing for frame by frame moves from this positon to next one in flow, i.e. [1] in flow rows
          // first, figure out local coords of that next position, like we did for initial position
          if(f_count > 1 )     // is there at least one more flow row?
@@ -437,7 +480,7 @@ void do_flow()          // called from loop if there's a flow executing that nee
  
             // we need local coords to be able to give commands to servos
             // the operation code in f_operation[f_active] tells us what king of coords we were given
-            f_active=1;             // OK, we're now processing flow row 1 for first real line
+            f_active ++ ;             // OK, we're now processing next flow row after 1st leg movement command
             prepNextLine();         // decode flow row 1's position, figure deltas, etc
                                     // so we'll be ready at next 20 ms mark
             f_frame = 1 ;           // initialize frame counter
@@ -457,7 +500,7 @@ void do_flow()          // called from loop if there's a flow executing that nee
    } // if f_active == 0
 
    // OK above takes care of initial case for initial flow row where flow is just starting
-   // now the work of grinding out the servo changes for everu 20 msec frame, fo 6 legs
+   // now the work of grinding out the servo changes for everu 20 msec frame, for 6 legs
    else if( f_active > 0)
    {  if(millis() >= f_nextTime)          // did we get to next 20 msec frame time?
       {                                   // we did hit 20 ms mark - time to move servos
@@ -494,7 +537,10 @@ void do_flow()          // called from loop if there's a flow executing that nee
                {  if(f_angH != f_lastAngH[L])               // if new hip angle is different than last one, move the servo 
                   {  
                      servoNum = ((L - 1) * 3) +1;   // servo numbers go from 1 to 18. This is hip servo for leg L
-                     pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L],  pwmClkStart, mapDegToPWM(t_angH,servoNum));
+                     if(!f_inMacroDefs)
+                     {
+                        pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L],  pwmClkStart, mapDegToPWM(t_angH,servoNum));
+                     }
                      f_lastAngH[L] = f_angH;                // and update last angle for this servo
                   }
                }
@@ -502,7 +548,10 @@ void do_flow()          // called from loop if there's a flow executing that nee
                {  if(f_angK != f_lastAngK[L])               // only if the knee angle has changed...
                   {  
                      servoNum = ((L - 1) * 3) +2;   // servo numbers go from 1 to 18. This is knee servo for leg L
-                     pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L]+1,pwmClkStart, mapDegToPWM(t_angK,servoNum));
+                     if(!f_inMacroDefs)
+                     {
+                        pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L]+1,pwmClkStart, mapDegToPWM(t_angK,servoNum));
+                     }
                      f_lastAngK[L] = f_angK;
                   }
                }
@@ -510,7 +559,10 @@ void do_flow()          // called from loop if there's a flow executing that nee
                {  if(f_angA != f_lastAngA[L])               // only if ankle angle has changed...
                   {  
                      servoNum = ((L - 1) * 3) +3;   // servo numbers go from 1 to 18. This is ankle servo for leg L
-                     pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L]+2,pwmClkStart, mapDegToPWM(t_angA,servoNum));
+                     if(!f_inMacroDefs)
+                     {
+                        pwmDriver[legIndexDriver[L]].setPWM(legIndexHipPin[L]+2,pwmClkStart, mapDegToPWM(t_angA,servoNum));
+                     }
                      f_lastAngA[L] = f_angA;
                   }
                }
@@ -538,11 +590,35 @@ void do_flow()          // called from loop if there's a flow executing that nee
          f_frame ++  ;                          // advance to next frame within the flow row
          if(f_frame > f_framesPerPosn)          // did we run out of frames?
          {  // yup - we must be sitting at end position of the line, otherwise wait for next 20 msec
+
+            // check to see if we just got to the end of executing a macro.
+            // if so, we might need to do more iterations of the macro,
+            // or resume execution from where the macro was called from
+
+            if( f_activeMacro != 0)  //if there's a macro running..
+            {  if(f_active >= macrosLast[f_activeMacro])     // are we at the very end of the macro?
+               {  // yup! we just did the last line of the macro, gotta check some stuff
+                  f_macroCount-- ;        // count that we've completed one more iteration
+                  if(f_macroCount > 0)    // do we have more iterations to do?
+                  {  // no - just have to start the next one
+                     f_active = macrosStart[f_activeMacro];   // start again at start of macro's code
+                  }
+                  else ;      // just finished the last iteration of this macro
+                  {
+                     // now we have pop context before macro call, and continue from there
+                     // context was saved in handle_fo_doMacro() near end of flows.cpp
+                     f_activeMacro = ms_pop();   // macro number (or 0) that was previously executing
+                     f_macroCount = ms_pop();    // it's current iteration (or 0)
+                     f_active = ms_pop();        // and the flow row of the original macro call
+                     // then fall through to code to process next flow row
+                  }
+               }
+            }
             f_active = f_active + 1 ;                       // advance to next flow row
             if(f_active < f_count)              // have we run out of flow rows to do?
             {  // there are rows left, f_active points to a valid flow row
                if((toeMoveAction & fa_graphPrint) == 0)  // if we're NOT doing Calc compatible output...
-               { traceLi(" start of flow row #",f_active);   // announce start of this flow row 
+               { traceLi(" start of flow row   # ",f_active);   // announce start of this flow row 
                }
                for(L=1; L<=6; L++)              // remember end of last line as start of next one
                {  f_lastLegX[L] = f_endLegX[L];
@@ -561,7 +637,6 @@ void do_flow()          // called from loop if there's a flow executing that nee
                   int byte = Serial.read();     // read the byte
                   f_flowing = true;              // re-enable flow processing and carry on
                }
-
                prepNextLine();                  // process active flow row, leaving local coords in f_endLegX[L], Y, Z
             }                                   // ..and figuring frame deltas, and framesPerPosition
             else                                // we ran out of rows in the flow. end flow processing
@@ -569,8 +644,13 @@ void do_flow()          // called from loop if there's a flow executing that nee
                f_flowing = false;               // stop flow processing triggered from loop()
                f_nextTime=0;                    // kill any 20 ms processing
                traceL(" end of multi row flow processing");
+
+// debug dump to see how the macro definitions went   
+//for(int qq=1;qq<26;qq++)
+//{sp6sl("n,op,sh1,mstrt,mlast",qq,f_operation[qq],f_lShape1[qq],macrosStart[qq],macrosLast[qq]);}
+
             }
-         } // if(f_frame > f_framesPerPosn) 
+         }  // if(f_frame > f_framesPerPosn) 
          if((toeMoveAction & fa_graphPrint) != 0) {sp1s(f_active); }  // put flow row # at start of Calc fa_graphPrint lines
       }   // if millis > f_nextTime
    } // else if( f_active > 0)
@@ -579,41 +659,38 @@ void do_flow()          // called from loop if there's a flow executing that nee
      // f_active went negative - abort
      f_flowing = 0;
    }
-
 }  // void do_flow
 
 // ================================================================================
-
 bool prepNextLine() 
-
 {
    prepNextLine1() ;        // look at next line, which could be a control command
    if(didControl)          // it was a control command, so redo prepNextLine to get movement command
-   {  if((toeMoveAction & fa_graphPrint) == 0) { sp2sl(" start of flow-row #",f_active); }
+   {  if((toeMoveAction & fa_graphPrint) == 0) { traceLi(" start of flow row   # ",f_active); }
       // note dash in "flow-row" in above message 
       prepNextLine1();     // could have 2 control commands in a row.
       if(didControl)
-      {  if((toeMoveAction & fa_graphPrint) == 0) { sp2sl(" start of flow~row #",f_active);} 
+      {  if((toeMoveAction & fa_graphPrint) == 0) { traceLi(" start of flow row   # ",f_active);} 
          // note tilde in "flow~row" in above message
          prepNextLine1();         
          if(didControl)
-         {  if((toeMoveAction & fa_graphPrint) == 0) { sp2sl(" start of flow~row #",f_active);} 
+         {  if((toeMoveAction & fa_graphPrint) == 0) { traceLi(" start of flow row   # ",f_active);} 
             // note tilde in "flow~row" in above message
             prepNextLine1();         
             if(didControl)
-            {  if((toeMoveAction & fa_graphPrint) == 0) { sp2sl(" start of flow~row #",f_active);} 
+            {  if((toeMoveAction & fa_graphPrint) == 0) { traceLi(" start of flow row   # ",f_active);} 
                // note tilde in "flow~row" in above message
                prepNextLine1();         
                if(didControl)
-               {  if((toeMoveAction & fa_graphPrint) == 0) { sp2sl(" start of flow~row #",f_active);} 
+               {  if((toeMoveAction & fa_graphPrint) == 0) { traceLi(" start of flow row   # ",f_active);} 
                   // note tilde in "flow~row" in above message
                   prepNextLine1();         
                   if(didControl)
-                  {  if((toeMoveAction & fa_graphPrint) == 0) { sp2sl(" start of flow~row #",f_active);} 
+                  {  if((toeMoveAction & fa_graphPrint) == 0) { traceLi(" start of flow row   # ",f_active);} 
                      // note tilde in "flow~row" in above message
                      prepNextLine1();         
                      if(didControl)
-                     {  if((toeMoveAction & fa_graphPrint) == 0) { sp2sl(" start of flow~row #",f_active);} 
+                     {  if((toeMoveAction & fa_graphPrint) == 0) { traceLi(" start of flow row   # ",f_active);} 
                         // note tilde in "flow~row" in above message
                         prepNextLine1();         
                         if(didControl)
@@ -669,13 +746,24 @@ bool prepNextLine1()
    } // if
    // following line removed because it causes console messages in the middle of spreadsheet data
    // setStdRgbColour(rgbLedClr); // Set RGB led colour
+
+   // check to see if we're defining macros, which aren't executed while they're being defined
+   // the only command we want to execute is the one that ends macro definitions
+   //if(f_inMacroDefs == true)     //if we've seen startMacroDefs, and are skipping until end of macros
+   //   {
+   //      while(f_operation[f_active] != fo_endMacroDefs) // unless we're at end of the macro defs
+   //      {
+   //         f_active++;    //ignore this command, & just scan for end of macro defs
+   //      }
+   //   }
    if      (f_operation[f_active] == fo_moveGlobal)         {handle_fo_moveGlobal();} 
    else if (f_operation[f_active] == fo_moveLocal)       {handle_fo_moveLocal();} 
    else if (f_operation[f_active] == fo_moveGRelHome)    {handle_fo_moveGRelHome();}
    else if (f_operation[f_active] == fo_moveLRelHome)    {handle_fo_moveLRelHome();}
 
    else if (f_operation[f_active] == fo_moveGRelLast)    {handle_fo_moveGRelLast();} 
-   else if (f_operation[f_active] == fo_moveLRelLast)    {handle_fo_moveLRelLast();}    // FO_moveGRelLast and fo_moveLRelLast, moving relative to last position, aren't implemented yet
+   else if (f_operation[f_active] == fo_moveLRelLast)    {handle_fo_moveLRelLast();}    
+   // FO_moveGRelLast and fo_moveLRelLast, moving relative to last position, aren't implemented yet
 
    else if (f_operation[f_active] == fo_newHomeGCoords)  {handle_fo_newHomeGCoords();}
    else if (f_operation[f_active] == fo_newHomeLCoords)  {handle_fo_newHomeLCoords();}
@@ -691,7 +779,10 @@ bool prepNextLine1()
    else if (f_operation[f_active] == fo_toeSafetyY)      {handle_fo_toeSafetyY();}
    else if (f_operation[f_active] == fo_toeSafetyZ)      {handle_fo_toeSafetyZ();}
    else if (f_operation[f_active] == fo_toeSafetyReset)  {handle_fo_toeSafetyReset();}
-
+   else if (f_operation[f_active] == fo_doMacro)         {handle_fo_doMacro();}
+   else if (f_operation[f_active] == fo_beginOfMacros)   {handle_fo_beginOfMacros();}
+   else if (f_operation[f_active] == fo_endOfMacros)     {handle_fo_endOfMacros();}
+   else if (f_operation[f_active] == fo_saveMacro)       {handle_fo_saveMacro();}
 
    else
    {  // unsupported op code in nextfirst row - abort
@@ -700,16 +791,14 @@ bool prepNextLine1()
       f_goodData = false;        // bypass rest of do_flow processing
       // need to avoid falling into following code. use a flag for "good data seen" ?
    }
-   if(f_goodData)       // continue only if we haven't aborted due to an error, 
+   if(f_goodData && (!f_inMacroDefs))       // continue only if we haven't aborted due to an error, 
                         // and didn't do a control command that already returned
    {
       // get here if we've been able to calculate local coordinates for next toe position
       // now we need to see if requested position is within "safe positions box"
-
       String badLegs = "" ;   // initialize error message identifying unsafe positions
       for(L=1; L<=6; L++ )       // go thru all legs
       { 
-//sp2s(f_endLegX[L],f_endLegY[L]); sp; sp1l(f_endLegZ[L]);
          if(f_endLegX[L] - f_staticHomeX > safeMaxPosX){badLegs =badLegs +legNum[L] +"XP ";
             sp5sl(L,"XP:home,new,max=",f_staticHomeX,f_endLegX[L],safeMaxPosX);}
          if(f_staticHomeX - f_endLegX[L] > safeMaxNegX){badLegs =badLegs +legNum[L] +"XN ";
@@ -749,8 +838,8 @@ bool prepNextLine1()
 
 void handle_fo_moveGlobal()
 {  // we were given absolute coords, and need to convert to local coords
-   for(L=1; L<=6; L++)   // l stands for leg. short to avoid cobol expression syndrome
-   {  globCoordsToLocal(L,f_legX[f_active][L],f_legY[f_active][L],f_legZ[f_active][L]);   // local coords returned in f_endLegX[L],...
+   for(int LL=1; LL<=6; LL++)   // LL stands for leg. 
+   {  globCoordsToLocal(LL,f_legX[f_active][LL],f_legY[f_active][LL],f_legZ[f_active][LL]);   // local coords returned in f_endLegX[L],...
    }
 } // handle_fo_moveAbs()
 
@@ -779,8 +868,11 @@ void handle_fo_moveLRelHome()
 {  // we were given offsets relative to leg's home position, expressed in LOCAL coordinates
    for(L=1; L<=6; L++)
    {  f_endLegX[L] = f_legX[f_active][L] + f_dynLHomeX[L];   // get local offset out of flow row, and add to local home coords
+      //sp6sl(L,"X ",f_endLegX[L],f_legX[f_active][L],f_dynLHomeX[L],f_active);
       f_endLegY[L] = f_legY[f_active][L] + f_dynLHomeY[L];
+      //sp5sl(L,"Y ",f_endLegY[L],f_legY[f_active][L],f_dynLHomeY[L]);
       f_endLegZ[L] = f_legZ[f_active][L] + f_dynLHomeZ[L];
+      //sp5sl(L,"Z ",f_endLegZ[L],f_legZ[f_active][L],f_dynLHomeZ[L]);
    }  
 } // void handle_fo_moveLRelHome()
 
@@ -928,6 +1020,7 @@ void handle_fo_newHomeHere()        // new home position is now defined as curre
    }
    f_active ++ ;                 // advance to flow row after the one with this control operation code
    didControl = true;                  // signal that we did a control command rather than preparing leg moves
+   return;
 }
 
 void handle_fo_newHomeLReset()
@@ -941,7 +1034,7 @@ void handle_fo_newHomeLReset()
    float d$cornerToeY = d$cornerY + legLen * cos_p45 ;
    float d$sideToeX = d$sideX + 0.0 ;
    float d$sideToeY = d$sideY + legLen ;
-   float d$allToeZ = -1.0 * d$footL ;
+   float d$allToeZ = d$footL ;
 
    f_dynGHomeX[1] =        d$cornerToeX  ; f_dynGHomeY[1] = -1.0 * d$cornerToeY  ; f_dynGHomeZ[1] = -1.0 * d$allToeZ ; 
    f_dynGHomeX[2] =        d$sideToeX    ; f_dynGHomeY[2] = -1.0 * d$sideToeY    ; f_dynGHomeZ[2] = -1.0 * d$allToeZ ;
@@ -975,3 +1068,62 @@ void handle_fo_toeSafetyZ()
 void handle_fo_toeSafetyReset()
 {}
 
+void handle_fo_doMacro()
+{
+// push where I should resume after macro, what iteration count to restore
+// and nameID of executing macro (may be 0)
+   ms_push(f_active );     // where to resume after macro's iterations are done
+   ms_push(f_macroCount);  // what macro iteration to resume at (0 is not in macro)
+   ms_push(f_activeMacro); // ID number of currently running macro, otherwise 0
+                           // these are popped back when macro is done, in sequence line processing
+                           //..to find where, grep ms_pop in this module
+   f_activeMacro = f_lShape1[f_active]; // get macro number to start from the doMacro command
+   f_macroCount = f_lShape2[f_active];  // rep count: DM flow opcode did error checking, err > 26
+   f_active = macrosStart[f_activeMacro]; // continue executing at start of macro
+   f_flowing = true ;   // probably already set, but make sure loop() is dispatching do_flow
+   didControl = true;                  // signal that we did a control command rather than preparing leg moves
+   f_goodData = false;                 // but that we're not aimed at a row with leg data
+   return;
+}
+
+void handle_fo_beginOfMacros()
+{
+
+      f_inMacroDefs = true;               // set flag so that macros being defined aren't executed during definition
+      didControl = true;                  // signal that we did a control command rather than preparing leg moves
+      f_active ++ ;                 // advance to flow row after the one with this control operation code
+      f_goodData = false;
+       f_nextSeqStart = f_active;           // next row in flow arrays - already inc'd
+   return;
+}
+
+void handle_fo_endOfMacros()
+{
+   f_inMacroDefs = false;              // resume execution of sequence data after macro definitions
+   didControl = true;                  // signal that we did a control command rather than preparing leg moves
+   f_active ++ ;                 // advance to flow row after the one with this control operation code
+   f_goodData = false;
+   return;
+}
+
+void handle_fo_saveMacro()
+{
+   // save currently acumulating flow commands into named macro
+   // the MQTT FLOW command interpreter converted macro name letter into a number from 1-26
+   // and put it in the f_lShape1[f_active] parameter
+   int macroNum = f_lShape1[f_active];
+   if(macrosLast[macroNum] != 0)    // is this macro name already in use?
+   {  sp2sl("attempt to redefine macro number:",macroNum);
+      f_nextSeqStart = f_lastSeqStart;     // reuse the sequence rows from redefinition attempt
+   }
+   else
+   {  macrosStart[macroNum] = f_nextSeqStart;  // where we started this macro in flow arrays
+      macrosLast[macroNum] = f_active -1 ;      // last index in flow arrays used by this macro
+      f_nextSeqStart = f_active+1;                  // next unused row in flow arrays
+   }
+   //for(int i=1;i<=6;i++) {sp3sl(i,macrosStart[i],macrosLast[i]);}  // debug dump -top of macro tables
+
+   didControl = true;                  // signal that we did a control command rather than preparing leg moves
+   f_active ++ ;                 // advance to flow row after the one with this control operation code
+   return;
+}
