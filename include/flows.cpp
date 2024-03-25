@@ -605,9 +605,10 @@ void run_sequence()          // called from loop if there's a sequence executing
                      f_macroCount-- ;        // count that we've completed one more iteration
                      if(f_macroCount > 0)    // do we have more iterations to do?
                      {  // yes - just have to start the next one
-                        f_active = macrosStart[f_activeMacro];   // start again at start of macro's code
+                        f_active = macrosStart[f_activeMacro] -1;   // start again at start of macro's code
+                                                                    // the -1 offsets f_active increment below
                      }
-                     else ;      // just finished the last iteration of this macro
+                     else       // just finished the last iteration of this macro
                      {
                         // now we have pop context before macro call, and continue from there
                         // context was saved in handle_fo_doMacro() near end of flows.cpp
@@ -1111,6 +1112,15 @@ void handle_fo_endOfMacros()
    didControl = true;                  // signal that we did a control command rather than preparing leg moves
    f_active ++ ;                 // advance to flow row after the one with this control operation code
    f_goodData = false;
+
+   // debug dump of the macro tables and the flow tables
+   //for(int i=1;i<=40;i++)
+   //{
+   //   int i1 = i % 26;     // mod 26 to have a subscript that's inside mac tables when i > 26
+   //   sp6s("mac,frows:",i,macrosStart[i1],macrosLast[i1],f_operation[i],f_lShape1[i]);
+   //   sp1l(f_lShape2[i]);
+   //}
+
    return;
 }
 
