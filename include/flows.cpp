@@ -595,25 +595,33 @@ void run_sequence()          // called from loop if there's a sequence executing
             // if so, we might need to do more iterations of the macro,
             // or resume execution from where the macro was called from
 
-            if( f_activeMacro != 0)  //if there's a macro running..
-            {  if(f_active >= macrosLast[f_activeMacro])     // are we at the very end of the macro?
-               {  // yup! we just did the last line of the macro, gotta check some stuff
-                  f_macroCount-- ;        // count that we've completed one more iteration
-                  if(f_macroCount > 0)    // do we have more iterations to do?
-                  {  // no - just have to start the next one
-                     f_active = macrosStart[f_activeMacro];   // start again at start of macro's code
-                  }
-                  else ;      // just finished the last iteration of this macro
-                  {
-                     // now we have pop context before macro call, and continue from there
-                     // context was saved in handle_fo_doMacro() near end of flows.cpp
-                     f_activeMacro = ms_pop();   // macro number (or 0) that was previously executing
-                     f_macroCount = ms_pop();    // it's current iteration (or 0)
-                     f_active = ms_pop();        // and the flow row of the original macro call
-                     // then fall through to code to process next flow row
-                  }
-               }
-            }
+            bool needMacCheck = true;   // need to check for end of macro, maybe recursively
+            while(needMacCheck)
+            {
+               needMacCheck = false;    // assume we don't have the edge case
+               if( f_activeMacro != 0)  //if there's a macro running..
+               {  if(f_active >= macrosLast[f_activeMacro])     // are we at the very end of the macro?
+                  {  // yup! we just did the last line of the macro, gotta check some stuff
+                     f_macroCount-- ;        // count that we've completed one more iteration
+                     if(f_macroCount > 0)    // do we have more iterations to do?
+                     {  // yes - just have to start the next one
+                        f_active = macrosStart[f_activeMacro];   // start again at start of macro's code
+                     }
+                     else ;      // just finished the last iteration of this macro
+                     {
+                        // now we have pop context before macro call, and continue from there
+                        // context was saved in handle_fo_doMacro() near end of flows.cpp
+                        f_activeMacro = ms_pop();   // macro number (or 0) that was previously executing
+                        f_macroCount = ms_pop();    // it's current iteration (or 0)
+                        f_active = ms_pop();        // and the flow row of the original macro call
+                                                   // ..which will be incremented below
+                        needMacCheck = true;       // the popped context could also be the end of a macro
+                        // then fall through to code to process next flow row
+                     } // if(f_macroCount > 0) .. else
+                  } // if(f_active >= macrosLast[f_activeMacro]) 
+               } //  if( f_activeMacro != 0) 
+            } // while(needMacCheck)
+
             f_active = f_active + 1 ;                       // advance to next flow row
             if(f_active < f_count)              // have we run out of flow rows to do?
             {  // there are rows left, f_active points to a valid flow row
