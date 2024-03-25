@@ -264,7 +264,7 @@ bool globCoordsToLocal(int legNumber, float gx, float gy, float gz)
 
    float Xrt, Yrt ;  //temp variables for rotated global X & Y coords
 
-   f_endLegY[L] = gz;       // height above robot is global Z, local Y
+   f_endLegY[legNumber] = gz;       // height above robot is global Z, local Y
    switch (legNumber) 
    {
       case 1:
