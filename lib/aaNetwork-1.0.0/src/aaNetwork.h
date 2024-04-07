@@ -46,6 +46,7 @@ class aaNetwork
       const char* evalSignal(int16_t signalStrength); // Return human readable assessment of signal strength.
       bool pingIP(IPAddress address); // Ping IP address and return response. Assume 1 ping.
       bool pingIP(IPAddress address, int8_t numPings); // Ping IP address and return response. User specified num pings.
+      const char* getAP(); // Return the access point name that is in use.
    private:
       const char* _lookForAP(); // Scan 2.4GHz radio spectrum for known Access Point.
       const char* _translateEncryptionType(wifi_auth_mode_t encryptionType); // Provide human readable wifi encryption method.
