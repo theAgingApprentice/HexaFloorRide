@@ -29,7 +29,47 @@ bool connectToMqttBroker(aaNetwork &network)
    strcpy(helpTopicTree, uniqueName);
    strcat(helpTopicTree, HELP_MQTT_TOPIC);
    Log.noticeln("<connectToMqttBroker> Full help topic tree = %s (length = %d).", helpTopicTree, strlen(helpTopicTree));
-   brokerIP = flashReadBrokerIP(); // Retrieve MQTT broker IP address from NV-RAM.
+   // Check to see if the AP name is known and if so use pre-defined MQTT Broker 
+   // IP, otherwise read flash memory to retrieve the MQTT brokwr IP address.
+   const char* apName = network.getAP(); // Grab the Access Point name that is in use.
+   bool knownFlag = false; // Assume the access point  is not known prior to checking out list.
+   Log.noticeln("<connectToMqttBroker> Check to see if AP %s is known.", apName);
+   // "MN_LIVINGROOM", "MN_WORKSHOP_2.4GHz", "MN_DS_OFFICE_2.4GHz", "MN_OUTSIDE", "borfpiggle"
+   if(strcmp(apName, "MN_LIVINGROOM") == 0) // One of Andrew's SSIDs
+   {
+      brokerIP.fromString("192.168.2.21");
+      knownFlag = true;
+      Log.noticeln("<connectToMqttBroker> This is one of Andrews SSIDs.");
+   } // if
+   if(strcmp(apName, "MN_WORKSHOP_2.4GHz") == 0) // One of Andrew's SSIDs
+   {
+      brokerIP.fromString("192.168.2.21");
+      knownFlag = true;
+      Log.noticeln("<connectToMqttBroker> This is one of Andrews SSIDs.");
+   } // if
+   if(strcmp(apName, "MN_DS_OFFICE_2.4GHz") == 0) // One of Andrew's SSIDs
+   {
+      brokerIP.fromString("192.168.2.21");
+      knownFlag = true;
+      Log.noticeln("<connectToMqttBroker> This is one of Andrews SSIDs.");
+   } // if
+   if(strcmp(apName, "MN_OUTSIDE") == 0) // One of Andrew's SSIDs
+   {
+      brokerIP.fromString("192.168.2.21");
+      knownFlag = true;
+      Log.noticeln("<connectToMqttBroker> This is one of Andrews SSIDs.");
+   } // if
+   if(strcmp(apName, "borfpiggle") == 0) // Doug's SSIDs
+   {
+      brokerIP.fromString("10.0.0.200");
+      knownFlag = true;
+      Log.noticeln("<connectToMqttBroker> This is Dougs SSID.");
+   } // if
+   if(knownFlag == false) // If the SSID is none of the ones checked above grab addres from flash.
+   {
+      brokerIP = flashReadBrokerIP(); // Retrieve MQTT broker IP address from NV-RAM.
+      Log.noticeln("<connectToMqttBroker> Grabbed broker IP from flash.");
+   } // else
    Log.noticeln("<connectToMqttBroker> MQTT broker IP believed to be %p.", brokerIP);
    bool tmpPingResult = network.pingIP(brokerIP, 5);
    String tmpResult[2];

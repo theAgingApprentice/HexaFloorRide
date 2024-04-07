@@ -301,6 +301,15 @@ const char* aaNetwork::_lookForAP()
 } // aaNetwork::_lookForAP()
 
 /**
+ * @brief Return the current Access Point name.
+ * @return const char* Service Set IDentifier (SSID). 
+ =============================================================================*/
+const char* aaNetwork::getAP()
+{
+   return _ssid;
+} // aaNetwork::getAP()
+
+/**
  * @brief Provide human readable wifi encryption method.
  * @param wifi_auth_mode_t Wifi encryption type code.
  * @return const char* Encryption type in one word. 
