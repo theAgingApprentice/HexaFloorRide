@@ -43,6 +43,8 @@
  * IN THE SOFTWARE.  
  *****************************************************************************/
 #include <aaNetwork.h> // Header file for linking.
+// needed per https://superuser.com/questions/1393936/mqtt-large-delay-between-messages#1394315
+#include "esp_wifi.h"
 
 /**
  * @class Write variables to flash memory.
@@ -179,6 +181,8 @@ void aaNetwork::connect()
    else // Found a known Access Point to connect to
    {
       WiFi.onEvent(_wiFiEvent); // Set up WiFi event handler
+      // avoid network delays per https://superuser.com/questions/1393936/mqtt-large-delay-between-messages#1394315
+      esp_wifi_set_ps (WIFI_PS_NONE);
       WiFi.begin(_ssid, _password); // Connect too strongest AP found
       Serial.print("<aaNetwork::connect> Attempting to connect to Access Point with the SSID ");
       Serial.println(_ssid);

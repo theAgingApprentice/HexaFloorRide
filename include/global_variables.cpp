@@ -499,7 +499,7 @@ void monitorWebServer();   // in web.cpp
 loopTaskVars(checkOled,201);  // check Oled buttons. intentionally desynchronized from webMon
 void checkOledButtons();   // in Oled.cpp for now, moving to deviceSupport.cpp
 
-loopTaskVars(checkMqtt,202);  // checkMqtt() in mqttBroker.cpp
+loopTaskVars(checkMqtt,2);  // checkMqtt() in mqttBroker.cpp. check for queued work is done every 2 msec
 void checkMqtt();
 
 loopTaskVars(flow,203);       // do_flow, condition call from loop
